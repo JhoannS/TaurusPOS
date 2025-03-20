@@ -16,8 +16,8 @@
     <p><strong>Ciudad:</strong> {{ user.tienda?.barrio_ct || 'Sin ciudad' }}</p>
     <p><strong>Email de la tienda:</strong> {{ user.tienda?.email_tienda || 'Sin email' }}</p>
     <p><strong>Teléfono:</strong> {{ user.tienda?.telefono_ct || 'Sin teléfono' }}</p>
-    <p><strong>Fecha de creación:</strong> {{ user.tienda?.fecha_creacion || 'Sin fecha' }}</p>
-    <p><strong>Fecha de modificacion:</strong> {{ user.tienda?.fecha_modificacion || 'Sin fecha' }}</p>
+    <p><strong>Fecha de creación:</strong> {{ formatFecha(user.fecha_creacion) }}</p>
+    <p><strong>Fecha de modificación:</strong> {{ formatFecha(user.fecha_modificacion) }}</p>
 
     <br>
    
@@ -30,6 +30,10 @@
 </template>
 
 <script setup>
+import dayjs from 'dayjs'
+import 'dayjs/locale/es' // ✅ Importa el idioma español
+
+dayjs.locale('es') // ✅ Configura el idioma español
 import { router } from '@inertiajs/vue3'
 
 const props = defineProps({
@@ -43,5 +47,10 @@ const user = props.auth.user
 
 const logout = () => {
   router.post(route('logout'))
+}
+
+const formatFecha = (fecha) => {
+  if (!fecha) return 'Sin fecha'
+  return dayjs(fecha).format('dddd D [de] MMMM [de] YYYY [a las] h:mm a')
 }
 </script>
