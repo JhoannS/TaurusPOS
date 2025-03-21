@@ -18,14 +18,8 @@ const dashboardRoute = computed(() => new URL(route('aplicacion.dashboard', { ap
 const multisucursalRoute = computed(() => new URL(route('aplicacion.multisucursales', { aplicacion, rol }), window.location.origin).pathname);
 
 import logo from '@images/logoTC.svg';
-import { router } from '@inertiajs/vue3';
 
-const logout = () => {
-  router.visit(route('logout'), {
-    method: 'post',
-    preserveScroll: true,
-  });
-};
+
 </script>
 
 
@@ -116,12 +110,7 @@ const logout = () => {
       </div> -->
 
       
-      <!-- Botón para Diversidad -->
-      <div @click="logout" class="cursor-pointer">
-        <a class="bg-transparent flex items-center justify-center">
-          <span class="material-symbols-rounded"> logout </span>
-        </a>
-      </div>
+      
     </aside>
   </div>
 </template>
