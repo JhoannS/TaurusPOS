@@ -13,11 +13,7 @@ Route::prefix('login')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 
-
 Route::prefix('register')->group(function () {
-    // Mostrar el formulario de registro y cargar los tipos de documento
     Route::get('/auth', [TipoDocumentoController::class, 'index'])->name('register.auth');
-
-    // Ruta para procesar el registro (POST)
-    Route::post('/auth', [RegisterController::class, 'register'])->name('register');
+    Route::post('/auth', [RegisterController::class, 'register'])->name('register.post');
 });

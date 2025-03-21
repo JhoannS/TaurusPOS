@@ -11,6 +11,9 @@ export default defineConfig({
         }),
         vue(),
     ],
+    optimizeDeps: {
+        include: ['ziggy-js'],
+      },    
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'resources/js'),

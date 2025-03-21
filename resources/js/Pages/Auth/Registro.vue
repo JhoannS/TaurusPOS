@@ -1,8 +1,9 @@
 <script setup>
-import { Head } from '@inertiajs/vue3';
-import { useForm } from '@inertiajs/vue3'
+import { Head, useForm, usePage } from '@inertiajs/vue3'
+
 import { computed } from 'vue';
-import { usePage } from '@inertiajs/inertia-vue3';
+
+
 import { route } from 'ziggy-js';
 
 const page = usePage();
@@ -13,6 +14,8 @@ defineProps({
     required: true,
   }
 })
+
+const currentRoute = computed(() => new URL(page.url, window.location.origin).pathname);
 
 const form = useForm({
   nombres_ct: '',

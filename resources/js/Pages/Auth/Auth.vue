@@ -1,8 +1,8 @@
 <script>
-import { Head, useForm } from '@inertiajs/vue3'
-import { computed } from 'vue';
-import { usePage } from '@inertiajs/inertia-vue3';
+import { Head, useForm, usePage } from '@inertiajs/vue3'
+
 import { route } from 'ziggy-js';
+
 export default {
   name: 'Auth',
   components: {
@@ -16,6 +16,8 @@ export default {
     };
   }
 }
+
+const page = usePage();
 </script>
 
 <script setup>
@@ -25,15 +27,16 @@ const form = useForm({
 })
 
 const submit = () => {
-  form.post('/login/auth', {
+  form.post(route('login.auth'), {
     onError: (errors) => {
-      console.error('Errores:', errors) // ✅ Para depurar errores en consola
+      console.error('Errores:', errors)
     },
     onSuccess: () => {
-      console.log('Inicio de sesión exitoso') // ✅ Si el login es exitoso
+      console.log('Inicio de sesión exitoso')
     },
   })
 }
+
 </script>
 
 <template>

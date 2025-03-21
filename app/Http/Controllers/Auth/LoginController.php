@@ -72,18 +72,28 @@ class LoginController extends Controller
     }
 
     // ✅ Redirige dinámicamente
-    return redirect()->route('aplicacion.dashboard', [
-        'aplicacion' => ucfirst($nombreAplicacion),
-        'rol' => ucfirst($rol),
-    ]);
+    // ✅ Redirige dinámicamente usando Ziggy
+return redirect()->route('aplicacion.dashboard', [
+    'aplicacion' => ucfirst($nombreAplicacion),
+    'rol' => ucfirst($rol),
+]);
+    
 }
 
 
 
     // ✅ Cerrar sesión
-    public function logout()
-    {
-        Auth::logout();
-        return redirect()->route('login.auth');
-    }
+
+    public function logout(Request $request)
+{
+    Auth::logout();
+
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    // 👇 Redirige correctamente al login
+    return redirect()->route('login.auth');
+}
+
+
 }

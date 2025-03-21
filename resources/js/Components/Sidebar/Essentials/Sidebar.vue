@@ -21,7 +21,10 @@ import logo from '@images/logoTC.svg';
 import { router } from '@inertiajs/vue3';
 
 const logout = () => {
-  router.post(route('logout'));
+  router.visit(route('logout'), {
+    method: 'post',
+    preserveScroll: true,
+  });
 };
 </script>
 
