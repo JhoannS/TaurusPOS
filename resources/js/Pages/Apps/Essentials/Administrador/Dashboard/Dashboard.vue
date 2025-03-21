@@ -13,6 +13,14 @@ export default {
     Head,
   },
 }
+import { defineProps } from 'vue';
+
+defineProps({
+  barsData: {
+    type: Array,
+    required: true
+  }
+});
 
 </script>
 
