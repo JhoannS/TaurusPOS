@@ -1,10 +1,11 @@
-<script setup>
-
+<script>
 import { ref, onMounted, onUnmounted, computed, } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
+</script>
 
-// Recibe el prop 'auth' desde el componente padre
+<script setup>
+// Traer datos del usuario logueado
 const props = defineProps({
     auth: Object,
 });
@@ -19,9 +20,6 @@ const currentRoute = computed(() => new URL(page.url, window.location.origin).pa
 const configuracionesRoute = computed(() => new URL(route('aplicacion.configuraciones', { aplicacion, rol }), window.location.origin).pathname);
 
 
-//
-// Reloj en tiempo real
-//
 const dia = ref('');
 const mes = ref('');
 const anio = ref('');
@@ -68,10 +66,6 @@ onMounted(() => {
 onUnmounted(() => {
     clearInterval(clockInterval);
 });
-
-// No se necesita 'export default' en este caso
-
-
 </script>
 
 <template>
@@ -106,7 +100,7 @@ onUnmounted(() => {
                 <div class="logo">
                     <div v-if="auth && auth.user">
                         <h3 class="font-semibold"> {{ auth.user.nombres_ct }}</h3>
-                        <p class="-mt-[8px] text-secundary-light text-[13px] font-medium">
+                        <p class="-mt-[5px] text-secundary-light text-[13px] font-medium">
                             {{ auth.user.rol?.tipo_rol || 'Sin rol' }}
                         </p>
                     </div>
@@ -115,8 +109,6 @@ onUnmounted(() => {
                     </div>
                 </div>
             </div>
-
         </div>
-
     </header>
 </template>

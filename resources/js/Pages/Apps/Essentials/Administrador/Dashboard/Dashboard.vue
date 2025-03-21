@@ -1,34 +1,19 @@
 <script>
 import { Head } from '@inertiajs/vue3';
+import { defineProps, ref, onMounted, onUnmounted } from 'vue';
 import Sidebar from '@/Components/Sidebar/Essentials/Sidebar.vue';
 import BarraCalendario from '@/Components/BarraCalendario/BarraCalendario.vue';
 import DetallesPlan from '@/Components/Dashboard/DetallesPlan.vue';
 import SaludoOpciones from '@/Components/header/Essentials/SaludoOpciones.vue';
 import CardHistorial from '@/Components/Dashboard/Essentials/CardHistorial.vue';
-
-
-export default {
-  name: 'Dashboard',
-  components: {
-    Head,
-  },
-}
-import { defineProps, ref, onMounted, onUnmounted} from 'vue';
-
-
 </script>
 
 <script setup>
-// Asegúrate de tener 'auth' en las props del componente
+// traer datos del usuario logueado
 defineProps({
-  auth: Object,
+    auth: Object,
 
 })
-
-
-//
-// Reloj en tiempo real
-//
 const dia = ref('');
 const mes = ref('');
 const anio = ref('');
@@ -66,7 +51,6 @@ function actualizarFechaHora() {
         saludo.value = "¡Buenas noches";
     }
 }
-
 let clockInterval = null;
 onMounted(() => {
     actualizarFechaHora();
@@ -79,18 +63,11 @@ onUnmounted(() => {
 
 <template>
     <div>
-
         <Head title="Dashboard Essentials" />
-
-
         <div class="bg-mono flex scrollbar-custom">
-            <Sidebar :auth="auth"/>
-           
-
-
+            <Sidebar :auth="auth" />
             <main class="w-full h-[100%] px-[40px] py-[20px] bg-transparent">
-                <SaludoOpciones :auth="auth"/>
-
+                <SaludoOpciones :auth="auth" />
                 <div class="flex gap-[10px] ">
                     <div class="left w-[35%] h-[85vh] flex flex-col gap-5 justify-between px-3">
                         <div class="saludo-btn flex flex-col justify-center items-center gap-3">
@@ -140,9 +117,7 @@ onUnmounted(() => {
                                 </div>
                             </div>
                         </div>
-
                         <BarraCalendario />
-
                     </div>
 
                     <div class="right w-[65%] px-3 flex flex-col ">
@@ -220,14 +195,11 @@ onUnmounted(() => {
                             </div>
                         </div>
 
-                        <CardHistorial/>
-                        <DetallesPlan/>
-
+                        <CardHistorial />
+                        <DetallesPlan />
                     </div>
                 </div>
             </main>
-
-
         </div>
     </div>
 </template>

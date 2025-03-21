@@ -1,8 +1,12 @@
-<script setup>
+<script>
 import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
+import logo from '@images/logoTC.svg';
+</script>
 
+<script setup>
+// Traer datos del usuario logeuado
 const props = defineProps({
   auth: Object,
 });
@@ -16,10 +20,6 @@ const rol = props.auth.user.rol?.tipo_rol || 'Sin rol'; // Obtén el tipo de rol
 const currentRoute = computed(() => new URL(page.url, window.location.origin).pathname);
 const dashboardRoute = computed(() => new URL(route('aplicacion.dashboard', { aplicacion, rol }), window.location.origin).pathname);
 const multisucursalRoute = computed(() => new URL(route('aplicacion.multisucursales', { aplicacion, rol }), window.location.origin).pathname);
-
-import logo from '@images/logoTC.svg';
-
-
 </script>
 
 
@@ -34,28 +34,34 @@ import logo from '@images/logoTC.svg';
 
       <!-- Botón para Dashboard -->
       <div :class="currentRoute === dashboardRoute ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('aplicacion.dashboard', { aplicacion, rol })" class="bg-transparent flex items-center justify-center">
+        <a :href="route('aplicacion.dashboard', { aplicacion, rol })"
+          class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> space_dashboard </span>
         </a>
       </div>
 
       <!-- Botón para Multisucursales -->
-      <div  :class="currentRoute === multisucursalRoute ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('aplicacion.multisucursales', { aplicacion, rol })" class="bg-transparent flex items-center justify-center">
+      <div :class="currentRoute === multisucursalRoute ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.multisucursales', { aplicacion, rol })"
+          class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> swap_horiz </span>
         </a>
       </div>
 
-      <!-- Botón para Swap -->
-      <div  :class="currentRoute === route('aplicacion.dashboard', { aplicacion, rol }) ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('aplicacion.multisucursales', { aplicacion, rol })" class="bg-transparent flex items-center justify-center">
+      <!-- Botón para Overviews -->
+      <div
+        :class="currentRoute === route('aplicacion.overviews', { aplicacion, rol }) ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.overviews', { aplicacion, rol })"
+          class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> savings </span>
         </a>
       </div>
 
       <!-- Botón para Gastos -->
-      <div :class="currentRoute === route('aplicacion.gastos', { aplicacion, rol }) ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('aplicacion.gastos', { aplicacion, rol })" class="bg-transparent flex items-center justify-center">
+      <div
+        :class="currentRoute === route('aplicacion.gastos', { aplicacion, rol }) ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.gastos', { aplicacion, rol })"
+          class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> monitoring </span>
         </a>
       </div>
@@ -82,15 +88,19 @@ import logo from '@images/logoTC.svg';
       </div> -->
 
       <!-- Botón para Etiquetado -->
-      <div :class="currentRoute === route('aplicacion.etiquetado', { aplicacion, rol }) ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('aplicacion.etiquetado', { aplicacion, rol })" class="bg-transparent flex items-center justify-center">
+      <div
+        :class="currentRoute === route('aplicacion.etiquetado', { aplicacion, rol }) ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.etiquetado', { aplicacion, rol })"
+          class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> barcode_scanner </span>
         </a>
       </div>
 
       <!-- Botón para Generador de QR -->
-      <div :class="currentRoute === route('aplicacion.generadorQrs', { aplicacion, rol }) ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('aplicacion.generadorQrs', { aplicacion, rol })" class="bg-transparent flex items-center justify-center">
+      <div
+        :class="currentRoute === route('aplicacion.generadorQrs', { aplicacion, rol }) ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.generadorQrs', { aplicacion, rol })"
+          class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> qr_code_2 </span>
         </a>
       </div>
@@ -109,8 +119,8 @@ import logo from '@images/logoTC.svg';
         </a>
       </div> -->
 
-      
-      
+
+
     </aside>
   </div>
 </template>
