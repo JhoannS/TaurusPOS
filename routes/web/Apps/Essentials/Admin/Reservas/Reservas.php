@@ -8,7 +8,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('{aplicacion}/{rol}')->group(function () {
 
         // Ruta para multisucursales
-        Route::get('/codigoBarras', function ($aplicacion, $rol) {
+        Route::get('/reservas', function ($aplicacion, $rol) {
             $user = auth()->user();
         
             if (!Gate::allows('access-role', 1)) {
@@ -16,7 +16,7 @@ Route::middleware('auth')->group(function () {
             }
         
             if ($user->tienda && $user->tienda->aplicacion->nombre_app === $aplicacion) {
-                return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/CodigoBarras/CodigoBarras', [
+                return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Reservas/Reservas', [
                     'auth' => [
                     'user' => $user,
             ]
@@ -24,7 +24,7 @@ Route::middleware('auth')->group(function () {
             }
         
             abort(404);
-        })->name('aplicacion.codigoBarras');
+        })->name('aplicacion.reservas');
 
     });
 });

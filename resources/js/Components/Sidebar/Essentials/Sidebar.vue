@@ -20,8 +20,16 @@ const rol = props.auth.user.rol?.tipo_rol || 'Sin rol'; // Obtén el tipo de rol
 const currentRoute = computed(() => new URL(page.url, window.location.origin).pathname);
 const dashboardRoute = computed(() => new URL(route('aplicacion.dashboard', { aplicacion, rol }), window.location.origin).pathname);
 const multisucursalRoute = computed(() => new URL(route('aplicacion.multisucursales', { aplicacion, rol }), window.location.origin).pathname);
+const overviewRoute = computed(() => new URL(route('aplicacion.overviews', { aplicacion, rol }), window.location.origin).pathname);
+const gastosRoute = computed(() => new URL(route('aplicacion.gastos', { aplicacion, rol }), window.location.origin).pathname);
+const usuariosRoute = computed(() => new URL(route('aplicacion.usuarios', { aplicacion, rol }), window.location.origin).pathname);
+const reservasRoute = computed(() => new URL(route('aplicacion.reservas', { aplicacion, rol }), window.location.origin).pathname);
+const inventarioRoute = computed(() => new URL(route('aplicacion.inventarios', { aplicacion, rol }), window.location.origin).pathname);
+const codigoBarrasRoute = computed(() => new URL(route('aplicacion.codigoBarras', { aplicacion, rol }), window.location.origin).pathname);
+const generadorQrsRoute = computed(() => new URL(route('aplicacion.generadorQrs', { aplicacion, rol }), window.location.origin).pathname);
+const ordenTrabajoRoute = computed(() => new URL(route('aplicacion.ordenTrabajos', { aplicacion, rol }), window.location.origin).pathname);
+const resenasRoute = computed(() => new URL(route('aplicacion.resenas', { aplicacion, rol }), window.location.origin).pathname);
 </script>
-
 
 
 <template>
@@ -49,8 +57,7 @@ const multisucursalRoute = computed(() => new URL(route('aplicacion.multisucursa
       </div>
 
       <!-- Botón para Overviews -->
-      <div
-        :class="currentRoute === route('aplicacion.overviews', { aplicacion, rol }) ? 'btn-link-essentials' : 'btn-link-disable'">
+      <div :class="currentRoute === overviewRoute ? 'btn-link-essentials' : 'btn-link-disable'">
         <a :href="route('aplicacion.overviews', { aplicacion, rol })"
           class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> savings </span>
@@ -58,73 +65,68 @@ const multisucursalRoute = computed(() => new URL(route('aplicacion.multisucursa
       </div>
 
       <!-- Botón para Gastos -->
-      <div
-        :class="currentRoute === route('aplicacion.gastos', { aplicacion, rol }) ? 'btn-link-essentials' : 'btn-link-disable'">
+      <div :class="currentRoute === gastosRoute ? 'btn-link-essentials' : 'btn-link-disable'">
         <a :href="route('aplicacion.gastos', { aplicacion, rol })"
           class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> monitoring </span>
         </a>
       </div>
 
-      <!-- Botón para Identidad
-      <div :class="currentRoute === 'swap' ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('swap')" class="bg-transparent flex items-center justify-center">
+      <!-- Botón para usuarios -->
+      <div :class="currentRoute === usuariosRoute ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.usuarios', { aplicacion, rol })"
+          class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> identity_platform </span>
         </a>
       </div>
 
-       Botón para Calendar 
-      <div :class="currentRoute === 'swap' ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('swap')" class="bg-transparent flex items-center justify-center">
+      <!-- Botón para reservas -->
+      <div :class="currentRoute === reservasRoute ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.reservas', { aplicacion, rol })"
+          class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> calendar_clock </span>
         </a>
       </div>
 
-       Botón para Checklist 
-      <div :class="currentRoute === 'swap' ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('swap')" class="bg-transparent flex items-center justify-center">
+      <!-- Botón para inventario -->
+      <div :class="currentRoute === inventarioRoute ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.inventarios', { aplicacion, rol })"
+          class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> checklist </span>
         </a>
-      </div> -->
+      </div>
 
       <!-- Botón para Etiquetado -->
-      <div
-        :class="currentRoute === route('aplicacion.etiquetado', { aplicacion, rol }) ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('aplicacion.etiquetado', { aplicacion, rol })"
+      <div :class="currentRoute === codigoBarrasRoute ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.codigoBarras', { aplicacion, rol })"
           class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> barcode_scanner </span>
         </a>
       </div>
 
       <!-- Botón para Generador de QR -->
-      <div
-        :class="currentRoute === route('aplicacion.generadorQrs', { aplicacion, rol }) ? 'btn-link-essentials' : 'btn-link-disable'">
+      <div :class="currentRoute === generadorQrsRoute ? 'btn-link-essentials' : 'btn-link-disable'">
         <a :href="route('aplicacion.generadorQrs', { aplicacion, rol })"
           class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> qr_code_2 </span>
         </a>
       </div>
 
-      <!-- Botón para Donut 
-      <div :class="currentRoute === 'swap' ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('swap')" class="bg-transparent flex items-center justify-center">
+      <!-- Botón para orden trabajo -->
+      <div :class="currentRoute === ordenTrabajoRoute ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.ordenTrabajos', { aplicacion, rol })"
+          class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> donut_small </span>
         </a>
       </div>
 
-       Botón para Diversidad 
-      <div :class="currentRoute === 'swap' ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('swap')" class="bg-transparent flex items-center justify-center">
+      <!-- Botón para resenas -->
+      <div :class="currentRoute === resenasRoute ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.resenas', { aplicacion, rol })"
+          class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> diversity_1 </span>
         </a>
-      </div> -->
-
-
-
+      </div>
     </aside>
   </div>
 </template>
-
-<style scoped>
-/* Aquí puedes agregar estilos adicionales */
-</style>
