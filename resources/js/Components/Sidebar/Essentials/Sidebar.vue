@@ -1,20 +1,28 @@
 <script setup>
 import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3';
-import { route } from 'ziggy-js'; // Asegúrate de importar Ziggy correctamente
+import { route } from 'ziggy-js';
 
-const page = usePage(); // Accede a la información de la página actual
-const currentRoute = computed(() => page.url); // Obtén la URL actual
+const props = defineProps({
+  auth: Object,
+});
+
+const page = usePage();
+
+const aplicacion = props.auth?.user?.tienda?.aplicacion?.nombre_app || 'Sin app';
+const rol = props.auth.user.rol?.tipo_rol || 'Sin rol'; // Obtén el tipo de rol
+
+// Normaliza las rutas para que la comparación funcione
+const currentRoute = computed(() => new URL(page.url, window.location.origin).pathname);
+const dashboardRoute = computed(() => new URL(route('aplicacion.dashboard', { aplicacion, rol }), window.location.origin).pathname);
+const multisucursalRoute = computed(() => new URL(route('aplicacion.multisucursales', { aplicacion, rol }), window.location.origin).pathname);
 
 import logo from '@images/logoTC.svg';
+import { router } from '@inertiajs/vue3';
 
-import { router } from '@inertiajs/vue3'
-
-// Método de logout
 const logout = () => {
-  // Realiza la petición POST al endpoint de logout usando la ruta 'logout'
-  router.post(route('logout'))
-}
+  router.post(route('logout'));
+};
 </script>
 
 
@@ -28,81 +36,81 @@ const logout = () => {
       </div>
 
       <!-- Botón para Dashboard -->
-      <div :class="currentRoute === 'essentials.admin.dashboard' ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('essentials.admin.dashboard')" class="bg-transparent flex items-center justify-center">
+      <div :class="currentRoute === dashboardRoute ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.dashboard', { aplicacion, rol })" class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> space_dashboard </span>
         </a>
       </div>
 
       <!-- Botón para Multisucursales -->
-      <div :class="currentRoute === 'essentials.admin.multisucursales' || currentRoute === 'essentials.admin.infoSucursal' || currentRoute === 'essentials.admin.crearItem' ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('essentials.admin.multisucursales')" class="bg-transparent flex items-center justify-center">
+      <div  :class="currentRoute === multisucursalRoute ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.multisucursales', { aplicacion, rol })" class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> swap_horiz </span>
         </a>
       </div>
 
       <!-- Botón para Swap -->
-      <div :class="currentRoute === 'swap' ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('swap')" class="bg-transparent flex items-center justify-center">
+      <div  :class="currentRoute === route('aplicacion.dashboard', { aplicacion, rol }) ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.multisucursales', { aplicacion, rol })" class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> savings </span>
         </a>
       </div>
 
       <!-- Botón para Gastos -->
-      <div :class="currentRoute === 'essentials.admin.gastos' ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('essentials.admin.gastos')" class="bg-transparent flex items-center justify-center">
+      <div :class="currentRoute === route('aplicacion.gastos', { aplicacion, rol }) ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.gastos', { aplicacion, rol })" class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> monitoring </span>
         </a>
       </div>
 
-      <!-- Botón para Identidad -->
+      <!-- Botón para Identidad
       <div :class="currentRoute === 'swap' ? 'btn-link-essentials' : 'btn-link-disable'">
         <a :href="route('swap')" class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> identity_platform </span>
         </a>
       </div>
 
-      <!-- Botón para Calendar -->
+       Botón para Calendar 
       <div :class="currentRoute === 'swap' ? 'btn-link-essentials' : 'btn-link-disable'">
         <a :href="route('swap')" class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> calendar_clock </span>
         </a>
       </div>
 
-      <!-- Botón para Checklist -->
+       Botón para Checklist 
       <div :class="currentRoute === 'swap' ? 'btn-link-essentials' : 'btn-link-disable'">
         <a :href="route('swap')" class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> checklist </span>
         </a>
-      </div>
+      </div> -->
 
       <!-- Botón para Etiquetado -->
-      <div :class="currentRoute === 'essentials.admin.etiquetado' ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('essentials.admin.etiquetado')" class="bg-transparent flex items-center justify-center">
+      <div :class="currentRoute === route('aplicacion.etiquetado', { aplicacion, rol }) ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.etiquetado', { aplicacion, rol })" class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> barcode_scanner </span>
         </a>
       </div>
 
       <!-- Botón para Generador de QR -->
-      <div :class="currentRoute === 'essentials.admin.generadorQrs' ? 'btn-link-essentials' : 'btn-link-disable'">
-        <a :href="route('essentials.admin.generadorQrs')" class="bg-transparent flex items-center justify-center">
+      <div :class="currentRoute === route('aplicacion.generadorQrs', { aplicacion, rol }) ? 'btn-link-essentials' : 'btn-link-disable'">
+        <a :href="route('aplicacion.generadorQrs', { aplicacion, rol })" class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> qr_code_2 </span>
         </a>
       </div>
 
-      <!-- Botón para Donut -->
+      <!-- Botón para Donut 
       <div :class="currentRoute === 'swap' ? 'btn-link-essentials' : 'btn-link-disable'">
         <a :href="route('swap')" class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> donut_small </span>
         </a>
       </div>
 
-      <!-- Botón para Diversidad -->
+       Botón para Diversidad 
       <div :class="currentRoute === 'swap' ? 'btn-link-essentials' : 'btn-link-disable'">
         <a :href="route('swap')" class="bg-transparent flex items-center justify-center">
           <span class="material-symbols-rounded"> diversity_1 </span>
         </a>
-      </div>
+      </div> -->
 
       
       <!-- Botón para Diversidad -->

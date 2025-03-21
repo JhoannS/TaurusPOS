@@ -13,23 +13,18 @@ export default {
     Head,
   },
 }
-import { defineProps } from 'vue';
+import { defineProps, ref, onMounted, onUnmounted} from 'vue';
 
-defineProps({
-  barsData: {
-    type: Array,
-    required: true
-  }
-});
 
 </script>
 
 <script setup>
 // Asegúrate de tener 'auth' en las props del componente
 defineProps({
-  auth: Object
+  auth: Object,
+
 })
-import { ref, onMounted, onUnmounted } from 'vue';
+
 
 //
 // Reloj en tiempo real

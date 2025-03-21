@@ -28,86 +28,86 @@ return new class extends Migration
         DB::table('aplicaciones_web')->insert([
             [
                 'id_plan_aplicacion' => '1',
-                'nombre_app' => 'Machine App'
+                'nombre_app' => 'Machine'
             ],
             [
                 'id_plan_aplicacion' => '1',
-                'nombre_app' => 'Gurú App'
+                'nombre_app' => 'Guru'
             ],
             [
                 'id_plan_aplicacion' => '1',
-                'nombre_app' => 'Smart App'
+                'nombre_app' => 'Smart'
             ],
             [
                 'id_plan_aplicacion' => '1',
-                'nombre_app' => 'Essentials App'
+                'nombre_app' => 'Essentials'
             ],
             [
                 'id_plan_aplicacion' => '1',
-                'nombre_app' => 'Shopper App'
+                'nombre_app' => 'Shopper'
             ],
 
             [
                 'id_plan_aplicacion' => '2',
-                'nombre_app' => 'Machine App'
+                'nombre_app' => 'Machine'
             ],
             [
                 'id_plan_aplicacion' => '2',
-                'nombre_app' => 'Gurú App'
+                'nombre_app' => 'Guru'
             ],
             [
                 'id_plan_aplicacion' => '2',
-                'nombre_app' => 'Smart App'
+                'nombre_app' => 'Smart'
             ],
             [
                 'id_plan_aplicacion' => '2',
-                'nombre_app' => 'Essentials App'
+                'nombre_app' => 'Essentials'
             ],
             [
                 'id_plan_aplicacion' => '2',
-                'nombre_app' => 'Shopper App'
+                'nombre_app' => 'Shopper'
             ],
 
             [
                 'id_plan_aplicacion' => '3',
-                'nombre_app' => 'Machine App'
+                'nombre_app' => 'Machine'
             ],
             [
                 'id_plan_aplicacion' => '3',
-                'nombre_app' => 'Gurú App'
+                'nombre_app' => 'Guru'
             ],
             [
                 'id_plan_aplicacion' => '3',
-                'nombre_app' => 'Smart App'
+                'nombre_app' => 'Smart'
             ],
             [
                 'id_plan_aplicacion' => '3',
-                'nombre_app' => 'Essentials App'
+                'nombre_app' => 'Essentials'
             ],
             [
                 'id_plan_aplicacion' => '3',
-                'nombre_app' => 'Shopper App'
+                'nombre_app' => 'Shopper'
             ],
 
             [
                 'id_plan_aplicacion' => '4',
-                'nombre_app' => 'Machine App'
+                'nombre_app' => 'Machine'
             ],
             [
                 'id_plan_aplicacion' => '4',
-                'nombre_app' => 'Gurú App'
+                'nombre_app' => 'Guru'
             ],
             [
                 'id_plan_aplicacion' => '4',
-                'nombre_app' => 'Smart App'
+                'nombre_app' => 'Smart'
             ],
             [
                 'id_plan_aplicacion' => '4',
-                'nombre_app' => 'Essentials App'
+                'nombre_app' => 'Essentials'
             ],
             [
                 'id_plan_aplicacion' => '4',
-                'nombre_app' => 'Shopper App'
+                'nombre_app' => 'Shopper'
             ],
             [
                 'id_plan_aplicacion' => '4',

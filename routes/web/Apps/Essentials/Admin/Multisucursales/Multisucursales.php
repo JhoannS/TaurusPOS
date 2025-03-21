@@ -3,14 +3,29 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('essentials/admin')->group(function () {
-    // Ruta principal
-    Route::get('/multisucursales', function () {
-        return Inertia::render('Apps/Essentials/Admin/Multisucursales/Multisucursales');
-    })->name('essentials.admin.multisucursales');
 
-    // Subruta relacionada con multisucursales
-    Route::get('/infoSucursal', function () {
-        return Inertia::render('Apps/Essentials/Admin/Multisucursales/InfoSucursales');
-    })->name('essentials.admin.infoSucursal');
+Route::middleware('auth')->group(function () {
+    Route::prefix('{aplicacion}/{rol}')->group(function () {
+
+        // Ruta para multisucursales
+        Route::get('/multisucursales', function ($aplicacion, $rol) {
+            $user = auth()->user();
+        
+            if (!Gate::allows('access-role', 1)) {
+                abort(403, 'No tienes permisos para acceder a esta sección.');
+            }
+        
+            if ($user->tienda && $user->tienda->aplicacion->nombre_app === $aplicacion) {
+                return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Multisucursales/Multisucursales', [
+                    'auth' => [
+                    'user' => $user,
+            ]
+                ]);
+            }
+        
+            abort(404);
+        })->name('aplicacion.multisucursales');
+
+    });
 });
+

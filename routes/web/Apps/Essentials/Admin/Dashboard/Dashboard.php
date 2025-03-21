@@ -4,19 +4,30 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 
 
-Route::prefix('essentials/admin')->middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        if (!Gate::allows('access-role', 1)) {
-            abort(403, 'No tienes permisos para acceder a esta sección.');
-        }
+Route::middleware('auth')->group(function () {
+    Route::prefix('{aplicacion}/{rol}')->group(function () {
+        
+        // Ruta para el dashboard
+        Route::get('/dashboard', function ($aplicacion, $rol) {
+            $user = auth()->user();
 
-        $user = auth()->user();
+            if (!Gate::allows('access-role', 1)) {
+                abort(403, 'No tienes permisos para acceder a esta sección.');
+            }
 
-        // Si el ID de la aplicación es 19, renderiza Essentials
-        if ($user->tienda && $user->tienda->id_aplicacion_web == 19) {
-            return Inertia::render('Apps/Essentials/Administrador/Dashboard/Dashboard');
-        }
+            if ($user->tienda && $user->tienda->aplicacion->nombre_app === $aplicacion) {
+                return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Dashboard/Dashboard', [
+                    'auth' => [
+                    'user' => $user,
+            ]
+                ]);
+            }
 
-        abort(404);
-    })->name('essentials.admin.dashboard'); // Asegúrate de que el nombre de la ruta sea 'admin.dashboard'
+            abort(404);
+        })->name('aplicacion.dashboard');
+
+    });
 });
+
+
+

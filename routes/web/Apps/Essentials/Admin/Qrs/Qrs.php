@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 
 // ✅ Ruta para configuraciones
-Route::get('/gastos', function ($aplicacion, $rol) {
+Route::get('/generadorQrs', function ($aplicacion, $rol) {
     $user = auth()->user();
 
     if (!Gate::allows('access-role', 1)) {
@@ -13,8 +13,8 @@ Route::get('/gastos', function ($aplicacion, $rol) {
     }
 
     if ($user->tienda && $user->tienda->aplicacion->nombre_app === $aplicacion) {
-        return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Gastos/Gastos');
+        return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . 'Qrs/GeneradorQrs');
     }
 
     abort(404);
-})->name('aplicacion.gastos');
+})->name('aplicacion.generadorQrs');
