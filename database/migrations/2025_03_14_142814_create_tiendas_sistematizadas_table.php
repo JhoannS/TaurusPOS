@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('id_estado')->default(1);
             $table->unsignedBigInteger('id_token')->nullable();
             $table->unsignedBigInteger('id_aplicacion_web');
-            $table->binary('logo_tienda');
             $table->string('nombre_tienda');
             $table->string('email_tienda')->unique();
             $table->string('telefono_ct')->unique();

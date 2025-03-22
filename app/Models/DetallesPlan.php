@@ -26,7 +26,11 @@ class DetallesPlan extends Model
         'manejo_codigos_qr',
         'manejo_orden_trabajo',
         'manejo_encuestas',
-        'fecha_creacion',
-        'fecha_modificacion',
     ];
+
+    // ✅ Relación inversa con el plan de aplicación
+    public function plan()
+    {
+        return $this->belongsTo(PlanAplicacion::class, 'id_plan_aplicacion');
+    }
 }
