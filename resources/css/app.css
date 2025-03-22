@@ -130,7 +130,7 @@ body {
 
 
 .btn-taurus {
-  box-shadow: 0px 8px 28px var(--naranja);
+  box-shadow: 0px 8px 28px #FE4F2D;
   background: var(--naranja);
   border-radius: 8px;
   padding: 5px 15px;

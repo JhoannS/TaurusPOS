@@ -57,6 +57,12 @@ module.exports = {
                   complement: '#EFD3D7'
                 },
             },
+            boxShadow: {
+              'universal-naranja': '0px 8px 28px #FE4F2D;',
+              'essentials': '0 8px 28px rgba(79, 70, 229, 0.5)',
+              'machine': '0 4px 6px rgba(22, 163, 74, 0.5)',
+              'shopper': '0 4px 6px rgba(239, 68, 68, 0.5)'
+            }
         },
     },
     plugins: [],
