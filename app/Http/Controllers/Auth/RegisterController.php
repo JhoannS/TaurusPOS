@@ -60,7 +60,6 @@ class RegisterController extends Controller
         'telefono_ct' => $cliente->telefono_ct,
         'direccion_ct' => 'Dirección por defecto',
         'barrio_ct' => 'Barrio por defecto',
-        'logo_tienda' => '',
     ]);
 
     $cliente->update(['id_tienda' => $tienda->id]);

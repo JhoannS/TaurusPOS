@@ -4,25 +4,28 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Gate;
 
-Route::prefix('TaurusCO/superAdmin')->middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        if (!Gate::allows('access-role', 4)) {
-            abort(403, 'No tienes permisos para acceder a esta sección.');
-        }
 
-        $user = auth()->user()->load([
-            'rol',
-            'tienda',
-            'tienda.estado',
-            'estado',
-            'tipoDocumento'
-        ]);
+Route::middleware('auth')->group(function () {
+    Route::prefix('{aplicacion}/{rol}')->group(function () {
+        
+        // Ruta para el dashboard
+        Route::get('/dashboard', function ($aplicacion, $rol) {
+            $user = auth()->user();
 
-        return Inertia::render('Apps/TaurusCO/SuperAdmin/Dashboard/Dashboard', [
-            'auth' => [
-                'user' => $user
+            if (!Gate::allows('access-role', 4)) {
+                abort(403, 'No tienes permisos para acceder a esta sección.');
+            }
+
+            if ($user->tienda && $user->tienda->aplicacion->nombre_app === $aplicacion) {
+                return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Dashboard/Dashboard', [
+                    'auth' => [
+                    'user' => $user,
             ]
-        ]);
+                ]);
+            }
 
-    })->name('superAdmin.dashboard');
+            abort(404);
+        })->name('aplicacion.dashboard');
+
+    });
 });
