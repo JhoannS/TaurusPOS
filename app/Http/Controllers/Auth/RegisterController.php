@@ -48,10 +48,11 @@ class RegisterController extends Controller
         'email_ct' => $request->email_ct,
         'telefono_ct' => $request->telefono_ct,
         'contrasenia_ct' => Hash::make($request->contrasenia_ct),
-        'id_estado' => 1,
-        'id_rol' => 1,
+        'id_estado' => 1, // Estado inicial para cliente
+        'id_rol' => 1, // Rol inicial para cliente
     ]);
-
+    
+    // ✅ Crear tienda vinculada al cliente
     $tienda = TiendaSistematizada::create([
         'id_estado' => 1,
         'id_aplicacion_web' => 1,
@@ -61,17 +62,24 @@ class RegisterController extends Controller
         'direccion_ct' => 'Dirección por defecto',
         'barrio_ct' => 'Barrio por defecto',
     ]);
-
+    
+    // ✅ Asignar la tienda creada al cliente
     $cliente->update(['id_tienda' => $tienda->id]);
-
-    TokenAcceso::create([
+    
+    // ✅ Crear token automáticamente y asignarle el estado 2
+    $token = TokenAcceso::create([
         'id_cliente_ct' => $cliente->id,
-        'id_estado' => 1,
-        'token_activacion' => Str::uuid(),
+        'id_estado' => 2, // Estado = 2 ✅
+        'token_activacion' => Str::uuid(), // Token único generado automáticamente
         'id_tienda_sistematizada' => $tienda->id,
     ]);
-
+    
+    // ✅ Actualizar el id_token en la tienda para que quede vinculado
+    $tienda->update(['id_token' => $token->id]);
+    
+    // ✅ Redirigir al login
     return redirect()->route('login.auth');
+    
 }
 
 }

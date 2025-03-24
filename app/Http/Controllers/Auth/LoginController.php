@@ -48,18 +48,18 @@ class LoginController extends Controller
 
     Auth::login($cliente);
 
-    // ✅ Validación de token
-    if (
-        !$cliente->tienda ||
-        !$cliente->tienda->token ||
-        !$cliente->tienda->token->token_activacion
-    ) {
-        Auth::logout();
-        return back()->withErrors([
-            'numero_documento_ct' => 'Token no válido o inactivo, contactanos.',
-        ]);
-    }
-
+   // ✅ Validación de token
+if (
+    !$cliente->tienda || // Si no tiene tienda
+    !$cliente->tienda->token || // Si no tiene token
+    !$cliente->tienda->token->token_activacion || // Si el token está vacío
+    $cliente->tienda->token->id_estado === 2 // Si el estado del token NO es 2
+) {
+    Auth::logout();
+    return back()->withErrors([
+        'numero_documento_ct' => 'Token no válido o inactivo, contáctanos.',
+    ]);
+}
     // ✅ Obtener nombre de la aplicación y rol
     $nombreAplicacion = $cliente->tienda->aplicacion->nombre_app ?? null;
     $rol = $cliente->rol->tipo_rol ?? null;

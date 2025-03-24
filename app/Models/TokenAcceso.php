@@ -13,12 +13,18 @@ class TokenAcceso extends Model
 
     protected $fillable = [
         'token_activacion',
+        'id_estado',
+        'id_tienda_sistematizada'
     ];
 
-    public function tienda()
-{
-    return $this->belongsTo(TiendaSistematizada::class, 'id_tienda_sistematizada');
-}
+    public function estado()
+    {
+        return $this->belongsTo(Estados::class, 'id_estado');
+    }
 
+     // Relación con TiendaSistematizada (cada token pertenece a una tienda)
+     public function tienda()
+     {
+         return $this->belongsTo(TiendaSistematizada::class, 'id_tienda_sistematizada');
+     }
 }
-

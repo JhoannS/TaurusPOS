@@ -58,6 +58,8 @@ const submit = () => {
             <p class="text-[20px]">Hoy es un excelente día para vender, inicia sesión y sácale el jugo a tu App.</p>
           </div>
 
+        
+
           <!-- ✅ FORMULARIO DE LOGIN -->
           <form @submit.prevent="submit" class="mt-5 flex flex-col gap-5">
             <!-- ✅ Campo Usuario -->

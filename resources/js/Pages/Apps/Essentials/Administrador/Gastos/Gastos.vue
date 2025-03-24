@@ -166,8 +166,8 @@ const validarNumero = (event, field) => {
 
 
 
-                   <!-- Botón para abrir el modal -->
-                   <button @click="showModal = true" class="btn-essentials">
+                    <!-- Botón para abrir el modal -->
+                    <button @click="showModal = true" class="btn-essentials">
                         Crear nueva sucursal
                         <span class="material-symbols-rounded"> outbound </span>
                     </button>
@@ -177,46 +177,46 @@ const validarNumero = (event, field) => {
                 </div>
 
                 <div class="tarjetas-overviews my-7 flex w-full gap-2 justify-between">
-            <div class="border border-secundary-light rounded-lg w-full p-2 flex justify-between items-center">
-                <div class="metodoPago-monto">
-                    <p class="text-[14px]">Imprevistos</p>
-                    <p class="font-bold text-[25px]">$ 0,00</p>
+                    <div class="border border-secundary-light rounded-lg w-full p-2 flex justify-between items-center">
+                        <div class="metodoPago-monto">
+                            <p class="text-[14px]">Imprevistos</p>
+                            <p class="font-bold text-[25px]">$ 0,00</p>
+                        </div>
+                        <div
+                            class="contador bg-essentials-primary p-2 rounded-md flex justify-center items-center w-auto h-6 font-bold">
+                            1% <span class="material-symbols-rounded"> arrow_drop_up </span>
+                        </div>
+                    </div>
+                    <div class="border border-secundary-light rounded-lg w-full p-2 flex justify-between items-center">
+                        <div class="metodoPago-monto">
+                            <p class="text-[14px]">Variables</p>
+                            <p class="font-bold text-[25px]">$ 0,00</p>
+                        </div>
+                        <div
+                            class="contador bg-essentials-primary p-2 rounded-md flex justify-center items-center w-auto h-6 font-bold">
+                            1% <span class="material-symbols-rounded"> arrow_drop_up </span>
+                        </div>
+                    </div>
+                    <div class="border border-secundary-light rounded-lg w-full p-2 flex justify-between items-center">
+                        <div class="metodoPago-monto">
+                            <p class="text-[14px]">Fijos</p>
+                            <p class="font-bold text-[25px]">$ 0,00</p>
+                        </div>
+                        <div
+                            class="contador bg-essentials-primary p-2 rounded-md flex justify-center items-center w-auto h-6 font-bold">
+                            1% <span class="material-symbols-rounded"> arrow_drop_up </span>
+                        </div>
+                    </div>
+                    <div class="border border-secundary-light rounded-lg w-full p-2 flex justify-between items-center">
+                        <div class="metodoPago-monto">
+                            <p class="text-[14px]">Balance</p>
+                            <p class="font-bold text-[25px]">Estable</p>
+                        </div>
+                        <div
+                            class="contador bg-semaforo-verde shadow-verde p-2 rounded-md flex justify-center items-center w-10 h-5 font-bold">
+                        </div>
+                    </div>
                 </div>
-                <div
-                    class="contador bg-essentials-primary p-2 rounded-md flex justify-center items-center w-auto h-6 font-bold">
-                    1% <span class="material-symbols-rounded"> arrow_drop_up </span>
-                </div>
-            </div>
-            <div class="border border-secundary-light rounded-lg w-full p-2 flex justify-between items-center">
-                <div class="metodoPago-monto">
-                    <p class="text-[14px]">Variables</p>
-                    <p class="font-bold text-[25px]">$ 0,00</p>
-                </div>
-                <div
-                    class="contador bg-essentials-primary p-2 rounded-md flex justify-center items-center w-auto h-6 font-bold">
-                    1% <span class="material-symbols-rounded"> arrow_drop_up </span>
-                </div>
-            </div>
-            <div class="border border-secundary-light rounded-lg w-full p-2 flex justify-between items-center">
-                <div class="metodoPago-monto">
-                    <p class="text-[14px]">Fijos</p>
-                    <p class="font-bold text-[25px]">$ 0,00</p>
-                </div>
-                <div
-                    class="contador bg-essentials-primary p-2 rounded-md flex justify-center items-center w-auto h-6 font-bold">
-                    1% <span class="material-symbols-rounded"> arrow_drop_up </span>
-                </div>
-            </div>
-            <div class="border border-secundary-light rounded-lg w-full p-2 flex justify-between items-center">
-                <div class="metodoPago-monto">
-                    <p class="text-[14px]">Balance</p>
-                    <p class="font-bold text-[25px]">Estable</p>
-                </div>
-                <div
-                    class="contador bg-semaforo-verde shadow-verde p-2 rounded-md flex justify-center items-center w-10 h-5 font-bold">
-                </div>
-            </div>
-        </div>
 
                 <ExportarExcel idTabla="tabla" nombreArchivo="Movimientos_Almacenados"
                     titulo="Movimientos almacenados" />
@@ -224,64 +224,65 @@ const validarNumero = (event, field) => {
                 <Gastos :searchQuery="searchQuery" />
             </main>
 
-            <Modal :isOpen="showModal" titulo="Crear nuevo gasto" descripcion="EnEn este apartado podrás crear gastos de diferentes categorías, recuerda llenar los datos a conciencia para tener un registro exitoso." confirmText="Confirmar creación" @close="showModal = false"
-                    @confirm="createBranch">
-                     <!-- contenido del modal -->
-            <div class="mt-[20px] flex justify-between gap-3 w-full">
-                <div class="w-[50%]">
-                    <p class="my-[5px] text-[14px]">Tipo de gasto:</p>
-                    <div class="custom-select">
-                        <select>
-                            <option>Selecciona una categoría</option>
-                            <option>Imprevisto</option>
-                            <option>Variable</option>
-                            <option>Fijo</option>
-                        </select>
-                        <div class="select-arrow text-blanco"></div>
+            <Modal :isOpen="showModal" titulo="Crear nuevo gasto"
+                descripcion="EnEn este apartado podrás crear gastos de diferentes categorías, recuerda llenar los datos a conciencia para tener un registro exitoso."
+                confirmText="Confirmar creación" @close="showModal = false" @confirm="createBranch">
+                <!-- contenido del modal -->
+                <div class="mt-[20px] flex justify-between gap-3 w-full">
+                    <div class="w-[50%]">
+                        <p class="my-[5px] text-[14px]">Tipo de gasto:</p>
+                        <div class="custom-select">
+                            <select>
+                                <option>Selecciona una categoría</option>
+                                <option>Imprevisto</option>
+                                <option>Variable</option>
+                                <option>Fijo</option>
+                            </select>
+                            <div class="select-arrow text-blanco"></div>
+                        </div>
+                    </div>
+
+                    <div class="w-[50%]">
+                        <p class="my-[5px] text-[14px]">Monto total del gasto:</p>
+                        <div
+                            class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]">
+                            <span
+                                class="material-symbols-rounded text-essentials-primary text-[20px] pl-[5px]">payments</span>
+
+                            <input type="text" min="0" max="999999999999999" :value="form.monto"
+                                @input="validarNumero($event, 'monto')"
+                                class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro"
+                                placeholder="Digita el monto en números." name="montoGasto" />
+                        </div>
                     </div>
                 </div>
 
-                <div class="w-[50%]">
-                    <p class="my-[5px] text-[14px]">Monto total del gasto:</p>
+                <div class=" mt-[10px] w-[100%]">
+                    <p class="my-[5px] text-[14px]">Titulo de gasto:</p>
                     <div
                         class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]">
                         <span
-                            class="material-symbols-rounded text-essentials-primary text-[20px] pl-[5px]">payments</span>
+                            class="material-symbols-rounded text-essentials-primary text-[20px] pl-[5px]">format_italic</span>
 
-                        <input type="text" min="0" max="999999999999999"
-                        :value="form.monto" @input="validarNumero($event, 'monto')"
+                        <input type="text" id="monto"
                             class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro"
-                            placeholder="Digita el monto en números." name="montoGasto" />
+                            placeholder="Ponle un titulo para el gasto." name="tituloGasto" />
                     </div>
                 </div>
-            </div>
+                <div class=" mt-[10px] w-[100%]">
+                    <p class="my-[5px] text-[14px]">Descripción del gasto:</p>
+                    <div
+                        class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]">
+                        <span
+                            class="material-symbols-rounded text-essentials-primary text-[20px] pl-[5px]">format_italic</span>
 
-            <div class=" mt-[10px] w-[100%]">
-                <p class="my-[5px] text-[14px]">Titulo de gasto:</p>
-                <div
-                    class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]">
-                    <span
-                        class="material-symbols-rounded text-essentials-primary text-[20px] pl-[5px]">format_italic</span>
-
-                    <input type="text" id="monto"
-                        class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro"
-                        placeholder="Ponle un titulo para el gasto." name="tituloGasto" />
+                        <input type="text" id="monto"
+                            class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro "
+                            placeholder="Describe brevemente este gasto." name="descripcionGasto" />
+                    </div>
                 </div>
-            </div>
-            <div class=" mt-[10px] w-[100%]">
-                <p class="my-[5px] text-[14px]">Descripción del gasto:</p>
-                <div
-                    class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]">
-                    <span
-                        class="material-symbols-rounded text-essentials-primary text-[20px] pl-[5px]">format_italic</span>
 
-                    <input type="text" id="monto"
-                        class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro "
-                        placeholder="Describe brevemente este gasto." name="descripcionGasto" />
-                </div>
-            </div>
-
-                </Modal>
+            </Modal>
 
 
         </div>

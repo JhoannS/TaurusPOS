@@ -32,6 +32,8 @@ class ClienteTaurus extends Authenticatable
     protected $with = [
         'rol',
         'tienda',
+        'tienda.aplicacion.plan.detalles',
+        'tienda.aplicacion.membresia',
         'estado',
         'tipoDocumento'
     ];
@@ -65,6 +67,11 @@ class ClienteTaurus extends Authenticatable
     {
         return $this->belongsTo(TipoDocumento::class, 'id_tipo_documento', 'id');
     }
+
+    public function membresia()
+{
+    return $this->belongsTo(Membresia::class, 'id_membresia');
+}
 
     // Método para obtener el identificador de autenticación (si usas un campo diferente)
     public function getAuthIdentifierName()

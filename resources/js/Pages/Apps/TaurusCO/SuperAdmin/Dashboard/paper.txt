@@ -80,3 +80,85 @@ const formatFecha = (fecha) => {
   return dayjs(fecha).format('dddd D [de] MMMM [de] YYYY [a las] h:mm a')
 }
 </script>
+
+
+
+
+<script setup>
+import { computed } from 'vue';
+
+const props = defineProps({
+  clientes: {
+    type: Array,
+    default: () => [],
+  },
+  searchQuery: {
+    type: String,
+    default: '',
+  }
+});
+
+const filteredClientes = computed(() => {
+  if (!props.clientes || !Array.isArray(props.clientes)) return [];
+  if (!props.searchQuery.trim()) return props.clientes;
+
+  const query = props.searchQuery.toLowerCase().trim();
+
+  return props.clientes.filter(cliente => {
+    return (
+      String(cliente.id).toLowerCase().includes(query) ||
+      cliente.nombres.toLowerCase().includes(query) ||
+      cliente.tienda?.toLowerCase().includes(query) ||
+      cliente.telefono?.toLowerCase().includes(query) ||
+      cliente.token?.toLowerCase().includes(query) ||
+      cliente.aplicacion?.toLowerCase().includes(query) ||
+      cliente.membresia?.toLowerCase().includes(query) ||
+      String(cliente.precio).toLowerCase().includes(query) ||
+      cliente.estado?.toLowerCase().includes(query)
+    );
+  });
+});
+
+function getEstadoClass(estado) {
+  if (estado === 'Inactivo') return 'bg-semaforo-rojo';
+  if (estado === 'Suspendido') return 'bg-semaforo-amarillo';
+  if (estado === 'Activo') return 'bg-semaforo-verde';
+}
+</script>
+
+<template>
+  <div class="overflow-x-auto">
+    <table class="w-full border-collapse">
+      <thead>
+        <tr class="border border-secundary-light">
+          <th class="p-2 text-left">ID</th>
+          <th class="p-2 text-left">Nombres</th>
+          <th class="p-2 text-left">Tienda</th>
+          <th class="p-2 text-left">Teléfono</th>
+          <th class="p-2 text-left">Token</th>
+          <th class="p-2 text-left">Aplicación</th>
+          <th class="p-2 text-left">Membresía</th>
+          <th class="p-2 text-left">Precio</th>
+          <th class="p-2 text-left">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="cliente in filteredClientes" :key="cliente.id">
+          <td class="p-2">{{ cliente.id }}</td>
+          <td class="p-2">{{ cliente.nombres }}</td>
+          <td class="p-2">{{ cliente.tienda || 'N/A' }}</td>
+          <td class="p-2">{{ cliente.telefono || 'N/A' }}</td>
+          <td class="p-2">{{ cliente.token || 'N/A' }}</td>
+          <td class="p-2">{{ cliente.aplicacion || 'N/A' }}</td>
+          <td class="p-2">{{ cliente.membresia || 'N/A' }}</td>
+          <td class="p-2">${{ cliente.precio || '0' }}</td>
+          <td class="p-2">
+            <span class="p-1 rounded-[5px] font-bold" :class="getEstadoClass(cliente.estado)">
+              {{ cliente.estado || 'N/A' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>

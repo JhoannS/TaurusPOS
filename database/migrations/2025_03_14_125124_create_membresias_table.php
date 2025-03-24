@@ -57,14 +57,21 @@ return new class extends Migration
                 'precio' => '0',
                 'periodo'=> 'Semestral',
                 'duracion' => '180',
-                'descripcion' => 'lan de modalidad cada 6 meses, con previo aviso 5 dias antes',
+                'descripcion' => 'Plan de modalidad cada 6 meses, con previo aviso 5 dias antes',
             ],
             [
                 'nombre_membresia' => 'Ruby',
                 'precio' => '0',
                 'periodo'=> 'Anual',
                 'duracion' => '365',
-                'descripcion' => 'lan de modalidad cada 12 meses, con previo aviso 5 dias antes',
+                'descripcion' => 'Plan de modalidad cada 12 meses, con previo aviso 5 dias antes',
+            ],
+            [
+                'nombre_membresia' => 'All star',
+                'precio' => '0',
+                'periodo'=> 'Infinito',
+                'duracion' => '999999',
+                'descripcion' => 'Plan sin terminación.',
             ],
 
         ]);

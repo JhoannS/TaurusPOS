@@ -132,7 +132,7 @@ return new class extends Migration {
             ],
             [
                 'id_plan_aplicacion' => '4',
-                'id_membresia' => '4',
+                'id_membresia' => '6',
                 'nombre_app' => 'TaurusCO'
             ],
 

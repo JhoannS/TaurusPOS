@@ -22,6 +22,12 @@ return new class extends Migration
         
             $table->foreign('id_estado')->references('id')->on('estados')->onDelete('cascade');
         });
+
+        DB::table('token_accesos')->insert([
+            [
+                'token_activacion' => 'Sin token'
+            ],
+        ]);
         
     }
 

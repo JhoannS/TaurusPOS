@@ -27,11 +27,11 @@ class TiendaSistematizada extends Model
         'estado',
     ];
 
-     // Relación con el estado
-     public function estado()
-     {
-         return $this->belongsTo(Estados::class, 'id_estado', 'id');
-     }
+    // Relación con el estado
+    public function estado()
+    {
+        return $this->belongsTo(Estados::class, 'id_estado', 'id');
+    }
     // ✅ Relación con la aplicación
     public function aplicacion()
     {
@@ -40,8 +40,15 @@ class TiendaSistematizada extends Model
 
     public function token()
     {
-        return $this->hasOne(TokenAcceso::class, 'id_tienda_sistematizada');
+        return $this->belongsTo(TokenAcceso::class, 'id_token');
     }
+    
+    public function membresia()
+    {
+        return $this->belongsTo(Membresia::class, 'id_membresia');
+    }
+
+    
 
 
 

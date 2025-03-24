@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_estado')->default(1);
             $table->unsignedBigInteger('id_token')->nullable();
-            $table->unsignedBigInteger('id_aplicacion_web');
+            $table->unsignedBigInteger('id_aplicacion_web')->default(19);
             $table->string('nombre_tienda');
             $table->string('email_tienda')->unique();
             $table->string('telefono_ct')->unique();
@@ -28,6 +28,9 @@ return new class extends Migration
             $table->foreign('id_estado')->references('id')->on('estados')->onDelete('cascade');
             $table->foreign('id_aplicacion_web')->references('id')->on('aplicaciones_web')->onDelete('cascade');
         });
+
+        
+        
         
     }
 
