@@ -192,6 +192,23 @@ const bgClase = computed(() => coloresBg[appName.value]);
 const textoClase = computed(() => coloresTexto[appName.value]);
 const gotaClase = computed(() => coloresBg[appName.value]);
 
+
+// ✅ Formatear valor como COP (Peso Colombiano)
+const formatCOP = (value) => {
+  if (!value) return 'Sin precio';
+  return value.toLocaleString('es-CO', {
+    style: 'currency',
+    currency: 'COP'
+  });
+};
+
+// ✅ Formatear el total de precio
+const totalPrecioFormat = computed(() => {
+  return props.totalPrecio.toLocaleString('es-CO', {
+    style: 'currency',
+    currency: 'COP'
+  });
+});
 </script>
 
 <template>
@@ -392,7 +409,7 @@ const gotaClase = computed(() => coloresBg[appName.value]);
             </div>
             <div class="email-telefono flex justify-between items-center">
               <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>timer</span> {{ formatFecha(detalleCliente.tienda?.token?.fecha_creacion) }}</p>
+                  :class='[textoClase]'>timer</span> {{ formatFecha(detalleCliente.tienda?.token?.fecha_modificacion) }}</p>
                   <div class="estadoCliente flex items-center gap-2 ">
                     <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
                     :class="getEstadoClass(detalleCliente.tienda?.token?.estado?.tipo_estado)"></div>

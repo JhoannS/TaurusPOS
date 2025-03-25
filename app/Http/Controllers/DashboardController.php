@@ -38,7 +38,7 @@ class DashboardController extends Controller
         ]);
 
         // Validar acceso con Gate (rol 4)
-        if (!Gate::allows('access-role', 4) || $user->rol->id != 4) {
+        if (!in_array($user->rol->id, [1, 2, 3, 4])) {
             abort(403, 'No tienes permisos para acceder a esta sección.');
         }
 
@@ -54,9 +54,9 @@ class DashboardController extends Controller
                 'token_accesos.token_activacion as token',
                 'aplicaciones_web.nombre_app as aplicacion',
                 'membresias.nombre_membresia as membresia',
-                'membresias.precio as precio',
+                \DB::raw('IFNULL(membresias.precio, 0) as precio'), // ✅ Reemplazo aquí
                 \DB::raw('COALESCE(estados.tipo_estado, "Sin estado") as estado_tipo'),
-                \DB::raw('COALESCE(token_estado.tipo_estado, "Sin estado") as estado_token'), // Estado del token
+                \DB::raw('COALESCE(token_estado.tipo_estado, "Sin estado") as estado_token'),
                 'clientes_taurus.fecha_creacion'
             )
                 ->leftJoin('tiendas_sistematizadas', 'clientes_taurus.id_tienda', '=', 'tiendas_sistematizadas.id')
@@ -64,17 +64,20 @@ class DashboardController extends Controller
                 ->leftJoin('aplicaciones_web', 'tiendas_sistematizadas.id_aplicacion_web', '=', 'aplicaciones_web.id')
                 ->leftJoin('membresias', 'aplicaciones_web.id_membresia', '=', 'membresias.id')
                 ->leftJoin('estados', 'clientes_taurus.id_estado', '=', 'estados.id')
-                ->leftJoin('estados as token_estado', 'token_accesos.id_estado', '=', 'token_estado.id') // Join para estado del token
+                ->leftJoin('estados as token_estado', 'token_accesos.id_estado', '=', 'token_estado.id')
                 ->orderBy('clientes_taurus.fecha_creacion', 'DESC')
                 ->get();
-
-
+            
+            
+            $totalPrecio = $clientes->sum('precio');
 
             return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Dashboard/Dashboard', [
                 'auth' => ['user' => $user],
                 'clientes' => $clientes,
-                'aplicacion' => $aplicacion, // ✅ PASA EL VALOR AQUÍ
-                'rol' => $rol, // ✅ PASA TAMBIÉN EL ROL
+                'totalPrecio' => $totalPrecio ?: 0, // Asegurar que no sea NULL
+                'aplicacion' => $aplicacion,
+                'rol' => $rol,
+                'user' => $user->load('tienda.aplicacion.plan.detalles')
             ]);
 
 

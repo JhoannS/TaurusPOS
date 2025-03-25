@@ -9,60 +9,35 @@ import CardHistorial from '@/Components/Dashboard/Essentials/CardHistorial.vue';
 </script>
 
 <script setup>
-// traer datos del usuario logueado
+import { Head } from '@inertiajs/vue3';
+import { ref, onMounted, onUnmounted } from 'vue';
+import Sidebar from '@/Components/Sidebar/Essentials/Sidebar.vue';
+import BarraCalendario from '@/Components/BarraCalendario/BarraCalendario.vue';
+import DetallesPlan from '@/Components/Dashboard/DetallesPlan.vue';
+import SaludoOpciones from '@/Components/header/Essentials/SaludoOpciones.vue';
+
 defineProps({
     auth: Object,
+    user: Object
+});
 
-})
-const dia = ref('');
-const mes = ref('');
-const anio = ref('');
-const hora = ref('');
 const saludo = ref('');
 
-function actualizarFechaHora() {
-    const fecha = new Date();
-    dia.value = fecha.getDate();
+const actualizarSaludo = () => {
+    const hora = new Date().getHours();
+    if (hora < 12) saludo.value = '¡Buenos días!';
+    else if (hora < 18) saludo.value = '¡Buenas tardes!';
+    else saludo.value = '¡Buenas noches!';
+};
 
-    const monthNamesClock = [
-        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-    ];
-    mes.value = monthNamesClock[fecha.getMonth()];
-    anio.value = fecha.getFullYear();
-
-    let horas = fecha.getHours();
-    const minutos = fecha.getMinutes().toString().padStart(2, "0");
-    const segundos = fecha.getSeconds().toString().padStart(2, "0");
-    const periodo = horas >= 12 ? "pm" : "am";
-
-    if (horas > 12) {
-        horas -= 12;
-    } else if (horas === 0) {
-        horas = 12;
-    }
-    hora.value = `${horas}:${minutos}:${segundos} ${periodo}`;
-
-    if (fecha.getHours() < 12) {
-        saludo.value = "¡Buenos días";
-    } else if (fecha.getHours() < 18) {
-        saludo.value = "¡Buenas tardes";
-    } else {
-        saludo.value = "¡Buenas noches";
-    }
-}
-let clockInterval = null;
 onMounted(() => {
-    actualizarFechaHora();
-    clockInterval = setInterval(actualizarFechaHora, 1000);
-});
-onUnmounted(() => {
-    clearInterval(clockInterval);
+    actualizarSaludo();
 });
 </script>
 
 <template>
     <div>
+
         <Head title="Dashboard Essentials" />
         <div class="bg-mono flex scrollbar-custom">
             <Sidebar :auth="auth" />
@@ -196,7 +171,8 @@ onUnmounted(() => {
                         </div>
 
                         <CardHistorial />
-                        <DetallesPlan />
+                        <DetallesPlan v-if="user?.tienda?.aplicacion?.plan?.detalles"
+                            :detalles="user.tienda.aplicacion.plan.detalles" />
                     </div>
                 </div>
             </main>

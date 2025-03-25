@@ -11,7 +11,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', function ($aplicacion, $rol) {
             $user = auth()->user();
 
-            if ($user->rol->id != 1) {
+            if (!in_array($user->rol->id, [1, 2, 3, 4])) {
                 abort(403, 'No tienes permisos para acceder a esta sección.');
             }
             
@@ -24,7 +24,6 @@ Route::middleware('auth')->group(function () {
             ]
                 ]);
             }
-
             abort(404);
         })->name('aplicacion.dashboard');
 

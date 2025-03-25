@@ -26,7 +26,13 @@ const props = defineProps({
     type: Object,
     required: true
   },
+  totalPrecio: {
+    type: Number,
+    required: true // 
+  }
 })
+
+
 
 const user = props.auth.user
 const auth = usePage().props.auth;
@@ -77,6 +83,7 @@ const textoClase = computed(() => coloresTexto[appName.value]);
 const searchQuery = ref('');
 
 
+
 const logout = () => {
   router.post(route('logout'))
 }
@@ -121,7 +128,7 @@ const logout = () => {
           class="border  bg-secundary-opacity border-secundary-light rounded-md w-[40%] p-2 flex justify-between items-center">
           <div class="metodoPago-monto">
             <p class="text-[14px]">Dinero activo:</p>
-            <p class="font-bold text-[18px]">$0.0</p>
+            <p class="font-bold text-[18px]"> {{ totalPrecio || 'Error al obtener total'}}</p>
           </div>
           <div class="contador p-2 rounded-md flex justify-center items-center w-10 h-10 font-bold" :class="[bgClase]">
             <span class="material-symbols-rounded">

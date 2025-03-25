@@ -2,118 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PlanAplicacion;
-use App\Models\DetallesPlan;
+use App\Models\ClienteTaurus;
+use App\Models\Producto;
+use App\Models\Servicio;
+use App\Models\Empleado;
+use App\Models\Proveedor;
+use App\Models\Factura;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class PlanAplicacionController extends Controller
 {
-    public function mostrarDetalles()
+    public function index()
     {
-        $user = auth()->user();
+        $clienteId = Auth::id();
 
-        // Verifica que la tienda esté vinculada y tenga el ID de aplicación correcto
-        if (!$user->tienda || $user->tienda->id_aplicacion_web != 19) {
-            abort(404);
-        }
+        $detalles = ClienteTaurus::with('detallesPlan')->where('id', $clienteId)->first();
 
-        // Obtener el plan de aplicación con los detalles
-        $detalles = PlanAplicacion::with('detalles')->where('id', $user->tienda->id_plan_aplicacion)->first();
-
-        if (!$detalles) {
-            abort(404, 'No se encontraron detalles del plan.');
-        }
-
-        // Transformar los datos al formato esperado por Vue
-        $barsData = [
-            [
-                'id' => 'bar1',
-                'title' => 'Sucursales activas:',
-                'segments' => $detalles->detalles->cantidad_sucursales ? [
-                    [
-                        'max' => $detalles->detalles->cantidad_sucursales,
-                        'value' => $detalles->detalles->cantidad_sucursales,
-                        'color' => 'bg-blue-500',
-                        'tag' => 'Sucursales activas'
-                    ]
-                ] : []
-            ],
-            [
-                'id' => 'bar2',
-                'title' => 'Gestión usuarios:',
-                'segments' => [
-                    [
-                        'max' => 9999,
-                        'value' => $detalles->detalles->cantidad_empleados ?? 0,
-                        'color' => 'bg-purple-500',
-                        'tag' => 'Empleados'
-                    ],
-                    [
-                        'max' => 9999,
-                        'value' => $detalles->detalles->cantidad_proveedores ?? 0,
-                        'color' => 'bg-yellow-500',
-                        'tag' => 'Proveedores'
-                    ],
-                    [
-                        'max' => 9999,
-                        'value' => $detalles->detalles->cantidad_clientes ?? 0,
-                        'color' => 'bg-orange-500',
-                        'tag' => 'Clientes'
-                    ]
-                ]
-            ],
-            [
-                'id' => 'bar3',
-                'title' => 'Facturación POS',
-                'segments' => [
-                    [
-                        'max' => 9999,
-                        'value' => $detalles->detalles->cantidad_facturacion_electronica ?? 0,
-                        'color' => 'bg-teal-500',
-                        'tag' => 'Electrónica'
-                    ],
-                    [
-                        'max' => 9999,
-                        'value' => $detalles->detalles->cantidad_facturacion_fisica ?? 0,
-                        'color' => 'bg-pink-500',
-                        'tag' => 'Digital'
-                    ]
-                ]
-            ],
-            [
-                'id' => 'bar4',
-                'title' => 'Gestión de inventarios',
-                'segments' => [
-                    [
-                        'max' => 9999,
-                        'value' => $detalles->detalles->cantidad_productos ?? 0,
-                        'color' => 'bg-cyan-500',
-                        'tag' => 'Productos'
-                    ],
-                    [
-                        'max' => 9999,
-                        'value' => $detalles->detalles->cantidad_servicios ?? 0,
-                        'color' => 'bg-indigo-500',
-                        'tag' => 'Servicios'
-                    ]
-                ]
-            ],
-            [
-                'id' => 'bar5',
-                'title' => 'Gestión de mesas:',
-                'segments' => [
-                    [
-                        'max' => 200,
-                        'value' => $detalles->detalles->cantidad_mesas ?? 0,
-                        'color' => 'bg-emerald-500',
-                        'tag' => 'Registradas'
-                    ]
-                ]
-            ]
+        // Contamos los registros reales desde la base de datos
+        $data = [
+            'cantidad_sucursales' => $detalles->detallesPlan->cantidad_sucursales ?? 0,
+            'cantidad_empleados' => Empleado::where('cliente_id', $clienteId)->count(),
+            'cantidad_proveedores' => Proveedor::where('cliente_id', $clienteId)->count(),
+            'cantidad_productos' => Producto::where('cliente_id', $clienteId)->count(),
+            'cantidad_servicios' => Servicio::where('cliente_id', $clienteId)->count(),
+            'cantidad_facturacion_electronica' => Factura::where('cliente_id', $clienteId)->where('tipo', 'electronica')->count(),
+            'cantidad_facturacion_fisica' => Factura::where('cliente_id', $clienteId)->where('tipo', 'fisica')->count(),
+            'manejo_reservas' => $detalles->detallesPlan->manejo_reservas ?? 'No',
+            'manejo_pos' => $detalles->detallesPlan->manejo_pos ?? 'No',
+            'manejo_control_gastos' => $detalles->detallesPlan->manejo_control_gastos ?? 'No'
         ];
 
-        // Pasar los datos a la vista de Inertia
-        return inertia('Apps/Essentials/Administrador/Dashboard/Dashboard', [
-            'barsData' => $barsData
+        return Inertia::render('Dashboard', [
+            'detalles' => $data
         ]);
     }
 }
