@@ -114,32 +114,29 @@ const confirmDelete = (id) => {
   }
 }
 
-// ✅ Mueve la función fuera de onMounted
 const deleteCliente = (id) => {
   if (!props.aplicacion || !props.rol) {
-    console.error('❌ Faltan parámetros de aplicación o rol')
-    return
+    console.error('❌ Faltan parámetros de aplicación o rol');
+    return;
   }
 
   router.delete(route('clientes.destroy', {
-    aplicacion: props.aplicacion,  // ✅ Pasar el valor de la aplicación
-    rol: props.rol,                // ✅ Pasar el valor del rol
-    id: id                         // ✅ Pasar el ID correctamente
+    aplicacion: props.aplicacion,
+    rol: props.rol,
+    id: id
+  }, {
+    replace: true, // ✅ Usa replace para actualizar correctamente la URL
+    prefix: 'dashboard' // ✅ Añade el prefijo directamente en la URL
   }), {
     onSuccess: () => {
-      alert('✅ Cliente eliminado correctamente.')
+      alert('✅ Cliente eliminado correctamente.');
     },
     onError: (error) => {
-      console.error('❌ Error:', error)
-      alert('❌ Error al eliminar el cliente.')
+      console.error('❌ Error:', error);
+      alert('❌ Error al eliminar el cliente.');
     }
-  })
+  });
 }
-
-// ✅ SOLO PARA DEBUGGING
-onMounted(() => {
-  console.log('📥 Props recibidas:', props)
-})
 </script>
 
 <template>

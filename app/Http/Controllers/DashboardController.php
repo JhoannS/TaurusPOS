@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB; // ✅ Importa la clase DB correctamente
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class DashboardController extends Controller
 {
@@ -69,13 +70,13 @@ class DashboardController extends Controller
 
 
 
-                return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Dashboard/Dashboard', [
-                    'auth' => ['user' => $user],
-                    'clientes' => $clientes,
-                    'aplicacion' => $aplicacion, // ✅ PASA EL VALOR AQUÍ
-                    'rol' => $rol, // ✅ PASA TAMBIÉN EL ROL
-                ]);
-                
+            return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Dashboard/Dashboard', [
+                'auth' => ['user' => $user],
+                'clientes' => $clientes,
+                'aplicacion' => $aplicacion, // ✅ PASA EL VALOR AQUÍ
+                'rol' => $rol, // ✅ PASA TAMBIÉN EL ROL
+            ]);
+
 
         }
 
@@ -135,27 +136,58 @@ class DashboardController extends Controller
         }
     }
 
-    public function destroy(Request $request, $id)
-{
-    $cliente = ClienteTaurus::find($id);
+    use AuthorizesRequests; // 👈 Añadir este trait aquí
 
-    if (!$cliente) {
-        if ($request->inertia()) {
-            abort(404, 'Cliente no encontrado'); // ✅ Si es una solicitud Inertia, devuelve un error 404 de Inertia
+
+    public function destroy(Request $request, $aplicacion, $rol, $id)
+    {
+        $cliente = ClienteTaurus::with('rol')->find($id); // ✅ Cargar relación 'rol'
+
+        if (!$cliente) {
+            abort(404, 'Cliente no encontrado');
         }
 
-        return response()->json(['error' => 'Cliente no encontrado'], 404); // ✅ Si no es de Inertia, devuelve JSON
+        // ✅ Guardar el nombre del rol antes de eliminarlo
+        $nombreRol = $cliente->rol ? $cliente->rol->nombre_rol : 'Invitado';
+
+        // ✅ Si la tienda tiene un token asociado, elimínalo primero
+        if ($cliente->tienda && $cliente->tienda->token) {
+            $cliente->tienda->token()->delete();
+        }
+
+        // ✅ Eliminar la tienda asociada (si existe)
+        if ($cliente->tienda) {
+            $cliente->tienda()->delete();
+        }
+
+        // ✅ Eliminar relaciones dependientes
+        if ($cliente->estado) {
+            $cliente->estado()->dissociate()->delete();
+        }
+
+        if ($cliente->tipoDocumento) {
+            $cliente->tipoDocumento()->dissociate()->delete();
+        }
+
+        if ($cliente->rol) {
+            $cliente->rol()->dissociate()->delete();
+        }
+
+        // ✅ Finalmente eliminar el cliente
+        $cliente->deleteOrFail();
+
+        // ✅ Si no hay rol, usar valor por defecto 'Invitado'
+        $nombreRol = $nombreRol ?: 'SuperAdmin';
+
+        // ✅ Redirigir correctamente con el valor del rol
+        return redirect()->route('aplicacion.dashboard', [
+            'aplicacion' => $aplicacion,
+            'rol' => ucfirst($nombreRol) // ✅ Usa el nombre del rol
+        ]);
     }
 
-    $this->authorize('delete', $cliente); // Usa la política para validar permisos
 
-    $cliente->deleteOrFail();
 
-    return response()->json([
-        'message' => 'Cliente eliminado correctamente',
-        'cliente_id' => $id
-    ]);
-}
 
 
 }

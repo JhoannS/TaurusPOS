@@ -14,7 +14,8 @@ Route::middleware('auth')->group(function () {
         // Ruta para obtener ususarios sin activar
         Route::get('/clientes-activacion', [DashboardController::class, 'getClientesPorActivacion'])
             ->name('clientes-activacion');
-        Route::delete('/clientes/{id}', [DashboardController::class, 'destroy'])->name('clientes.destroy');
+         // ✅ Agregar `/dashboard` a la ruta DELETE
+         Route::delete('/clientes/{id}', [DashboardController::class, 'destroy'])->name('clientes.destroy');
 
 
 

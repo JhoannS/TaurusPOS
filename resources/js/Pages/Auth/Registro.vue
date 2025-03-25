@@ -12,6 +12,10 @@ defineProps({
   tiposDocumento: {
     type: Array,
     required: true,
+  },
+  aplicaciones: {
+    type: Array,
+    required: true
   }
 })
 
@@ -20,12 +24,13 @@ const currentRoute = computed(() => new URL(page.url, window.location.origin).pa
 const form = useForm({
   nombres_ct: '',
   apellidos_ct: '',
-  id_tipo_documento: 1,
+  id_tipo_documento: '',
   numero_documento_ct: '',
   email_ct: '',
   telefono_ct: '',
   contrasenia_ct: '',
   contrasenia_ct_confirmation: '',
+  id_aplicacion: '' // ✅ Nuevo campo para la app seleccionada
 })
 
 function submit() {
@@ -46,7 +51,7 @@ function submit() {
 
     <Head title="Registrate" />
     <div class="bg-mono-negro flex justify-center items-center">
-      <main class="flex items-center justify-between h-[100vh] w-[80%] p-[80px] gap-16">
+      <main class="flex items-center justify-between min-h-[100vh] w-[80%] p-[80px] gap-16">
         <div class="left w-[60%]">
           <div class="logo flex gap-3 items-center">
             <div class="gota h-7 w-10 shadow-essentials bg-universal-naranja rounded-full"></div>
@@ -62,7 +67,7 @@ function submit() {
           </div>
 
 
-          <form @submit.prevent="submit" class="mt-5 flex flex-col gap-5">
+          <form @submit.prevent="submit" class="mt-5 flex flex-col gap-2">
 
             <div class="flex justify-between items-center gap-2">
               <div class="w-[50%]">
@@ -196,6 +201,21 @@ function submit() {
                   <input type="password"
                     class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
                     placeholder="Debe ser igual la contraseña" v-model="form.contrasenia_ct_confirmation" />
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-between items-center gap-2">
+              <div class="w-[100%]">
+                <p class="my-[5px] text-[16px]">Aplicacion de interes:</p>
+                <div class="custom-select">
+                  <select v-model="form.id_aplicacion"
+                    class="w-full p-2 bg-mono-negro text-white border border-secundary-light rounded-md">
+                    <option value="" disabled selected>Selecciona una app</option>
+                    <option v-for="app in aplicaciones" :key="app.id" :value="app.id">
+                      {{ app.nombre_app }}
+                    </option>
+                  </select>
+                  <div class="select-arrow"></div>
                 </div>
               </div>
             </div>

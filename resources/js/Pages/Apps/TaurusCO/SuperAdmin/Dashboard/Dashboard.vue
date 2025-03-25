@@ -84,14 +84,9 @@
       </div>
       <ExportarExcel idTabla="tabla" nombreArchivo="Movimientos_Almacenados" titulo="Movimientos almacenados" />
       <!-- formulario -->
-      <Clientes 
-  :auth="auth" 
-  :user-id="auth.user.id"
-  :rol="typeof auth.user.rol === 'object' ? auth.user.rol : { id: auth.user.rol }"
-  :aplicacion="aplicacion"
-  :clientes="clientes" 
-  :searchQuery="searchQuery" 
-/>
+      <Clientes :auth="auth" :user-id="auth.user.id"
+        :rol="typeof auth.user.rol === 'object' ? auth.user.rol : { id: auth.user.rol }" :aplicacion="aplicacion"
+        :clientes="clientes" :searchQuery="searchQuery" />
 
 
     </div>
@@ -143,7 +138,7 @@
     <p><strong>Facturación electrónica:</strong> {{
       user.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_electronica || 0 }}</p>
     <p><strong>Facturación física:</strong> {{ user.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_fisica || 0
-    }}</p>
+      }}</p>
     <p><strong>Productos:</strong> {{ user.tienda?.aplicacion?.plan?.detalles?.cantidad_productos || 0 }}</p>
     <p><strong>Servicios:</strong> {{ user.tienda?.aplicacion?.plan?.detalles?.cantidad_servicios || 0 }}</p>
     <p><strong>Manejo reservas:</strong> {{ user.tienda?.aplicacion?.plan?.detalles?.manejo_reservas || 'No aplica' }}
@@ -170,8 +165,8 @@
 
     <br>
 
-     <!-- ✅ Datos de token -->
-     <p class="text-4xl">Tabla de datos del token</p>
+    <!-- ✅ Datos de token -->
+    <p class="text-4xl">Tabla de datos del token</p>
     <h2>Datos del token:</h2>
     <p><strong>ID:</strong> {{ user.tienda?.token?.id || 'Sin id' }}</p>
     <p><strong>estado de token:</strong> {{ user.tienda?.token?.estado?.tipo_estado || 'Sin estado' }}</p>

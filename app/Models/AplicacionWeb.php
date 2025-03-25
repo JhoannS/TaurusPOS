@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Inertia\Inertia;
+
 
 class AplicacionWeb extends Model
 {
@@ -36,4 +38,5 @@ class AplicacionWeb extends Model
        return $this->belongsTo(Estados::class, 'id_estado');
    }
 
+  
 }
