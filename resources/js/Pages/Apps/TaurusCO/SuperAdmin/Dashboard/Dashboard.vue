@@ -120,13 +120,12 @@ const logout = () => {
         <div
           class="border  bg-secundary-opacity border-secundary-light rounded-md w-[40%] p-2 flex justify-between items-center">
           <div class="metodoPago-monto">
-            <p class="text-[12px]">Son datos y hay que darlos</p>
-            <p class="text-[14px]">Producto con menor Stock:</p>
-            <p class="font-bold text-[18px]">Producto pronto a terminarse</p>
+            <p class="text-[14px]">Dinero activo:</p>
+            <p class="font-bold text-[18px]">$0.0</p>
           </div>
           <div class="contador p-2 rounded-md flex justify-center items-center w-10 h-10 font-bold" :class="[bgClase]">
             <span class="material-symbols-rounded">
-              category
+              attach_money
             </span>
           </div>
         </div>

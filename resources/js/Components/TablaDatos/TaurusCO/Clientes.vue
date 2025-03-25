@@ -438,63 +438,63 @@ const gotaClase = computed(() => coloresBg[appName.value]);
               <p class="text-secundary-light font-semibold">Detalles del plan:</p>
               <div class="documento flex justify-between items-center">
               <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>verified</span> Sucursales virtuales: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_sucursales || 0}}</p>
+                  :class='[textoClase]'>swap_horiz</span> Sucursales virtuales: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_sucursales || 0}}</p>
               <p>Usadas: 0</p>
             </div>
             <div class="documento flex justify-between items-center">
               <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>verified</span> Empleados: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_empleados || 0
+                  :class='[textoClase]'>identity_platform</span> Empleados: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_empleados || 0
           }}</p>
               <p>Usadas: 0</p>
             </div>
             <div class="documento flex justify-between items-center">
               <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>verified</span> Proveedores: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_proveedores || 0 }}</p>
+                  :class='[textoClase]'>identity_platform</span> Proveedores: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_proveedores || 0 }}</p>
               <p>Usadas: 0</p>
             </div>
             <div class="documento flex justify-between items-center">
               <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>verified</span> Productos: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_productos || 0}}</p>
+                  :class='[textoClase]'>category</span> Productos: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_productos || 0}}</p>
               <p>Usadas: 0</p>
             </div>
             <div class="documento flex justify-between items-center">
               <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>verified</span> Servicios: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_servicios || 0}}</p>
+                  :class='[textoClase]'>category</span> Servicios: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_servicios || 0}}</p>
               <p>Usadas: 0</p>
             </div>
             <div class="documento flex justify-between items-center">
               <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>verified</span> Facturación electrónica: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_electronica || 0 }}</p>
+                  :class='[textoClase]'>receipt</span> Facturación electrónica: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_electronica || 0 }}</p>
               <p>Usadas: 0</p>
             </div>
             <div class="documento flex justify-between items-center">
               <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>verified</span> Facturación física: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_fisica || 0}}</p>
+                  :class='[textoClase]'>picture_As_pdf</span> Facturación física: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_fisica || 0}}</p>
               <p>Usadas: 0</p>
             </div>
             <div class="documento flex justify-between items-center">
               <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>verified</span> Manejo reservas: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_reservas ||'No aplica' }}</p>
+                  :class='[textoClase]'>event</span> Manejo reservas: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_reservas ||'No aplica' }}</p>
                   <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                    :class='[textoClase]'>verified</span> Manejo POS: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_pos || 'No aplica' }}</p>
+                    :class='[textoClase]'>savings</span> Manejo POS: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_pos || 'No aplica' }}</p>
             </div>
             <div class="documento flex justify-between items-center">
               <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
                   :class='[textoClase]'>verified</span> Contabilidad: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_contabilidad ||'No aplica' }}</p>
                   <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                    :class='[textoClase]'>verified</span> Manejo gastos: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_control_gastos ||'No aplica' }}</p>
+                    :class='[textoClase]'>monitoring</span> Manejo gastos: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_control_gastos ||'No aplica' }}</p>
             </div>
             <div class="documento flex justify-between items-center">
               <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>verified</span> Etiquetado barras: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_etiquetado_barras ||'No aplica' }}</p>
+                  :class='[textoClase]'>barcode_scanner</span> Etiquetado barras: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_etiquetado_barras ||'No aplica' }}</p>
                   <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                    :class='[textoClase]'>verified</span> Códigos Qr: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_codigos_qr ||'No aplica' }}</p>
+                    :class='[textoClase]'>qr_code_2</span> Códigos Qr: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_codigos_qr ||'No aplica' }}</p>
             </div>
             <div class="documento flex justify-between items-center">
               <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>verified</span> Orden trabajo: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_orden_trabajo ||'No aplica' }}</p>
+                  :class='[textoClase]'>diversity_1</span> Orden trabajo: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_orden_trabajo ||'No aplica' }}</p>
                   <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                    :class='[textoClase]'>verified</span> Encuestas: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_encuestas ||'No aplica' }}</p>
+                    :class='[textoClase]'>theater_comedy</span> Encuestas: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_encuestas ||'No aplica' }}</p>
             </div>
             </div>
 
