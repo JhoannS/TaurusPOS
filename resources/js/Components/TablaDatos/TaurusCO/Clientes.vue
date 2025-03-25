@@ -20,7 +20,7 @@ const props = defineProps({
     required: true
   },
   rol: {
-    type: Object, 
+    type: Object,
     required: true
   }
 })
@@ -97,7 +97,7 @@ const confirmDelete = (id) => {
   }
 
   if (confirm('⚠️ ¿Estás seguro de que deseas eliminar este cliente?')) {
-    deleteCliente(id) 
+    deleteCliente(id)
   }
 }
 
@@ -112,8 +112,8 @@ const deleteCliente = (id) => {
     rol: props.rol,
     id: id
   }, {
-    replace: true, 
-    prefix: 'dashboard' 
+    replace: true,
+    prefix: 'dashboard'
   }), {
     onSuccess: () => {
       alert('✅ Cliente eliminado correctamente.');
@@ -131,6 +131,66 @@ function handleBeforeEnter(el) {
 function handleBeforeLeave(el) {
   el.classList.add('animate-fadeOut');
 }
+
+// ✅ Iniciales para el detalle de cliente
+const inicialesNombreCliente = computed(() => {
+  if (!detalleCliente.value) return '';
+
+  const nombres = detalleCliente.value.nombres_ct || '';
+  const apellidos = detalleCliente.value.apellidos_ct || '';
+
+  const firstNameInitial = nombres.split(' ')[0]?.charAt(0).toUpperCase() || '';
+  const lastNameInitial = apellidos.split(' ')[0]?.charAt(0).toUpperCase() || '';
+
+
+
+  return firstNameInitial + lastNameInitial;
+});
+
+// ✅ Iniciales para el detalle de cliente
+const inicialesNombreTienda = computed(() => {
+  if (!detalleCliente.value) return '';
+
+  const nombreTienda = detalleCliente.value.tienda?.nombre_tienda || '';
+
+  const inicialTienda = nombreTienda.split(' ')[0]?.charAt(0).toUpperCase() || '';
+  return inicialTienda;
+});
+
+// ✅ Iniciales para el detalle de cliente
+const inicialesNombrePlan = computed(() => {
+  if (!detalleCliente.value) return '';
+
+  const nombrePlan = detalleCliente.value.tienda?.aplicacion?.nombre_app || '';
+
+  const inicialPlan = nombrePlan.split(' ')[0]?.charAt(0).toUpperCase() || '';
+  return inicialPlan;
+});
+
+
+
+
+// ✅ Clases dinámicas según la aplicación
+
+const coloresBg = {
+  'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
+  'Essentials': 'bg-essentials-primary shadow-essentials',
+  'Machine': 'bg-machine-primary shadow-machine',
+  'Shopper': 'bg-shopper-primary shadow-shopper',
+  'default': 'bg-gray-300 shadow-gray-300'
+};
+const coloresTexto = {
+  'TaurusCO': 'text-universal-naranja',
+  'Essentials': 'text-essentials-primary',
+  'Machine': 'text-machine-primary',
+  'Shopper': 'text-shopper-primary',
+  'default': 'text-gray-500'
+};
+
+const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app || 'default');
+const bgClase = computed(() => coloresBg[appName.value]);
+const textoClase = computed(() => coloresTexto[appName.value]);
+const gotaClase = computed(() => coloresBg[appName.value]);
 
 </script>
 
@@ -191,105 +251,254 @@ function handleBeforeLeave(el) {
       No hay coincidencias.
     </div>
 
-    <ModalDetalles :isOpen="showModal" titulo="Datos del usuario:" descripcion="Detalles completos del cliente"
-      @close="closeModal">
+    <ModalDetalles :isOpen="showModal" @close="closeModal">
       <div v-if="detalleCliente">
-        <div>
-          <p class="text-4xl">Tabla de clientes taurus</p>
-          <p>ID: {{ detalleCliente.id }}</p>
-          <p>Estado: {{ detalleCliente.estado?.tipo_estado }} </p>
-          <p><strong>Rol:</strong> {{ detalleCliente.rol?.tipo_rol || 'Sin rol' }}</p>
-          <p>Tienda asignada: {{ detalleCliente.tienda?.nombre_tienda }}</p>
-          <h1>Bienvenido, {{ detalleCliente.nombres_ct }} {{ detalleCliente.apellidos_ct }}</h1>
-          <p><strong>Tipo de documento:</strong> {{ detalleCliente.tipo_documento?.documento_legal || 'Sin tipo de documento' }}</p>
-          <p><strong>Documento:</strong> {{ detalleCliente.numero_documento_ct }}</p>
-          <p><strong>Email:</strong> {{ detalleCliente.email_ct }}</p>
-          <p><strong>Teléfono:</strong> {{ detalleCliente.telefono_ct }}</p>
-          <p><strong>Fecha de creación:</strong> {{ formatFecha(detalleCliente.fecha_creacion) }}</p>
-          <p><strong>Fecha de modificación:</strong> {{ formatFecha(detalleCliente.fecha_modificacion) }}</p>
+        <div class="w-full flex justify-between items-center">
 
-          <br>
+          <div class="usuario w-[30%]">
+            <p>Detalles de cliente:</p>
 
-          <p class="text-4xl">Tabla de tienda sistematizada:</p>
-          <h2>Datos de la tienda vinculada:</h2>
-          <p>ID: {{ detalleCliente.tienda?.id }}</p>
-          <p><strong>Estado de la tienda:</strong> {{ detalleCliente.tienda?.estado?.tipo_estado || 'Sin estado' }}</p>
-          <p>Token: {{ detalleCliente.tienda?.token?.token_activacion }}</p>
-          <p><strong>Nombre de la tienda:</strong> {{ detalleCliente.tienda?.nombre_tienda || 'Sin tienda' }}</p>
-          <p><strong>Dirección:</strong> {{ detalleCliente.tienda?.direccion_ct || 'Sin dirección' }}</p>
-          <p><strong>Ciudad:</strong> {{ detalleCliente.tienda?.barrio_ct || 'Sin ciudad' }}</p>
-          <p><strong>Email de la tienda:</strong> {{ detalleCliente.tienda?.email_tienda || 'Sin email' }}</p>
-          <p><strong>Teléfono:</strong> {{ detalleCliente.tienda?.telefono_ct }}</p>
-          <p><strong>Fecha de creación:</strong> {{ formatFecha(detalleCliente.tienda?.fecha_creacion) }}</p>
-          <p><strong>Fecha de modificación:</strong> {{ formatFecha(detalleCliente.tienda?.fecha_modificacion) }}</p>
+            <div class="encabezado flex gap-3 items-center w-full mb-2">
+              <div class="gota w-[8%]">
+                <div class="user h-[40px] w-[40px] rounded-full overflow-hidden flex items-center justify-center"
+                  :class="[gotaClase]">
+                  <span class="text-white text-md font-bold">
+                    {{ inicialesNombreCliente }}
+                  </span>
+                </div>
+              </div>
 
-          <br>
+              <div class="w-[92%]">
+                <div class="flex w-full items-center justify-between mb-2">
+                  <p class="text-[12px]">{{ detalleCliente.id }}</p>
+                  <p class="flex items-center gap-1 text-[12px]"><span class="material-symbols-rounded text-[20px]"
+                      :class='[textoClase]'>history</span>{{ formatFecha(detalleCliente.fecha_modificacion) }}</p>
+                </div>
+                <div class="nombre-Rol w-full flex justify-between items-center">
+                  <div class="nombre">
+                    <h3 class="font-semibold text-[20px] -mt-2">{{ detalleCliente.nombres_ct }} {{
+                      detalleCliente.apellidos_ct }}</h3>
+                    <p class="text-secundary-light text-sm -mt-2"> {{ detalleCliente.rol?.tipo_rol || 'Sin rol' }}</p>
+                  </div>
+                  <div class="estadoCliente flex items-center gap-2 ">
+                    <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
+                      :class="getEstadoClass(detalleCliente.estado?.tipo_estado)"></div>
+                    <p>{{ detalleCliente.estado?.tipo_estado }} </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="detallesCuenta my-2">
+              <p class="text-secundary-light font-semibold">Datos personales:</p>
+              <div class="documento flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>id_card</span> {{ detalleCliente.tipo_documento?.documento_legal || 'Sin tipo de documento' }}</p>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>tag</span> {{ detalleCliente.numero_documento_ct }}</p>
+              </div>
+
+              <div class="email-telefono flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>email</span> {{ detalleCliente.email_ct }}</p>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>phone</span> {{ detalleCliente.telefono_ct }}</p>
+              </div>
+            </div>
 
 
-          <br>
+            <div class="detallesCuenta my-2">
+              <p class="text-secundary-light font-semibold">Detalles membresía:</p>
+              <div class=" flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>card_membership</span> {{ detalleCliente.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }}</p>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>timer</span>{{ detalleCliente.tienda?.aplicacion?.membresia?.duracion || 'Sin duración' }} días</p>
+              </div>
 
-      
-          <p class="text-4xl">Tabla de detalles del plan</p>
-          <h2>Detalles del Plan:</h2>
-          <p>ID: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.id }}</p>
-          <p><strong>Sucursales:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_sucursales || 0
-            }}</p>
-          <p><strong>Empleados:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_empleados || 0
-            }}</p>
-          <p><strong>Proveedores:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_proveedores ||
-            0 }}</p>
-          <p><strong>Facturación electrónica:</strong> {{
-            detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_electronica || 0 }}</p>
-          <p><strong>Facturación física:</strong> {{
-            detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_fisica || 0
-            }}</p>
-          <p><strong>Productos:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_productos || 0
-            }}</p>
-          <p><strong>Servicios:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_servicios || 0
-            }}</p>
-          <p><strong>Manejo reservas:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_reservas ||
-            'No aplica' }}
-          </p>
-          <p><strong>Manejo POS:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_pos || 'No aplica' }}</p>
-          <p><strong>Manejo control de gastos:</strong> {{
-            detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_control_gastos ||
-            'No aplica' }}</p>
-          <p><strong>Fecha de creación:</strong> {{
-            formatFecha(detalleCliente.tienda?.aplicacion?.plan?.detalles?.fecha_creacion) }}</p>
-          <p><strong>Fecha de modificación:</strong> {{
-            formatFecha(detalleCliente.tienda?.aplicacion?.plan?.detalles?.fecha_modificacion) }}</p>
-          <br>
+              <div class=" flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>format_italic</span> {{ detalleCliente.tienda?.aplicacion?.membresia?.descripcion || 'Sin descripcion' }}</p>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>history_toggle_off</span> {{ detalleCliente.tienda?.aplicacion?.membresia?.periodo || 'Sin periodo' }} </p>
+              </div>
 
-        
-          <p class="text-4xl">Tabla de datos de la membresia</p>
-          <h2>Datos de la membresía:</h2>
-          <p><strong>ID de la membresía:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.id || 'Sin membresía'
-            }}</p>
-          <p><strong>Nombre de la membresía:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.nombre_membresia
-            || 'Sin membresía' }}</p>
-          <p><strong>Precio:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.precio || 'Sin precio' }} USD</p>
-          <p><strong>Periodo:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.periodo || 'Sin periodo' }}</p>
-          <p><strong>Duración:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.duracion || 'Sin duración' }}
-            días</p>
-          <p><strong>Estado:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.estado?.tipo_estado || 'Sin estado' }}</p>
-          <p><strong>Descripcion:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.descripcion || 'Sin descripcion' }}.</p>
+              <div class=" flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>attach_money</span>{{ detalleCliente.tienda?.aplicacion?.membresia?.precio || 'Sin precio' }} COP</p>
+                    <div class="estadoCliente flex items-center gap-2 ">
+                    <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
+                      :class="getEstadoClass(detalleCliente.tienda?.aplicacion?.membresia?.estado?.tipo_estado)"></div>
+                    <p> {{ detalleCliente.tienda?.aplicacion?.membresia?.estado?.tipo_estado || 'Sin estado' }} </p>
+                  </div>
+              </div>
+            </div>
 
-          <br>
+          </div>
 
-          <p class="text-4xl">Tabla de datos del token</p>
-          <h2>Datos del token:</h2>
-          <p><strong>ID:</strong> {{ detalleCliente.tienda?.token?.id || 'Sin id' }}</p>
-          <p><strong>estado de token:</strong> {{ detalleCliente.tienda?.token?.estado?.tipo_estado || 'Sin estado' }}
-          </p>
-          <p><strong>Tienda asignada:</strong> {{ detalleCliente.tienda?.nombre_tienda || 'Sin tienda' }}</p>
-          <p><strong>Token activacion:</strong> {{ detalleCliente.tienda?.token?.token_activacion || 'Sin token' }}</p>
-          <p><strong>Fecha de creación:</strong> {{ formatFecha(detalleCliente.tienda?.token?.fecha_creacion) }}
-          </p>
-          <p><strong>Fecha de modificación:</strong> {{
-            formatFecha(detalleCliente.tienda?.token?.fecha_modificacion) }}</p>
-          <br>
-          <br>
-          <button @click="logout">Cerrar sesión</button>
+          <div class="tienda w-[30%]">
+            <p>Detalles de tienda:</p>
+            <div class="encabezado flex gap-3 items-center w-full mb-2">
+              <div class="gota w-[8%]">
+                <div class="user h-[40px] w-[40px] rounded-full overflow-hidden flex items-center justify-center"
+                  :class="[gotaClase]">
+                  <span class="text-white text-md font-bold">
+                    {{ inicialesNombreTienda }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="w-[92%]">
+                <div class="flex w-full items-center justify-between mb-2">
+                  <p class="text-[12px]">{{ detalleCliente.tienda?.id }}</p>
+                  <p class="flex items-center gap-1 text-[12px]"><span class="material-symbols-rounded text-[20px]"
+                      :class='[textoClase]'>history</span>{{ formatFecha(detalleCliente.tienda?.fecha_modificacion) }}</p>
+                </div>
+                <div class="nombre-Rol w-full flex justify-between items-center">
+                  <div class="nombre">
+                    <h3 class="font-semibold text-[20px] -mt-2">{{ detalleCliente.tienda?.nombre_tienda || 'Sin tienda' }}</h3>
+                    <p class="text-secundary-light text-sm -mt-2">{{ detalleCliente.tienda?.direccion_ct || 'Sin dirección' }} - {{ detalleCliente.tienda?.barrio_ct || 'Sin ciudad' }}</p>
+                  </div>
+                  <div class="estadoCliente flex items-center gap-2 ">
+                    <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
+                    :class="getEstadoClass(detalleCliente.tienda?.estado?.tipo_estado)"></div>
+                    <p>{{ detalleCliente.tienda?.estado?.tipo_estado || 'Sin estado' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+
+            <div class="my-2">
+              <p class="text-secundary-light font-semibold">Datos del establecimiento:</p>
+              <div class="documento flex justify-between items-center">
+              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                  :class='[textoClase]'>verified</span> {{ detalleCliente.tienda?.aplicacion?.nombre_app || 'Sin app' }}
+                App</p>
+            </div>
+            <div class="email-telefono flex justify-between items-center">
+              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                  :class='[textoClase]'>email</span> {{ detalleCliente.tienda?.email_tienda || 'Sin email' }}</p>
+              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                  :class='[textoClase]'>phone</span>{{ detalleCliente.tienda?.telefono_ct }}</p>
+            </div>
+            </div>
+
+            <div class="my-2">
+              <p class="text-secundary-light font-semibold">Detalles del token:</p>
+              <div class="token">
+              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                  :class='[textoClase]'>key</span> {{ detalleCliente.tienda?.token?.token_activacion }}</p>
+            </div>
+            <div class="email-telefono flex justify-between items-center">
+              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                  :class='[textoClase]'>timer</span> {{ formatFecha(detalleCliente.tienda?.token?.fecha_creacion) }}</p>
+                  <div class="estadoCliente flex items-center gap-2 ">
+                    <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
+                    :class="getEstadoClass(detalleCliente.tienda?.token?.estado?.tipo_estado)"></div>
+                    <p>{{ detalleCliente.tienda?.token?.estado?.tipo_estado || 'Sin estado' }}</p>
+                  </div>
+            </div>
+            </div>
+          </div>
+
+          <div class="plan w-[30%]">
+            <p>Detalles de aplicación:</p>
+            <div class="encabezado flex gap-3 items-center w-full mb-2">
+              <div class="gota w-[8%]">
+                <div class="user h-[40px] w-[40px] rounded-full overflow-hidden flex items-center justify-center"
+                  :class="[gotaClase]">
+                  <span class="text-white text-md font-bold">
+                    {{ inicialesNombrePlan }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="w-[92%]">
+                <div class="flex w-full items-center justify-between mb-2">
+                  <p class="text-[12px]">{{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.id }}</p>
+                  <p class="flex items-center gap-1 text-[12px]"><span class="material-symbols-rounded text-[20px]"
+                      :class='[textoClase]'>history</span> {{formatFecha(detalleCliente.tienda?.aplicacion?.plan?.detalles?.fecha_modificacion) }}</p>
+                </div>
+                <div class="nombre-Rol w-full flex justify-between items-center">
+                  <div class="nombre">
+                    <h3 class="font-semibold text-[20px] -mt-2">{{ detalleCliente.tienda?.aplicacion?.nombre_app || 'Sin app' }}</h3>
+                    <p class="text-secundary-light text-sm -mt-2">{{ detalleCliente.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }}</p>
+                  </div>
+                  <div class="estadoCliente flex items-center gap-2 ">
+                    <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
+                      :class="getEstadoClass(detalleCliente.tienda?.aplicacion?.membresia?.estado?.tipo_estado)"></div>
+                    <p> {{ detalleCliente.tienda?.aplicacion?.membresia?.estado?.tipo_estado || 'Sin estado' }} </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="my-2">
+              <p class="text-secundary-light font-semibold">Detalles del plan:</p>
+              <div class="documento flex justify-between items-center">
+              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                  :class='[textoClase]'>verified</span> Sucursales virtuales: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_sucursales || 0}}</p>
+              <p>Usadas: 0</p>
+            </div>
+            <div class="documento flex justify-between items-center">
+              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                  :class='[textoClase]'>verified</span> Empleados: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_empleados || 0
+          }}</p>
+              <p>Usadas: 0</p>
+            </div>
+            <div class="documento flex justify-between items-center">
+              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                  :class='[textoClase]'>verified</span> Proveedores: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_proveedores || 0 }}</p>
+              <p>Usadas: 0</p>
+            </div>
+            <div class="documento flex justify-between items-center">
+              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                  :class='[textoClase]'>verified</span> Productos: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_productos || 0}}</p>
+              <p>Usadas: 0</p>
+            </div>
+            <div class="documento flex justify-between items-center">
+              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                  :class='[textoClase]'>verified</span> Servicios: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_servicios || 0}}</p>
+              <p>Usadas: 0</p>
+            </div>
+            <div class="documento flex justify-between items-center">
+              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                  :class='[textoClase]'>verified</span> Facturación electrónica: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_electronica || 0 }}</p>
+              <p>Usadas: 0</p>
+            </div>
+            <div class="documento flex justify-between items-center">
+              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                  :class='[textoClase]'>verified</span> Facturación física: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_fisica || 0}}</p>
+              <p>Usadas: 0</p>
+            </div>
+            <div class="documento flex justify-between items-center">
+              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                  :class='[textoClase]'>verified</span> Manejo reservas: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_reservas ||'No aplica' }}</p>
+                  <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>verified</span> Manejo POS: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_pos || 'No aplica' }}</p>
+            </div>
+            <div class="documento flex justify-between items-center">
+              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                  :class='[textoClase]'>verified</span> Contabilidad: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_contabilidad ||'No aplica' }}</p>
+                  <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>verified</span> Manejo gastos: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_control_gastos ||'No aplica' }}</p>
+            </div>
+            <div class="documento flex justify-between items-center">
+              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                  :class='[textoClase]'>verified</span> Etiquetado barras: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_etiquetado_barras ||'No aplica' }}</p>
+                  <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>verified</span> Códigos Qr: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_codigos_qr ||'No aplica' }}</p>
+            </div>
+            <div class="documento flex justify-between items-center">
+              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                  :class='[textoClase]'>verified</span> Orden trabajo: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_orden_trabajo ||'No aplica' }}</p>
+                  <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>verified</span> Encuestas: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_encuestas ||'No aplica' }}</p>
+            </div>
+            </div>
+
+          </div> 
         </div>
       </div>
     </ModalDetalles>
