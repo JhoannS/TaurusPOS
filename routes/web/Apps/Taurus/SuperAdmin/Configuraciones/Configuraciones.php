@@ -11,9 +11,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/configuraciones', function ($aplicacion, $rol) {
             $user = auth()->user();
 
-            if (!Gate::allows('access-role', 1)) {
+            if (!in_array($user->rol->id, [1, 2, 3, 4])) {
                 abort(403, 'No tienes permisos para acceder a esta sección.');
             }
+            
 
             if ($user->tienda && $user->tienda->aplicacion->nombre_app === $aplicacion) {
                 return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Configuraciones/Configuraciones', [
