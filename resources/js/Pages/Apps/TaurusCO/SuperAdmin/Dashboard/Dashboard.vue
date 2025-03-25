@@ -1,3 +1,88 @@
+<script setup>
+import { router, Head, usePage } from '@inertiajs/vue3';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
+import axios from 'axios';
+import 'dayjs/locale/es';
+import dayjs from 'dayjs';
+import SaludoOpciones from '@/Components/header/Essentials/SaludoOpciones.vue';
+import Clientes from '@/Components/TablaDatos/TaurusCo/Clientes.vue';
+import ExportarExcel from '@/components/ExportarExcel/ExportarExcel.vue';
+import Modal from '@/Components/Modales/Essentials/Modal.vue';
+
+const props = defineProps({
+  auth: {
+    type: Object,
+    required: true
+  },
+  clientes: {
+    type: Array,
+    default: () => [],
+  },
+  aplicacion: {
+    type: String,
+    default: ''
+  },
+  errors: {
+    type: Object,
+    required: true
+  },
+})
+
+const user = props.auth.user
+const auth = usePage().props.auth;
+const clientes = ref(props.clientes);
+
+dayjs.locale('es')
+const formatFecha = (fecha) => {
+  if (!fecha) return 'Sin fecha'
+  return dayjs(fecha).format('dddd D [de] MMMM [de] YYYY [a las] h:mm a')
+}
+
+const clientesPorActivacion = ref([])
+const cargarClientesPorActivacion = async () => {
+  try {
+    const { data } = await axios.get(route('clientes.activacion', {
+      aplicacion: props.aplicacion, 
+      rol: props.auth.user.rol
+    }))
+    clientesPorActivacion.value = data
+  } catch (error) {
+    console.error('Error al cargar clientes:', error)
+  }
+}
+
+onMounted(() => {
+  cargarClientesPorActivacion()
+})
+
+
+const coloresBg = {
+  'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
+  'Essentials': 'bg-essentials-primary shadow-essentials',
+  'Machine': 'bg-machine-primary shadow-machine',
+  'Shopper': 'bg-shopper-primary shadow-shopper',
+  'default': 'bg-gray-300 shadow-gray-300'
+};
+const coloresTexto = {
+  'TaurusCO': 'text-universal-naranja',
+  'Essentials': 'text-essentials-primary',
+  'Machine': 'text-machine-primary',
+  'Shopper': 'text-shopper-primary',
+  'default': 'text-gray-500'
+};
+
+const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app || 'default');
+const bgClase = computed(() => coloresBg[appName.value]);
+const textoClase = computed(() => coloresTexto[appName.value]);
+const searchQuery = ref('');
+
+
+const logout = () => {
+  router.post(route('logout'))
+}
+
+</script>
+
 <template>
 
   <Head title="Dashboard" />
@@ -50,19 +135,29 @@
           class="border  bg-secundary-opacity border-secundary-light rounded-md w-full p-2 flex justify-between items-center">
           <div class="clientesInactivos">
             <p class="text-[14px]">Clientes por activación:</p>
-            <div v-for="cliente in clientesPorActivacion" :key="cliente.id"
-              class="clientesActivacion flex justify-between items-center gap-4 w-full">
-              <div class="flex items-center gap-2">
-                <div class="gota bg-semaforo-rojo h-3 w-5 rounded-full"></div>
-                <div>
-                  <h3 class="font-semibold">{{ cliente.nombres_ct }} {{ cliente.apellidos_ct }}</h3>
-                  <p class="-mt-[5px] text-secundary-light text-[13px] font-medium">
-                    {{ cliente.nombre_tienda }}
-                  </p>
+
+           
+            <div v-if="clientesPorActivacion.length === 0" class="text-semaforo-verde font-semibold">
+              Estás al día, muy bien 👌
+            </div>
+
+          
+            <div v-else>
+              <div v-for="cliente in clientesPorActivacion" :key="cliente.id"
+                class="clientesActivacion flex justify-between items-center gap-4 w-full">
+                <div class="flex items-center gap-2">
+                  <div class="gota bg-semaforo-rojo h-3 w-5 rounded-full"></div>
+                  <div>
+                    <h3 class="font-semibold">{{ cliente.nombres_ct }} {{ cliente.apellidos_ct }}</h3>
+                    <p class="-mt-[5px] text-secundary-light text-[13px] font-medium">
+                      {{ cliente.nombre_tienda }}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
         </div>
       </div>
       <!-- header administrativo -->
@@ -72,16 +167,6 @@
           <input v-model="searchQuery" type="search" placeholder="Buscar clientes..." class="" />
           <span class="material-symbols-rounded" :class='[textoClase]'>travel_explore</span>
         </div>
-
-
-
-        <a :href="route('essentials.admin.crearItem')">
-          <button class="rounded-md p-1.5 flex items-center gap-2" :class="[bgClase]">Crear cliente<span
-              class="material-symbols-rounded"> outbound </span></button>
-        </a>
-
-
-
       </div>
       <ExportarExcel idTabla="tabla" nombreArchivo="Movimientos_Almacenados" titulo="Movimientos almacenados" />
       <!-- formulario -->
@@ -94,95 +179,3 @@
 
   </main>
 </template>
-
-<script setup>
-import SaludoOpciones from '@/Components/header/Essentials/SaludoOpciones.vue';
-import Clientes from '@/Components/TablaDatos/TaurusCo/Clientes.vue';
-import ExportarExcel from '@/components/ExportarExcel/ExportarExcel.vue';
-import Modal from '@/Components/Modales/Essentials/Modal.vue';
-
-const showModal = ref(false);
-const branchTitle = ref('');
-const branchDescription = ref('');
-
-
-
-import dayjs from 'dayjs'
-import 'dayjs/locale/es' // ✅ Importa el idioma español
-import axios from 'axios'
-dayjs.locale('es')
-import { ref, onMounted, onUnmounted, computed } from 'vue';
-import { router, Head, usePage } from '@inertiajs/vue3';
-
-const props = defineProps({
-  auth: {
-    type: Object,
-    required: true
-  },
-  clientes: {
-    type: Array,
-    default: () => [],
-  },
-  aplicacion: { // ✅ Define la prop correctamente
-    type: String,
-    default: ''
-  },
-  errors: {
-    type: Object,
-    required: true
-  },
-})
-
-const clientesPorActivacion = ref([])
-
-const cargarClientesPorActivacion = async () => {
-  try {
-    const { data } = await axios.get(route('clientes.activacion', {
-      aplicacion: props.aplicacion, // ✅ Paso dinámico desde props
-      rol: props.auth.user.rol // ✅ Paso dinámico desde props
-    }))
-    clientesPorActivacion.value = data
-  } catch (error) {
-    console.error('Error al cargar clientes:', error)
-  }
-}
-
-onMounted(() => {
-  cargarClientesPorActivacion()
-})
-const user = props.auth.user
-const auth = usePage().props.auth;
-const clientes = ref(props.clientes);
-
-const logout = () => {
-  router.post(route('logout'))
-}
-
-const formatFecha = (fecha) => {
-  if (!fecha) return 'Sin fecha'
-  return dayjs(fecha).format('dddd D [de] MMMM [de] YYYY [a las] h:mm a')
-}
-
-
-// ✅ Clases dinámicas según la aplicación
-const coloresBg = {
-  'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
-  'Essentials': 'bg-essentials-primary shadow-essentials',
-  'Machine': 'bg-machine-primary shadow-machine',
-  'Shopper': 'bg-shopper-primary shadow-shopper',
-  'default': 'bg-gray-300 shadow-gray-300'
-};
-const coloresTexto = {
-  'TaurusCO': 'text-universal-naranja',
-  'Essentials': 'text-essentials-primary',
-  'Machine': 'text-machine-primary',
-  'Shopper': 'text-shopper-primary',
-  'default': 'text-gray-500'
-};
-const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app || 'default');
-
-const bgClase = computed(() => coloresBg[appName.value]);
-const textoClase = computed(() => coloresTexto[appName.value]);
-const searchQuery = ref('');
-
-</script>
