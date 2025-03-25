@@ -118,23 +118,21 @@ class DashboardController extends Controller
     }
     public function getClientesPorActivacion($aplicacion, $rol)
     {
-        try {
-            $clientes = DB::table('clientes_taurus')
-                ->join('token_accesos', 'clientes_taurus.id', '=', 'token_accesos.cliente_id')
-                ->join('tiendas_sistematizadas', 'clientes_taurus.tienda_id', '=', 'tiendas_sistematizadas.id')
-                ->where('token_accesos.token_activacion', 'TokenPrueba131121220125')
-                ->select(
-                    'clientes_taurus.nombres_ct',
-                    'tiendas_sistematizadas.nombre_tienda'
-                )
-                ->get();
+        $clientes = ClienteTaurus::select(
+            'clientes_taurus.id',
+            'clientes_taurus.nombres_ct',
+            'clientes_taurus.apellidos_ct',
+            'tiendas_sistematizadas.nombre_tienda'
+        )
+            ->join('tiendas_sistematizadas', 'clientes_taurus.id_tienda', '=', 'tiendas_sistematizadas.id')
+            ->join('token_accesos', 'tiendas_sistematizadas.id_token', '=', 'token_accesos.id')
+            ->where('token_accesos.id_estado', 2) // ✅ Filtrar por id_estado = 2
+            ->get();
 
-            return response()->json($clientes);
-        } catch (\Exception $e) {
-            // Devuelve el mensaje de error completo para depurar
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
+        return response()->json($clientes);
     }
+
+
 
     use AuthorizesRequests; // 👈 Añadir este trait aquí
 
@@ -148,7 +146,7 @@ class DashboardController extends Controller
         }
 
         // ✅ Guardar el nombre del rol antes de eliminarlo
-        $nombreRol = $cliente->rol ? $cliente->rol->nombre_rol : 'Invitado';
+        $nombreRol = $cliente->rol ? $cliente->rol->nombre_rol : 'SuperAdmin';
 
         // ✅ Si la tienda tiene un token asociado, elimínalo primero
         if ($cliente->tienda && $cliente->tienda->token) {
@@ -185,6 +183,7 @@ class DashboardController extends Controller
             'rol' => ucfirst($nombreRol) // ✅ Usa el nombre del rol
         ]);
     }
+
 
 
 

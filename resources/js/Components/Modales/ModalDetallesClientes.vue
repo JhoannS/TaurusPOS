@@ -22,8 +22,6 @@
         <p class="mb-[10px] text-secundary-light">{{ descripcion }}</p>
 
       <hr class="h-[2px] w-full" />
-        
-  
         <!-- Contenido dinámico -->
         <slot></slot>
   
