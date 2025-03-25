@@ -67,6 +67,19 @@ onUnmounted(() => {
     clearInterval(clockInterval);
 });
 
+
+const initials = computed(() => {
+    const nombres = props.auth.user?.nombres_ct || '';
+    const apellidos = props.auth.user?.apellidos_ct || '';
+
+    // ⚡ Toma la primera letra del primer nombre y primer apellido
+    const firstNameInitial = nombres.split(' ')[0]?.charAt(0).toUpperCase() || '';
+    const lastNameInitial = apellidos.split(' ')[0]?.charAt(0).toUpperCase() || '';
+
+    return firstNameInitial + lastNameInitial;
+});
+
+
 // ✅ Clases dinámicas según la aplicación
 const colores = {
     'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
@@ -111,7 +124,12 @@ const gotaClase = computed(() => colores[appName.value]);
             </div>
 
             <div v-if="currentRoute !== configuracionesRoute" class="logo flex gap-3 items-center">
-                <div :class="[gotaClase]" class="gota h-10 w-10 rounded-full"></div>
+                <div class="user h-[40px] w-[40px] rounded-full overflow-hidden flex items-center justify-center"
+                    :class="[gotaClase]">
+                    <span class="text-white text-md font-bold">
+                        {{ initials }}
+                    </span>
+                </div>
                 <div class="logo">
                     <div v-if="auth && auth.user">
                         <h3 class="font-semibold"> {{ auth.user.nombres_ct }}</h3>

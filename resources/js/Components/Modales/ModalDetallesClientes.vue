@@ -13,16 +13,6 @@
           <span class="material-symbols-rounded">chevron_left</span>
           <p class="text-[12px]">Volver</p>
         </div>
-  
-        <!-- Título -->
-        <div class="encabezado flex gap-2 items-center bg-transparent my-2">
-          <div class="gota h-[20px] w-[20px] rounded-full bg-essentials-primary shadow-essentials"></div>
-          <p class="bg-transparent text-[25px]">{{ titulo }}</p>
-        </div>
-        <p class="mb-[10px] text-secundary-light">{{ descripcion }}</p>
-
-      <hr class="h-[2px] w-full" />
-        <!-- Contenido dinámico -->
         <slot></slot>
   
       </div>

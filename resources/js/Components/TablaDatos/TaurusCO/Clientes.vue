@@ -1,12 +1,11 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import axios from 'axios';
 import { router, Head, usePage } from '@inertiajs/vue3';
+import axios from 'axios';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import ModalDetalles from '@/Components/Modales/ModalDetallesClientes.vue';
 
-dayjs.locale('es');
 
 const props = defineProps({
   auth: { type: Object, required: true },
@@ -21,14 +20,10 @@ const props = defineProps({
     required: true
   },
   rol: {
-    type: Object, // ✅ Aceptar objeto en lugar de string
+    type: Object, 
     required: true
   }
 })
-
-// Variables reactivas
-const detalleCliente = ref(null);
-const showModal = ref(false);
 
 function getEstadoClass(estado) {
   if (estado === 'Inactivo') return 'bg-semaforo-rojo';
@@ -44,9 +39,6 @@ function getEstadoTokenClass(token) {
   return '';
 }
 
-
-
-// Filtrado de clientes (tal como lo tienes)
 const filteredClientes = computed(() => {
   if (!props.clientes || !Array.isArray(props.clientes)) return [];
   if (!props.searchQuery.trim()) return props.clientes;
@@ -67,42 +59,37 @@ const filteredClientes = computed(() => {
     );
   });
 });
-function handleBeforeEnter(el) {
-  el.classList.add('animate-fadeIn');
-}
 
-function handleBeforeLeave(el) {
-  el.classList.add('animate-fadeOut');
-}
-// Función para formatear fechas
+dayjs.locale('es');
 const formatFecha = (fecha) => {
   if (!fecha || !dayjs(fecha).isValid()) return 'Sin fecha';
   return dayjs(fecha).format('dddd D [de] MMMM [de] YYYY [a las] h:mm a');
 };
 
-// Función para abrir el modal de detalle usando axios
+
+const detalleCliente = ref(null);
+const showModal = ref(false);
+
 function openDetalle(clienteId) {
   axios.get(route('aplicacion.dashboard.detalle', {
     aplicacion: props.auth.user.tienda.aplicacion.nombre_app,
     rol: props.auth.user.rol.id,
     idCliente: clienteId
   }))
-  .then(response => {
-    detalleCliente.value = response.data;
-    showModal.value = true;
-  })
-  .catch(error => {
-    console.error('Error al cargar los detalles del cliente:', error);
-  });
+    .then(response => {
+      detalleCliente.value = response.data;
+      showModal.value = true;
+    })
+    .catch(error => {
+      console.error('Error al cargar los detalles del cliente:', error);
+    });
 }
-
-// Función para cerrar el modal
 function closeModal() {
   showModal.value = false;
   detalleCliente.value = null;
 }
 
-// ✅ FUNCIONES
+
 const confirmDelete = (id) => {
   if (id === props.userId) {
     alert('❌ No puedes eliminar tu propia cuenta.')
@@ -110,7 +97,7 @@ const confirmDelete = (id) => {
   }
 
   if (confirm('⚠️ ¿Estás seguro de que deseas eliminar este cliente?')) {
-    deleteCliente(id) // ✅ Llamada correcta
+    deleteCliente(id) 
   }
 }
 
@@ -125,8 +112,8 @@ const deleteCliente = (id) => {
     rol: props.rol,
     id: id
   }, {
-    replace: true, // ✅ Usa replace para actualizar correctamente la URL
-    prefix: 'dashboard' // ✅ Añade el prefijo directamente en la URL
+    replace: true, 
+    prefix: 'dashboard' 
   }), {
     onSuccess: () => {
       alert('✅ Cliente eliminado correctamente.');
@@ -137,6 +124,14 @@ const deleteCliente = (id) => {
     }
   });
 }
+
+function handleBeforeEnter(el) {
+  el.classList.add('animate-fadeIn');
+}
+function handleBeforeLeave(el) {
+  el.classList.add('animate-fadeOut');
+}
+
 </script>
 
 <template>
@@ -162,7 +157,7 @@ const deleteCliente = (id) => {
           <td class="text-[14px] p-2">{{ cliente.nombre_completo }}</td>
           <td class="text-[14px] p-2">{{ cliente.telefono }}</td>
           <td class="text-[14px] p-2">{{ cliente.nombre_tienda || 'Sin tienda' }}</td>
-         
+
           <td class="text-[14px] p-2">{{ cliente.aplicacion }}</td>
           <td class="text-[14px] p-2">{{ cliente.membresia }}</td>
           <td class="text-[14px] p-2">
@@ -173,14 +168,16 @@ const deleteCliente = (id) => {
               {{ cliente.estado_token || 'Sin estado' }}
             </span>
           </td>
-         
+
           <td class="text-[14px] p-2">{{ formatFecha(cliente.fecha_creacion) }}</td>
           <td>
             <div class="flex gap-2 items-center">
-              <button @click="confirmDelete(cliente.id)" class="material-symbols-rounded hover:text-essentials-primary cursor-pointer">
+              <button @click="confirmDelete(cliente.id)"
+                class="material-symbols-rounded hover:text-essentials-primary cursor-pointer">
                 delete
               </button>
-              <button @click="openDetalle(cliente.id)" class="material-symbols-rounded hover:text-blue-400 cursor-pointer">
+              <button @click="openDetalle(cliente.id)"
+                class="material-symbols-rounded hover:text-blue-400 cursor-pointer">
                 eye_tracking
               </button>
             </div>
@@ -194,93 +191,106 @@ const deleteCliente = (id) => {
       No hay coincidencias.
     </div>
 
-    <!-- Mostrar modal si showModal es true -->
-    <ModalDetalles :isOpen="showModal" titulo="Datos del usuario:" descripcion="Detalles completos del cliente" @close="closeModal">
-      <!-- Aquí muestra la información completa de detalleCliente -->
+    <ModalDetalles :isOpen="showModal" titulo="Datos del usuario:" descripcion="Detalles completos del cliente"
+      @close="closeModal">
       <div v-if="detalleCliente">
         <div>
-    <p class="text-4xl">Tabla de clientes taurus</p>
-    <p>ID: {{ detalleCliente.id }}</p>
-    <p>Estado: {{ detalleCliente.estado?.tipo_estado }} </p>
-    <p><strong>Rol:</strong> {{ detalleCliente.rol?.tipo_rol || 'Sin rol' }}</p>
-    <p>Tienda asignada: {{ detalleCliente.tienda?.nombre_tienda }}</p>
-    <h1>Bienvenido, {{ detalleCliente.nombres_ct }} {{ detalleCliente.apellidos_ct }}</h1>
-    <p><strong>Tipo de documento:</strong> {{ detalleCliente.tipo_documento?.documento_legal || 'Sin tipo de documento' }}</p>
-    <p><strong>Documento:</strong> {{ detalleCliente.numero_documento_ct }}</p>
-    <p><strong>Email:</strong> {{ detalleCliente.email_ct }}</p>
-    <p><strong>Teléfono:</strong> {{ detalleCliente.telefono_ct }}</p>
-    <p><strong>Fecha de creación:</strong> {{ formatFecha(detalleCliente.fecha_creacion) }}</p>
-    <p><strong>Fecha de modificación:</strong> {{ formatFecha(detalleCliente.fecha_modificacion) }}</p>
+          <p class="text-4xl">Tabla de clientes taurus</p>
+          <p>ID: {{ detalleCliente.id }}</p>
+          <p>Estado: {{ detalleCliente.estado?.tipo_estado }} </p>
+          <p><strong>Rol:</strong> {{ detalleCliente.rol?.tipo_rol || 'Sin rol' }}</p>
+          <p>Tienda asignada: {{ detalleCliente.tienda?.nombre_tienda }}</p>
+          <h1>Bienvenido, {{ detalleCliente.nombres_ct }} {{ detalleCliente.apellidos_ct }}</h1>
+          <p><strong>Tipo de documento:</strong> {{ detalleCliente.tipo_documento?.documento_legal || 'Sin tipo de documento' }}</p>
+          <p><strong>Documento:</strong> {{ detalleCliente.numero_documento_ct }}</p>
+          <p><strong>Email:</strong> {{ detalleCliente.email_ct }}</p>
+          <p><strong>Teléfono:</strong> {{ detalleCliente.telefono_ct }}</p>
+          <p><strong>Fecha de creación:</strong> {{ formatFecha(detalleCliente.fecha_creacion) }}</p>
+          <p><strong>Fecha de modificación:</strong> {{ formatFecha(detalleCliente.fecha_modificacion) }}</p>
 
-    <br>
+          <br>
 
-    <p class="text-4xl">Tabla de tienda sistematizada:</p>
-    <h2>Datos de la tienda vinculada:</h2>
-    <p>ID: {{ detalleCliente.tienda?.id }}</p>
-    <p><strong>Estado de la tienda:</strong> {{ detalleCliente.tienda?.estado?.tipo_estado || 'Sin estado' }}</p>
-    <p>Token: {{ detalleCliente.tienda?.token?.token_activacion }}</p>
-    <p><strong>Nombre de la tienda:</strong> {{ detalleCliente.tienda?.nombre_tienda || 'Sin tienda' }}</p>
-    <p><strong>Dirección:</strong> {{ detalleCliente.tienda?.direccion_ct || 'Sin dirección' }}</p>
-    <p><strong>Ciudad:</strong> {{ detalleCliente.tienda?.barrio_ct || 'Sin ciudad' }}</p>
-    <p><strong>Email de la tienda:</strong> {{ detalleCliente.tienda?.email_tienda || 'Sin email' }}</p>
-    <p><strong>Teléfono:</strong> {{ detalleCliente.tienda?.telefono_ct }}</p>
-    <p><strong>Fecha de creación:</strong> {{ formatFecha(detalleCliente.tienda?.fecha_creacion) }}</p>
-    <p><strong>Fecha de modificación:</strong> {{ formatFecha(detalleCliente.tienda?.fecha_modificacion) }}</p>
+          <p class="text-4xl">Tabla de tienda sistematizada:</p>
+          <h2>Datos de la tienda vinculada:</h2>
+          <p>ID: {{ detalleCliente.tienda?.id }}</p>
+          <p><strong>Estado de la tienda:</strong> {{ detalleCliente.tienda?.estado?.tipo_estado || 'Sin estado' }}</p>
+          <p>Token: {{ detalleCliente.tienda?.token?.token_activacion }}</p>
+          <p><strong>Nombre de la tienda:</strong> {{ detalleCliente.tienda?.nombre_tienda || 'Sin tienda' }}</p>
+          <p><strong>Dirección:</strong> {{ detalleCliente.tienda?.direccion_ct || 'Sin dirección' }}</p>
+          <p><strong>Ciudad:</strong> {{ detalleCliente.tienda?.barrio_ct || 'Sin ciudad' }}</p>
+          <p><strong>Email de la tienda:</strong> {{ detalleCliente.tienda?.email_tienda || 'Sin email' }}</p>
+          <p><strong>Teléfono:</strong> {{ detalleCliente.tienda?.telefono_ct }}</p>
+          <p><strong>Fecha de creación:</strong> {{ formatFecha(detalleCliente.tienda?.fecha_creacion) }}</p>
+          <p><strong>Fecha de modificación:</strong> {{ formatFecha(detalleCliente.tienda?.fecha_modificacion) }}</p>
 
-    <br>
+          <br>
 
 
-    <br>
+          <br>
 
-    <!-- ✅ Datos del plan -->
-    <p class="text-4xl">Tabla de detalles del plan</p>
-    <h2>Detalles del Plan:</h2>
-    <p>ID: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.id }}</p>
-    <p><strong>Sucursales:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_sucursales || 0 }}</p>
-    <p><strong>Empleados:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_empleados || 0 }}</p>
-    <p><strong>Proveedores:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_proveedores || 0 }}</p>
-    <p><strong>Facturación electrónica:</strong> {{
-      detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_electronica || 0 }}</p>
-    <p><strong>Facturación física:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_fisica || 0
-      }}</p>
-    <p><strong>Productos:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_productos || 0 }}</p>
-    <p><strong>Servicios:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_servicios || 0 }}</p>
-    <p><strong>Manejo reservas:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_reservas || 'No aplica' }}
-    </p>
-    <p><strong>Manejo POS:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_pos || 'No aplica' }}</p>
-    <p><strong>Manejo control de gastos:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_control_gastos ||
-      'No aplica' }}</p>
- <p><strong>Fecha de creación:</strong> {{ formatFecha(detalleCliente.tienda?.aplicacion?.plan?.detalles?.fecha_creacion) }}</p>
- <p><strong>Fecha de modificación:</strong> {{ formatFecha(detalleCliente.tienda?.aplicacion?.plan?.detalles?.fecha_modificacion) }}</p>
-    <br>
+      
+          <p class="text-4xl">Tabla de detalles del plan</p>
+          <h2>Detalles del Plan:</h2>
+          <p>ID: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.id }}</p>
+          <p><strong>Sucursales:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_sucursales || 0
+            }}</p>
+          <p><strong>Empleados:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_empleados || 0
+            }}</p>
+          <p><strong>Proveedores:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_proveedores ||
+            0 }}</p>
+          <p><strong>Facturación electrónica:</strong> {{
+            detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_electronica || 0 }}</p>
+          <p><strong>Facturación física:</strong> {{
+            detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_fisica || 0
+            }}</p>
+          <p><strong>Productos:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_productos || 0
+            }}</p>
+          <p><strong>Servicios:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_servicios || 0
+            }}</p>
+          <p><strong>Manejo reservas:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_reservas ||
+            'No aplica' }}
+          </p>
+          <p><strong>Manejo POS:</strong> {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_pos || 'No aplica' }}</p>
+          <p><strong>Manejo control de gastos:</strong> {{
+            detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_control_gastos ||
+            'No aplica' }}</p>
+          <p><strong>Fecha de creación:</strong> {{
+            formatFecha(detalleCliente.tienda?.aplicacion?.plan?.detalles?.fecha_creacion) }}</p>
+          <p><strong>Fecha de modificación:</strong> {{
+            formatFecha(detalleCliente.tienda?.aplicacion?.plan?.detalles?.fecha_modificacion) }}</p>
+          <br>
 
-    <!-- ✅ Datos de la membresía -->
-    <p class="text-4xl">Tabla de datos de la membresia</p>
-    <h2>Datos de la membresía:</h2>
-    <p><strong>ID de la membresía:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.id || 'Sin membresía' }}</p>
-    <p><strong>Nombre de la membresía:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }}</p>
-    <p><strong>Precio:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.precio || 'Sin precio' }} USD</p>
-    <p><strong>Periodo:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.periodo || 'Sin periodo' }}</p>
-    <p><strong>Duración:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.duracion || 'Sin duración' }} días</p>
-    <p><strong>Estado:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.estado?.tipo_estado || 'Sin estado' }}</p>
-    <p><strong>Descripcion:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.descripcion || 'Sin descripcion' }}.</p>
+        
+          <p class="text-4xl">Tabla de datos de la membresia</p>
+          <h2>Datos de la membresía:</h2>
+          <p><strong>ID de la membresía:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.id || 'Sin membresía'
+            }}</p>
+          <p><strong>Nombre de la membresía:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.nombre_membresia
+            || 'Sin membresía' }}</p>
+          <p><strong>Precio:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.precio || 'Sin precio' }} USD</p>
+          <p><strong>Periodo:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.periodo || 'Sin periodo' }}</p>
+          <p><strong>Duración:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.duracion || 'Sin duración' }}
+            días</p>
+          <p><strong>Estado:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.estado?.tipo_estado || 'Sin estado' }}</p>
+          <p><strong>Descripcion:</strong> {{ detalleCliente.tienda?.aplicacion?.membresia?.descripcion || 'Sin descripcion' }}.</p>
 
-    <br>
+          <br>
 
-    <p class="text-4xl">Tabla de datos del token</p>
-    <h2>Datos del token:</h2>
-    <p><strong>ID:</strong> {{ detalleCliente.tienda?.token?.id || 'Sin id' }}</p>
-    <p><strong>estado de token:</strong> {{ detalleCliente.tienda?.token?.estado?.tipo_estado || 'Sin estado' }}</p>
-    <p><strong>Tienda asignada:</strong> {{ detalleCliente.tienda?.nombre_tienda || 'Sin tienda' }}</p>
-    <p><strong>Token activacion:</strong> {{ detalleCliente.tienda?.token?.token_activacion || 'Sin token' }}</p>
-    <p><strong>Fecha de creación:</strong> {{ formatFecha(detalleCliente.tienda?.token?.fecha_creacion) }}
-    </p>
-    <p><strong>Fecha de modificación:</strong> {{
-      formatFecha(detalleCliente.tienda?.token?.fecha_modificacion) }}</p>
-    <br>
-    <br>
-    <button @click="logout">Cerrar sesión</button>
-  </div>
+          <p class="text-4xl">Tabla de datos del token</p>
+          <h2>Datos del token:</h2>
+          <p><strong>ID:</strong> {{ detalleCliente.tienda?.token?.id || 'Sin id' }}</p>
+          <p><strong>estado de token:</strong> {{ detalleCliente.tienda?.token?.estado?.tipo_estado || 'Sin estado' }}
+          </p>
+          <p><strong>Tienda asignada:</strong> {{ detalleCliente.tienda?.nombre_tienda || 'Sin tienda' }}</p>
+          <p><strong>Token activacion:</strong> {{ detalleCliente.tienda?.token?.token_activacion || 'Sin token' }}</p>
+          <p><strong>Fecha de creación:</strong> {{ formatFecha(detalleCliente.tienda?.token?.fecha_creacion) }}
+          </p>
+          <p><strong>Fecha de modificación:</strong> {{
+            formatFecha(detalleCliente.tienda?.token?.fecha_modificacion) }}</p>
+          <br>
+          <br>
+          <button @click="logout">Cerrar sesión</button>
+        </div>
       </div>
     </ModalDetalles>
   </div>
