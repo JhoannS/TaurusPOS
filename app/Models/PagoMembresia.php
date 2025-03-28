@@ -9,11 +9,12 @@ class PagoMembresia extends Model
     protected $table = 'pagos_membresia';
 
     public const CREATED_AT = 'fecha_creacion';
-    public const UPDATED_AT = 'fecha_modificacion';
+    public const UPDATED_AT = 'fecha_pago';
     
     protected $fillable = [
         'id_cliente',
         'id_tienda',
+        'monto_total', // ✅ Agregado
         'id_medio_pago',
         'id_estado',
         'fecha_pago'

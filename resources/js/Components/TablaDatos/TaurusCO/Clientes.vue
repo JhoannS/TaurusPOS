@@ -26,9 +26,9 @@ const props = defineProps({
 })
 
 function getEstadoClass(estado) {
-  if (estado === 'Inactivo') return 'bg-semaforo-rojo';
+  if (estado === 'Inactivo' || estado === 'Pendiente') return 'bg-semaforo-rojo';
   if (estado === 'Suspendido') return 'bg-semaforo-amarillo';
-  if (estado === 'Activo') return 'bg-semaforo-verde';
+  if (estado === 'Activo' || estado === 'Pagada') return 'bg-semaforo-verde';
   return '';
 }
 
@@ -38,6 +38,7 @@ function getEstadoTokenClass(token) {
   if (token === 'Activo') return 'bg-semaforo-verde';
   return '';
 }
+
 
 const filteredClientes = computed(() => {
   if (!props.clientes || !Array.isArray(props.clientes)) return [];
@@ -222,7 +223,9 @@ const totalPrecioFormat = computed(() => {
           <th class="p-2 text-left">Tienda</th>
           <th class="p-2 text-left">Aplicación</th>
           <th class="p-2 text-left">Membresía</th>
-          <th class="p-2 text-left">Precio</th>
+          <th class="p-2 text-left">Monto a pagar</th>
+          <th class="p-2 text-left">Fecha pago</th>
+          <th class="p-2 text-left">Estado pago</th>
           <th class="p-2 text-left">Token</th>
           <th class="p-2 text-left">Creación</th>
           <th class="p-2 text-left">Acciones</th>
@@ -237,8 +240,12 @@ const totalPrecioFormat = computed(() => {
 
           <td class="text-[14px] p-2">{{ cliente.aplicacion }}</td>
           <td class="text-[14px] p-2">{{ cliente.membresia }}</td>
+          <td>{{ cliente.monto_pago || 'Sin pago' }}</td>
+          <td class="text-[14px] p-2">{{ formatFecha(cliente.fecha_pago ) }}</td>
           <td class="text-[14px] p-2">
-            {{ cliente.precio || 'Sin precio' }}
+            <span class="p-1 rounded-[5px] font-bold" :class="getEstadoClass(cliente.estado_pago)">
+               {{ cliente.estado_pago || 'Sin pago' }}
+            </span>
           </td>
           <td class="text-[14px] p-2">
             <span class="p-1 rounded-[5px] font-bold" :class="getEstadoTokenClass(cliente.estado_token)">

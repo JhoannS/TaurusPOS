@@ -57,7 +57,13 @@ class DashboardController extends Controller
                 \DB::raw('IFNULL(membresias.precio, 0) as precio'), // ✅ Reemplazo aquí
                 \DB::raw('COALESCE(estados.tipo_estado, "Sin estado") as estado_tipo'),
                 \DB::raw('COALESCE(token_estado.tipo_estado, "Sin estado") as estado_token'),
-                'clientes_taurus.fecha_creacion'
+                'clientes_taurus.fecha_creacion',
+
+                // ✅ Estado, monto y fecha desde pagos_membresia
+                'pagos_membresia.monto_total as monto_pago',
+                'pagos_membresia.fecha_pago as fecha_pago',
+                'estado_pago.tipo_estado as estado_pago'
+
             )
                 ->leftJoin('tiendas_sistematizadas', 'clientes_taurus.id_tienda', '=', 'tiendas_sistematizadas.id')
                 ->leftJoin('token_accesos', 'tiendas_sistematizadas.id_token', '=', 'token_accesos.id')
@@ -65,10 +71,14 @@ class DashboardController extends Controller
                 ->leftJoin('membresias', 'aplicaciones_web.id_membresia', '=', 'membresias.id')
                 ->leftJoin('estados', 'clientes_taurus.id_estado', '=', 'estados.id')
                 ->leftJoin('estados as token_estado', 'token_accesos.id_estado', '=', 'token_estado.id')
+
+                // ✅ JOIN para los pagos de membresía
+                ->leftJoin('pagos_membresia', 'clientes_taurus.id', '=', 'pagos_membresia.id_cliente')
+                ->leftJoin('estados as estado_pago', 'pagos_membresia.id_estado', '=', 'estado_pago.id')
                 ->orderBy('clientes_taurus.fecha_creacion', 'DESC')
                 ->get();
-            
-            
+
+
             $totalPrecio = $clientes->sum('precio');
 
             return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Dashboard/Dashboard', [

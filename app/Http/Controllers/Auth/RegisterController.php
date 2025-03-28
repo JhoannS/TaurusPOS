@@ -19,8 +19,8 @@ class RegisterController extends Controller
     // ✅ Mostrar formulario de registro
     public function show()
     {
-        $tipoDocumentos = TipoDocumento::all(); 
-        $aplicaciones = AplicacionWeb::where('id_membresia', 1)->get(); 
+        $tipoDocumentos = TipoDocumento::all();
+        $aplicaciones = AplicacionWeb::where('id_membresia', 1)->get();
 
         return Inertia::render('Auth/Registro', [
             'tiposDocumento' => $tipoDocumentos,
@@ -31,25 +31,35 @@ class RegisterController extends Controller
     // ✅ Lógica de registro
     public function register(Request $request)
     {
+        $request->merge([
+            'id_aplicacion' => $request->id_aplicacion ? (int) $request->id_aplicacion : null
+        ]);
         // ✅ Validación de datos
         $request->validate([
-            'nombres_ct' => 'required|string|max:20',
-            'apellidos_ct' => 'required|string|max:20',
+            'nombres_ct' => 'required|string|max:25',
+            'apellidos_ct' => 'required|string|max:25',
             'id_tipo_documento' => 'required|integer|exists:tipo_documentos,id',
-            'numero_documento_ct' => 'required|string|max:20|unique:clientes_taurus,numero_documento_ct',
-            'email_ct' => 'required|string|email|max:255|unique:clientes_taurus,email_ct',
+            'numero_documento_ct' => 'required|string|max:15|unique:clientes_taurus,numero_documento_ct',
+            'email_ct' => 'required|string|email|max:60|unique:clientes_taurus,email_ct',
             'telefono_ct' => 'required|string|max:10',
             'contrasenia_ct' => 'required|string|min:6|confirmed',
-            'id_aplicacion' => 'required|exists:aplicaciones_web,id',
-        ],[
+            'id_aplicacion' => 'required|nullable|integer|exists:aplicaciones_web,id',
+
+        ], [
             'nombres_ct.required' => 'Los nombres son requeridos.',
             'apellidos_ct.required' => 'Los apellidos son requeridos.',
             'id_tipo_documento.required' => 'El tipo de documento es requerido.',
             'numero_documento_ct.required' => 'El número de documento es requerido.',
+            'numero_documento_ct.unique' => 'Oh, oh. Este documento ya existe',
             'email_ct.required' => 'El email es requerido.',
+            'email_ct.unique' => 'Oh, oh, este correo ya se encuentra vinculado.',
             'telefono_ct.required' => 'El teléfono es requerido.',
+            'telefono_ct.max' => 'El teléfono debe ser de maximo 10 digitos.',
             'contrasenia_ct.required' => 'La contraseña es requerida.',
+            'contrasenia_ct.min' => 'La contraseña debe ser minimo de 6 caracteres.',
+            'contrasenia_ct.confirmed' => 'Las contraseñas no coinciden.',
             'id_aplicacion.required' => 'La app de interés es requerida.',
+            'id_aplicacion.exists' => 'La app seleccionada no es válida.',
         ]);
 
         // ✅ Crear cliente
@@ -89,15 +99,22 @@ class RegisterController extends Controller
 
         // ✅ Actualizar el id_token en la tienda para que quede vinculado
         $tienda->update(['id_token' => $token->id]);
+        $montoTotal = AplicacionWeb::where('id', $request->id_aplicacion)
+            ->with('membresia') // ✅ Cargar la relación con la membresía
+            ->first()
+            ->membresia
+            ->precio;
 
         // ✅ Crear registro de pago de membresía
+        // ✅ Registrar el pago en la tabla `pagos_membresia`
         PagoMembresia::create([
             'id_cliente' => $cliente->id,
             'id_tienda' => $tienda->id,
-            'id_medio_pago' => 1, // ID por defecto del medio de pago (ajustar según la configuración)
-            'id_estado' => 9, // Estado por defecto de pago
+            'id_medio_pago' => 1, // ✅ Método de pago por defecto (puedes cambiarlo dinámicamente si es necesario)
+            'id_estado' => 9, // ✅ Estado por defecto
+            'monto_total' => $montoTotal, // ✅ Monto traído de la aplicación
+            'fecha_pago' => now(),
         ]);
-
         // ✅ Redirigir al login
         return redirect()->route('login.auth');
     }

@@ -15,12 +15,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_cliente');
             $table->unsignedBigInteger('id_tienda');
+            $table->string('monto_total')->default(0); // ✅ Monto total por defecto en 0
             $table->unsignedBigInteger('id_medio_pago'); // Relación con la tabla de medios de pago
             $table->unsignedBigInteger('id_estado'); // Estado del pago
 
            // Fechas de creación y modificación
            $table->timestamp('fecha_creacion')->default(DB::raw('CURRENT_TIMESTAMP'));
-           $table->timestamp('fecha_modificacion')->default(DB::raw('CURRENT_TIMESTAMP'))->useCurrentOnUpdate();
+           $table->timestamp('fecha_pago')->default(DB::raw('CURRENT_TIMESTAMP'))->useCurrentOnUpdate();
            
             $table->foreign('id_cliente')->references('id')->on('clientes_taurus');
             $table->foreign('id_tienda')->references('id')->on('tiendas_sistematizadas');

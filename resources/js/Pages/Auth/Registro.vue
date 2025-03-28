@@ -30,7 +30,7 @@ const form = useForm({
   telefono_ct: '',
   contrasenia_ct: '',
   contrasenia_ct_confirmation: '',
-  id_aplicacion: '' // ✅ Nuevo campo para la app seleccionada
+  id_aplicacion: ''
 })
 
 function submit() {
@@ -43,6 +43,38 @@ function submit() {
       console.log('Errores:', errors) // Si hay errores de validación, se mostrarán aquí
     }
   })
+}
+
+// ✅ Límites de caracteres para cada campo
+const limitesCaracteres = {
+  nombres_ct: 25,
+  apellidos_ct: 25,
+  id_tipo_documento: 10,
+  numero_documento_ct: 15,
+  email_ct: 60,
+  telefono_ct: 10
+}
+
+// ✅ Función para capitalizar cada palabra
+const capitalizeWords = (str) => {
+  return str
+    .split(' ')
+    .filter(word => word)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
+}
+
+// ✅ Función para capitalizar al salir del campo
+const handleBlur = (field) => {
+  if (typeof form[field] === 'string') {
+    form[field] = capitalizeWords(form[field].trim())
+  }
+}
+
+// ✅ Función para limitar caracteres y actualizar el valor
+const handleInput = (event, field) => {
+  const maxCaracteres = limitesCaracteres[field] || 25
+  form[field] = event.target.value.slice(0, maxCaracteres)
 }
 </script>
 
@@ -71,27 +103,38 @@ function submit() {
 
             <div class="flex justify-between items-center gap-2">
               <div class="w-[50%]">
-                <p class="my-[5px] text-[14px]">Nombre:</p>
+                <div class="contador-input flex items-center justify-between">
+                  <p class="my-[5px] text-[16px]">Nombre:</p>
+                  <p class="text-right text-[10px] text-gray-500">
+                    {{ form.nombres_ct.length }} / {{ limitesCaracteres.nombres_ct }}
+                  </p>
+                </div>
 
                 <div
-                  class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px] "
+                  class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]"
                   :class="{ 'border-universal-naranja': form.errors.nombres_ct }">
-                  <span
-                    class="material-symbols-rounded text-universal-naranja text-[20px] pl-[5px]">format_italic</span>
+                  <span class="material-symbols-rounded text-universal-naranja text-[20px] pl-[5px]">
+                    format_italic
+                  </span>
 
                   <input type="text"
                     class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
-                    placeholder="Ingresa tus nombres" v-model="form.nombres_ct" />
-
+                    placeholder="Ingresa tus nombres" v-model="form.nombres_ct"
+                    @input="handleInput($event, 'nombres_ct')" @blur="handleBlur('nombres_ct')" />
                 </div>
+
                 <span v-if="form.errors.nombres_ct" class="text-universal-naranja text-sm">
                   {{ form.errors.nombres_ct }}
                 </span>
               </div>
 
               <div class="w-[50%]">
-                <p class="my-[5px] text-[14px]">Apellidos:</p>
-
+                <div class="contador-input flex items-center justify-between">
+                  <p class="my-[5px] text-[16px]">Apellidos:</p>
+                  <p class="text-right text-[10px] text-gray-500">
+                    {{ form.apellidos_ct.length }} / {{ limitesCaracteres.apellidos_ct }}
+                  </p>
+                </div>
 
                 <div
                   class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]"
@@ -101,7 +144,8 @@ function submit() {
 
                   <input type="text"
                     class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
-                    placeholder="Ingresa tus apellidos" v-model="form.apellidos_ct" />
+                    placeholder="Ingresa tus apellidos" v-model="form.apellidos_ct" 
+                    @input="handleInput($event, 'apellidos_ct')" @blur="handleBlur('apellidos_ct')" />
                 </div>
                 <span v-if="form.errors.apellidos_ct" class="text-universal-naranja text-sm">
                   {{ form.errors.apellidos_ct }}
@@ -124,7 +168,12 @@ function submit() {
               </div>
 
               <div class="w-[50%]">
-                <p class="my-[5px] text-[14px]">Número de documento:</p>
+                <div class="contador-input flex items-center justify-between">
+                  <p class="my-[5px] text-[16px]">Número documento:</p>
+                  <p class="text-right text-[10px] text-gray-500">
+                    {{ form.numero_documento_ct.length }} / {{ limitesCaracteres.numero_documento_ct }}
+                  </p>
+                </div>
                 <div
                   class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]"
                   :class="{ 'border-universal-naranja': form.errors.numero_documento_ct }">
@@ -132,7 +181,8 @@ function submit() {
 
                   <input type="text"
                     class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
-                    placeholder="Ingresa solo numeros" v-model="form.numero_documento_ct" />
+                    placeholder="Ingresa solo numeros" v-model="form.numero_documento_ct" 
+                    @input="handleInput($event, 'numero_documento_ct')" @blur="handleBlur('numero_documento_ct')" />
                 </div>
                 <span v-if="form.errors.numero_documento_ct" class="text-universal-naranja text-sm">
                   {{ form.errors.numero_documento_ct }}
@@ -141,7 +191,12 @@ function submit() {
             </div>
             <div class="flex justify-between items-center gap-2">
               <div class="w-[50%]">
-                <p class="my-[5px] text-[14px]">Numero telefono:</p>
+                <div class="contador-input flex items-center justify-between">
+                  <p class="my-[5px] text-[16px]">Número telefono:</p>
+                  <p class="text-right text-[10px] text-gray-500">
+                    {{ form.telefono_ct.length }} / {{ limitesCaracteres.telefono_ct }}
+                  </p>
+                </div>
 
                 <div
                   class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]"
@@ -150,7 +205,8 @@ function submit() {
 
                   <input type="text"
                     class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
-                    placeholder="Ingresa solo números" v-model="form.telefono_ct" />
+                    placeholder="Ingresa solo números" v-model="form.telefono_ct"
+                    @input="handleInput($event, 'telefono_ct')" @blur="handleBlur('telefono_ct')" />
 
                 </div>
                 <span v-if="form.errors.telefono_ct" class="text-universal-naranja text-sm">
@@ -159,7 +215,12 @@ function submit() {
               </div>
 
               <div class="w-[50%]">
-                <p class="my-[5px] text-[14px]">Email:</p>
+                <div class="contador-input flex items-center justify-between">
+                  <p class="my-[5px] text-[16px]">Email:</p>
+                  <p class="text-right text-[10px] text-gray-500">
+                    {{ form.email_ct.length }} / {{ limitesCaracteres.email_ct }}
+                  </p>
+                </div>
                 <div
                   class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]"
                   :class="{ 'border-universal-naranja': form.errors.email_ct }">
@@ -167,7 +228,8 @@ function submit() {
 
                   <input type="email"
                     class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
-                    placeholder="Ingresa tus email" v-model="form.email_ct" />
+                    placeholder="Ingresa tus email" v-model="form.email_ct" 
+                    @input="handleInput($event, 'email_ct')" @blur="handleBlur('email_ct')" />
                 </div>
                 <span v-if="form.errors.email_ct" class="text-universal-naranja text-sm">
                   {{ form.errors.email_ct }}
