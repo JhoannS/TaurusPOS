@@ -36,6 +36,8 @@ return new class extends Migration
             $table->foreign('id_tienda')->references('id')->on('tiendas_sistematizadas')->onDelete('cascade');
             $table->foreign('id_tipo_documento')->references('id')->on('tipo_documentos')->onDelete('cascade');
         });
+
+        
     }
 
     /**

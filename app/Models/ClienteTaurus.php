@@ -90,4 +90,10 @@ class ClienteTaurus extends Authenticatable
     {
         return $this->nombres_ct . ' ' . $this->apellidos_ct;
     }
+
+    public function pagosMembresias()
+{
+    return $this->hasMany(PagoMembresia::class, 'id_cliente');
+}
+
 }

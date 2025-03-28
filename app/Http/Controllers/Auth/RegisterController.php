@@ -115,7 +115,9 @@ class RegisterController extends Controller
             'monto_total' => $montoTotal, // ✅ Monto traído de la aplicación
             'fecha_pago' => now(),
         ]);
-        // ✅ Redirigir al login
-        return redirect()->route('login.auth');
+
+        // ✅ Guarda el mensaje en la sesión y redirige a login con Inertia
+        return redirect()->route('login.auth')->with('success', 'Registro exitoso, Activa el token');
+
     }
 }

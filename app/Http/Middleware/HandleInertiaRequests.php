@@ -18,37 +18,41 @@ class HandleInertiaRequests extends Middleware
      * Determine the current asset version.
      */
     public function version(Request $request): ?string
-{
-    $manifestPath = public_path('build/manifest.json');
+    {
+        $manifestPath = public_path('build/manifest.json');
 
-    if (file_exists($manifestPath)) {
-        return md5_file($manifestPath);
+        if (file_exists($manifestPath)) {
+            return md5_file($manifestPath);
+        }
+
+        return null;
     }
 
-    return null;
-}
 
 
-    
     /**
      * Define the props that are shared by default.
      *
      * @return array<string, mixed>
      */
     public function share(Request $request): array
-{
-    return [
-        ...parent::share($request),
+    {
+        return [
+            ...parent::share($request),
 
-        'auth' => [
-            'user' => $request->user()
-                ? $request->user()->load('tienda', 'rol') // Carga relaciones
-                : null,
-        ],
+            'auth' => [
+                'user' => $request->user()
+                    ? $request->user()->load('tienda', 'rol')
+                    : null,
+            ],
 
-        // Añade el nombre de la ruta actual
-        'currentRoute' => fn () => $request->route()?->getName(),
-    ];
-}
+            // Añade el nombre de la ruta actual
+            'currentRoute' => fn() => $request->route()?->getName(),
+
+            // ✅ Añade el mensaje de éxito desde la sesión
+            'success' => session('success'),
+        ];
+    }
+
 
 }

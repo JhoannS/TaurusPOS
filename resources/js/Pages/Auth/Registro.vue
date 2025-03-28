@@ -1,7 +1,7 @@
 <script setup>
 import { Head, useForm, usePage } from '@inertiajs/vue3'
 
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 
 
 import { route } from 'ziggy-js';
@@ -33,18 +33,34 @@ const form = useForm({
   id_aplicacion: ''
 })
 
-function submit() {
-  console.log('Enviando formulario...') // Verifica que este mensaje aparezca en consola
+// ✅ Estado para la notificación
+const mensajeNotificacion = ref('')
+const tipoNotificacion = ref(null) // 'success' o 'error'
+const mostrarNotificacion = ref(false)
+
+// ✅ Función para mostrar la notificación
+const mostrarMensaje = (mensaje, tipo) => {
+  mensajeNotificacion.value = mensaje
+  tipoNotificacion.value = tipo
+  mostrarNotificacion.value = true
+
+  // Ocultar la notificación después de 3 segundos
+  setTimeout(() => {
+    mostrarNotificacion.value = false
+  }, 5000)
+}
+
+// ✅ Función para enviar el formulario
+const submit = () => {
   form.post('/register/auth', {
     onSuccess: () => {
-      console.log('Registro exitoso') // Si llega aquí, el registro fue exitoso
+      mostrarMensaje('Registro exitoso', 'success')
     },
-    onError: (errors) => {
-      console.log('Errores:', errors) // Si hay errores de validación, se mostrarán aquí
+    onError: () => {
+      mostrarMensaje('Error al registrar. Verifica los datos.', 'error')
     }
   })
 }
-
 // ✅ Límites de caracteres para cada campo
 const limitesCaracteres = {
   nombres_ct: 25,
@@ -144,7 +160,7 @@ const handleInput = (event, field) => {
 
                   <input type="text"
                     class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
-                    placeholder="Ingresa tus apellidos" v-model="form.apellidos_ct" 
+                    placeholder="Ingresa tus apellidos" v-model="form.apellidos_ct"
                     @input="handleInput($event, 'apellidos_ct')" @blur="handleBlur('apellidos_ct')" />
                 </div>
                 <span v-if="form.errors.apellidos_ct" class="text-universal-naranja text-sm">
@@ -181,7 +197,7 @@ const handleInput = (event, field) => {
 
                   <input type="text"
                     class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
-                    placeholder="Ingresa solo numeros" v-model="form.numero_documento_ct" 
+                    placeholder="Ingresa solo numeros" v-model="form.numero_documento_ct"
                     @input="handleInput($event, 'numero_documento_ct')" @blur="handleBlur('numero_documento_ct')" />
                 </div>
                 <span v-if="form.errors.numero_documento_ct" class="text-universal-naranja text-sm">
@@ -228,8 +244,8 @@ const handleInput = (event, field) => {
 
                   <input type="email"
                     class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
-                    placeholder="Ingresa tus email" v-model="form.email_ct" 
-                    @input="handleInput($event, 'email_ct')" @blur="handleBlur('email_ct')" />
+                    placeholder="Ingresa tus email" v-model="form.email_ct" @input="handleInput($event, 'email_ct')"
+                    @blur="handleBlur('email_ct')" />
                 </div>
                 <span v-if="form.errors.email_ct" class="text-universal-naranja text-sm">
                   {{ form.errors.email_ct }}
@@ -300,6 +316,33 @@ const handleInput = (event, field) => {
             src="https://images.unsplash.com/photo-1638657527755-ca3e0d217260?q=80&w=1376&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
             alt="Img login" class="rounded-lg" </div>
       </main>
+      <!-- ✅ Notificación de éxito -->
+      <div v-if="mostrarNotificacion && tipoNotificacion === 'success'"
+        class="notificacion translate-y-8 absolute w-[max-content] left-0 right-0 top-6 ml-auto mr-auto rounded-md bg-semaforo-verde_opacity text-mono-blanco shadow-semaforo-verde">
+        <div class="notificacion_body flex justify-center gap-3 items-center py-3 px-2">
+          <div class="flex gap-2 items-center">
+            <i class="material-symbols-rounded text-semaforo-verde">check_circle</i>
+            <p>{{ mensajeNotificacion }}</p>
+          </div>
+        </div>
+        <div
+          class="progreso_notificacion absolute left-1 bottom-1 h-1 scale-x-0 origin-left rounded-sm bg-semaforo-verde">
+        </div>
+      </div>
+
+      <!-- ✅ Notificación de error -->
+      <div v-if="mostrarNotificacion && tipoNotificacion === 'error'"
+        class="notificacion translate-y-8 absolute w-[max-content] left-0 right-0 top-6 ml-auto mr-auto rounded-md bg-semaforo-rojo_opacity text-mono-blanco shadow-semaforo-verde">
+        <div class="notificacion_body flex justify-center gap-3 items-center py-3 px-2">
+          <div class="flex gap-2 items-center">
+            <i class="material-symbols-rounded text-semaforo-rojo">cancel</i>
+            <p>{{ mensajeNotificacion }}</p>
+          </div>
+        </div>
+        <div
+          class="progreso_notificacion absolute left-1 bottom-1 h-1 scale-x-0 origin-left rounded-sm bg-semaforo-rojo">
+        </div>
+      </div>
     </div>
   </div>
 </template>

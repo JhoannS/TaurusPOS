@@ -29,4 +29,10 @@ class Membresia extends Model
     {
         return $this->belongsTo(AplicacionWeb::class, 'id_aplicacion_web');
     }
+
+    public function pagosMembresias()
+{
+    return $this->hasMany(PagoMembresia::class);
+}
+
 }
