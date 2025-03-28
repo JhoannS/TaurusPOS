@@ -95,83 +95,155 @@ const handleInput = (event, field) => {
   <div>
 
     <Head title="Registrate" />
-    <div class="bg-mono-negro flex justify-center items-center">
-      <main class="flex items-center justify-between min-h-[100vh] w-[80%] p-[80px] gap-16">
-        <div class="left w-[60%]">
-          <div class="logo flex gap-3 items-center">
-            <div class="gota h-7 w-10 shadow-essentials bg-universal-naranja rounded-full"></div>
+
+    <div class="bg-mono-negro
+            sm:bg-green-500 
+            md:bg-yellow-500
+            lg:bg-red-500 
+            xl:bg-purple-500 
+            2xl:bg-pink-500 flex justify-center items-center">
+      <main class="
+      2xl:flex 2xl:items-center 2xl:justify-between 2xl:w-[80%] 2xl:p-[80px] 2xl:gap-16
+        min-h-[100vh] 
+      ">
+        <div class="
+        left 
+        2xl:w-[60%]
+        ">
+          <div class="logo 
+          2xl:flex 2xl:gap-3 2xl:items-center
+          ">
+            <div class="gota 
+            2xl:h-7 2xl:w-10 2xl:rounded-full 
+            shadow-universal-naranja bg-universal-naranja
+            "></div>
             <div class="logo">
-              <h1 class="text-[20px] font-semibold">Taurus Comunity CO</h1>
-              <p class="-mt-[8px] text-[14px] font-medium">Software profesional Essentials App</p>
+              <h1 class="
+              2xl:text-[20px] 
+              font-semibold
+              ">Taurus Comunity CO</h1>
+              <p class="
+              2xl:-mt-[8px] 2xl:text-[14px] 
+              font-medium
+              ">Software profesional Essentials App</p>
             </div>
           </div>
 
           <div class="welcome">
-            <h2 class="text-[35px] font-bold mt-[20px]">Registrate y empecemos👋</h2>
-            <p class="text-[20px]">No te arrepentiras de unirte a la familia Taurus Comunity, especializado en software
+            <h2 class="
+            2xl:text-[35px] d 2xl:mt-[20px]
+            font-bol
+            ">Registrate y empecemos👋</h2>
+            <p class="
+            text-[20px]
+            ">No te arrepentiras de unirte a la familia Taurus Comunity, especializado en software
             </p>
           </div>
 
 
-          <form @submit.prevent="submit" class="mt-5 flex flex-col gap-2">
+          <form @submit.prevent="submit" class="
+          2xl:mt-5 2xl:flex 2xl:flex-col 2xl:gap-2
+          ">
 
-            <div class="flex justify-between items-center gap-2">
-              <div class="w-[50%]">
-                <div class="contador-input flex items-center justify-between">
-                  <p class="my-[5px] text-[16px]">Nombre:</p>
-                  <p class="text-right text-[10px] text-gray-500">
+            <div class="
+            2xl:flex 2xl:justify-between 2xl:items-center 2xl:gap-2
+            ">
+              <div class="
+              2xl:w-[50%]
+              ">
+                <div class="
+                contador-input 
+                2xl:flex 2xl:items-center 2xl:justify-between
+                ">
+                  <p class="
+                  2xl:my-[5px] 2xl:text-[16px]
+                  ">Nombre:</p>
+                  <p class="
+                  2xl:text-[10px]
+                  text-right  text-secundary-light
+                  ">
                     {{ form.nombres_ct.length }} / {{ limitesCaracteres.nombres_ct }}
                   </p>
                 </div>
 
-                <div
-                  class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]"
-                  :class="{ 'border-universal-naranja': form.errors.nombres_ct }">
-                  <span class="material-symbols-rounded text-universal-naranja text-[20px] pl-[5px]">
+                <div class="
+                  2xl:w-[100%] 2xl:p-[3px] 2xl:flex 2xl:items-center 2xl:gap-[8px]
+                  transition-all rounded-[5px] border-[1px] border-secundary-light" :class="{ 'border-universal-naranja': form.errors.nombres_ct }
+                    ">
+                  <span class="
+                  2xl:text-[20px] 2xl:pl-[5px]
+                  material-symbols-rounded text-universal-naranja 
+                  ">
                     format_italic
                   </span>
 
-                  <input type="text"
-                    class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
-                    placeholder="Ingresa tus nombres" v-model="form.nombres_ct"
+                  <input type="text" class="
+                    2xl:w-full 
+                    focus:outline-none focus:border-none font-normal bg-transparent
+                    " placeholder="Ingresa tus nombres" v-model="form.nombres_ct"
                     @input="handleInput($event, 'nombres_ct')" @blur="handleBlur('nombres_ct')" />
                 </div>
 
-                <span v-if="form.errors.nombres_ct" class="text-universal-naranja text-sm">
+                <span v-if="form.errors.nombres_ct" class="text-universal-naranja text-sm
+                ">
                   {{ form.errors.nombres_ct }}
                 </span>
               </div>
 
-              <div class="w-[50%]">
-                <div class="contador-input flex items-center justify-between">
-                  <p class="my-[5px] text-[16px]">Apellidos:</p>
-                  <p class="text-right text-[10px] text-gray-500">
+              <div class="
+              2xl:w-[50%]
+              ">
+                <div class="
+                contador-input 
+                2xl:flex 2xl:items-center 2xl:justify-between
+                ">
+                  <p class="
+                  2xl:my-[5px] 2xl:text-[16px]
+                  ">Apellidos:</p>
+                  <p class="
+                  2xl:text-[10px]
+                  text-right text-secundary-light">
                     {{ form.apellidos_ct.length }} / {{ limitesCaracteres.apellidos_ct }}
                   </p>
                 </div>
 
-                <div
-                  class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]"
-                  :class="{ 'border-universal-naranja': form.errors.apellidos_ct }">
-                  <span
-                    class="material-symbols-rounded text-universal-naranja text-[20px] pl-[5px]">format_italic</span>
+                <div class="
+                  2xl:w-[100%] 2xl:p-[3px] 2xl:flex 2xl:items-center 2xl:gap-[8px]
+                  transition-all rounded-[5px] border-[1px] border-secundary-light " :class="{ 'border-universal-naranja': form.errors.apellidos_ct }
+                    ">
+                  <span class="
+                  2xl:text-[20px] 2xl:pl-[5px]
+                    material-symbols-rounded text-universal-naranja 
+                    ">format_italic</span>
 
-                  <input type="text"
-                    class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
-                    placeholder="Ingresa tus apellidos" v-model="form.apellidos_ct"
+                  <input type="text" class="
+                    2xl:w-full 
+                    focus:outline-none focus:border-none font-normal bg-transparent
+                    " placeholder="Ingresa tus apellidos" v-model="form.apellidos_ct"
                     @input="handleInput($event, 'apellidos_ct')" @blur="handleBlur('apellidos_ct')" />
                 </div>
-                <span v-if="form.errors.apellidos_ct" class="text-universal-naranja text-sm">
+                <span v-if="form.errors.apellidos_ct" class="
+                2xl:text-sm
+                text-universal-naranja 
+                ">
                   {{ form.errors.apellidos_ct }}
                 </span>
               </div>
             </div>
-            <div class="flex justify-between items-center gap-2">
-              <div class="w-[50%]">
-                <p class="my-[5px] text-[16px]">Tipo de documento:</p>
+            <div class="
+            2xl:flex 2xl:justify-between 2xl:items-center 2xl:gap-2
+            ">
+              <div class="
+              2xl:w-[50%]
+              ">
+                <p class="
+                2xl:my-[5px] 2xl:text-[16px]
+                ">Tipo de documento:</p>
                 <div class="custom-select">
-                  <select v-model="form.id_tipo_documento"
-                    class="w-full p-2 bg-mono-negro text-white border border-secundary-light rounded-md">
+                  <select v-model="form.id_tipo_documento" class="
+                    2xl:w-full 2xl:p-2 
+                    border border-secundary-light rounded-md
+                    ">
                     <option value="" disabled selected>Selecciona un tipo</option>
                     <option v-for="tipo in tiposDocumento" :key="tipo.id" :value="tipo.id">
                       {{ tipo.documento_legal }}
@@ -181,114 +253,203 @@ const handleInput = (event, field) => {
                 </div>
               </div>
 
-              <div class="w-[50%]">
-                <div class="contador-input flex items-center justify-between">
-                  <p class="my-[5px] text-[16px]">Número documento:</p>
-                  <p class="text-right text-[10px] text-gray-500">
+              <div class="
+              2xl:w-[50%]
+              ">
+                <div class="
+                cotador-input 
+                2xl:flex 2xl:items-center 2xl:justify-between
+                ">
+                  <p class="
+                  2xl:my-[5px] 2xl:text-[16px]
+                  ">Número documento:</p>
+                  <p class="
+                  2xl:text-[10px] 
+                  text-secundary-light text-right 
+                  
+                  ">
                     {{ form.numero_documento_ct.length }} / {{ limitesCaracteres.numero_documento_ct }}
                   </p>
                 </div>
-                <div
-                  class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]"
-                  :class="{ 'border-universal-naranja': form.errors.numero_documento_ct }">
-                  <span class="material-symbols-rounded text-universal-naranja text-[20px] pl-[5px]">pin</span>
+                <div class="
+                  2xl:w-[100%] 2xl:p-[3px] 2xl:flex 2xl:items-center 2xl:gap-[8px]
+                  transition-all rounded-[5px] border-[1px] border-secundary-light" :class="{ 'border-universal-naranja': form.errors.numero_documento_ct }
+                    ">
+                  <span class="
+                  2xl:text-[20px] 2xl:pl-[5px]
+                  material-symbols-rounded text-universal-naranja 
+                  ">pin</span>
 
-                  <input type="text"
-                    class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
-                    placeholder="Ingresa solo numeros" v-model="form.numero_documento_ct"
-                    @input="handleInput($event, 'numero_documento_ct')" @blur="handleBlur('numero_documento_ct')" />
+                  <input type="text" class="
+                    2xl:w-full 
+                    focus:outline-none focus:border-none font-normal bg-transparent" placeholder="Ingresa solo numeros"
+                    v-model="form.numero_documento_ct" @input="handleInput($event, 'numero_documento_ct')"
+                    @blur="handleBlur('numero_documento_ct')" />
                 </div>
-                <span v-if="form.errors.numero_documento_ct" class="text-universal-naranja text-sm">
+                <span v-if="form.errors.numero_documento_ct" class="
+                2xl:text-sm
+                text-universal-naranja 
+                ">
                   {{ form.errors.numero_documento_ct }}
                 </span>
               </div>
             </div>
-            <div class="flex justify-between items-center gap-2">
-              <div class="w-[50%]">
-                <div class="contador-input flex items-center justify-between">
-                  <p class="my-[5px] text-[16px]">Número telefono:</p>
-                  <p class="text-right text-[10px] text-gray-500">
+            <div class="
+            2xl:flex 2xl:justify-between 2xl:items-center 2xl:gap-2
+            ">
+              <div class="
+              2xl:w-[50%]
+              ">
+                <div class="
+                contador-input 
+                2xl:flex 2xl:items-center 2xl:justify-between
+                ">
+                  <p class="
+                  2xl:my-[5px] 2xl:text-[16px]
+                  ">Número telefono:</p>
+                  <p class="
+                  2xl:text-[10px] 
+                  text-secundary-light text-right 
+                  ">
                     {{ form.telefono_ct.length }} / {{ limitesCaracteres.telefono_ct }}
                   </p>
                 </div>
 
-                <div
-                  class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]"
-                  :class="{ 'border-universal-naranja': form.errors.telefono_ct }">
-                  <span class="material-symbols-rounded text-universal-naranja text-[20px] pl-[5px]">phone</span>
+                <div class="
+                  2xl:w-[100%] 2xl:p-[3px] 2xl:flex 2xl:items-center 2xl:gap-[8px]
+                  transition-all rounded-[5px] border-[1px] border-secundary-light" :class="{ 'border-universal-naranja': form.errors.telefono_ct }
+                    ">
+                  <span class="
+                  2xl:text-[20px] 2xl:pl-[5px]
+                  material-symbols-rounded text-universal-naranja 
+                  ">phone</span>
 
-                  <input type="text"
-                    class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
-                    placeholder="Ingresa solo números" v-model="form.telefono_ct"
+                  <input type="text" class="
+                    2xl:w-full 
+                    focus:outline-none focus:border-none font-normal bg-transparent
+                    " placeholder="Ingresa solo números" v-model="form.telefono_ct"
                     @input="handleInput($event, 'telefono_ct')" @blur="handleBlur('telefono_ct')" />
 
                 </div>
-                <span v-if="form.errors.telefono_ct" class="text-universal-naranja text-sm">
+                <span v-if="form.errors.telefono_ct" class="
+                2xl:text-sm
+                text-universal-naranja 
+                ">
                   {{ form.errors.telefono_ct }}
                 </span>
               </div>
 
-              <div class="w-[50%]">
-                <div class="contador-input flex items-center justify-between">
-                  <p class="my-[5px] text-[16px]">Email:</p>
-                  <p class="text-right text-[10px] text-gray-500">
+              <div class="
+              2xl:w-[50%]
+              ">
+                <div class="
+                contador-input 
+                2xl:flex 2xl:items-center 2xl:justify-between
+                ">
+                  <p class="
+                  2xl:my-[5px] 2xl:text-[16px]
+                  ">Email:</p>
+                  <p class="
+                  2xl:text-[10px] 
+                  text-right text-secundary-light
+                  ">
                     {{ form.email_ct.length }} / {{ limitesCaracteres.email_ct }}
                   </p>
                 </div>
-                <div
-                  class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]"
-                  :class="{ 'border-universal-naranja': form.errors.email_ct }">
-                  <span class="material-symbols-rounded text-universal-naranja text-[20px] pl-[5px]">email</span>
+                <div class="
+                  2xl:w-[100%] 2xl:p-[3px] 2xl:flex 2xl:items-center 2xl:gap-[8px]
+                  transition-all rounded-[5px] border-[1px] border-secundary-light" :class="{ 'border-universal-naranja': form.errors.email_ct }
+                    ">
+                  <span class="
+                  material-symbols-rounded 
+                  2xl:text-[20px] 2xl:pl-[5px]
+                  text-universal-naranja 
+                  ">email</span>
 
-                  <input type="email"
-                    class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
-                    placeholder="Ingresa tus email" v-model="form.email_ct" @input="handleInput($event, 'email_ct')"
+                  <input type="email" class="
+                    2xl:w-full 
+                    focus:outline-none focus:border-none font-normal bg-transparent
+                    " placeholder="Ingresa tus email" v-model="form.email_ct" @input="handleInput($event, 'email_ct')"
                     @blur="handleBlur('email_ct')" />
                 </div>
-                <span v-if="form.errors.email_ct" class="text-universal-naranja text-sm">
+                <span v-if="form.errors.email_ct" class="
+                2xl:text-sm
+                text-universal-naranja 
+                ">
                   {{ form.errors.email_ct }}
                 </span>
               </div>
             </div>
-            <div class="flex justify-between items-center gap-2">
-              <div class="w-[50%]">
-                <p class="my-[5px] text-[14px]">Ingresa una contraseña:</p>
+            <div class="
+            2xl:flex 2xl:justify-between 2xl:items-center 2xl:gap-2
+            ">
+              <div class="
+              2xl:w-[50%]
+              ">
+                <p class="
+                2xl:my-[5px] 2xl:text-[14px]
+                ">Ingresa una contraseña:</p>
 
-                <div
-                  class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]"
-                  :class="{ 'border-universal-naranja': form.errors.contrasenia_ct }">
-                  <span class="material-symbols-rounded text-universal-naranja text-[20px] pl-[5px]">password</span>
+                <div class="
+                  2xl:w-[100%] 
+                  2xl:p-[3px] 2xl:flex 2xl:items-center 2xl:gap-[8px]
+                  transition-all rounded-[5px] border-[1px] border-secundary-ligh" t :class="{ 'border-universal-naranja': form.errors.contrasenia_ct }
+                    ">
+                  <span class="material-symbols-rounded text-universal-naranja text-[20px] pl-[5px]
+                  ">password</span>
 
-                  <input type="password"
-                    class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
-                    placeholder="Minimo 6 digitos" v-model="form.contrasenia_ct" />
+                  <input type="password" class="
+                    2xl:w-full
+                     focus:outline-none focus:border-none font-normal bg-transparent" placeholder="Minimo 6 digitos"
+                    v-model="form.contrasenia_ct" />
                 </div>
-                <span v-if="form.errors.contrasenia_ct" class="text-universal-naranja text-sm">
+                <span v-if="form.errors.contrasenia_ct" class="
+                2xl:text-sm
+                text-universal-naranja 
+                ">
                   {{ form.errors.contrasenia_ct }}
                 </span>
               </div>
 
-              <div class="w-[50%]">
-                <p class="my-[5px] text-[14px]">Confirmar contraseña:</p>
-                <div
-                  class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]">
-                  <span class="material-symbols-rounded text-universal-naranja text-[20px] pl-[5px]">password</span>
+              <div class="
+              2xl:w-[50%]
+              ">
+                <p class="
+                2xl:my-[5px] 2xl:text-[14px]
+                ">Confirmar contraseña:</p>
+                <div class="
+                  2xl:w-[100%] 2xl:p-[3px] 2xl:flex 2xl:items-center 2xl:gap-[8px]
+                  transition-all rounded-[5px] border-[1px] border-secundary-light 
+                  ">
+                  <span class="
+                  2xl:text-[20px] 2xl:pl-[5px]
+                  material-symbols-rounded text-universal-naranja 
+                  ">password</span>
 
-                  <input type="password"
-                    class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
+                  <input type="password" class="
+                    2xl:w-full 
+                    focus:outline-none focus:border-none font-normal bg-transparent"
                     placeholder="Debe ser igual la contraseña" v-model="form.contrasenia_ct_confirmation" />
                 </div>
               </div>
             </div>
-            <div class="flex justify-between items-center gap-2">
-              <div class="w-[100%]">
-                <p class="my-[5px] text-[16px]">Aplicacion de interes:</p>
+            <div class="
+            2xl:flex 2xl:justify-between 2xl:items-center 2xl:gap-2
+            ">
+              <div class="
+              2xl:w-[100%]
+              ">
+                <p class="
+                2xl:my-[5px] vtext-[16px]
+                ">Aplicacion de interes:</p>
                 <div class="custom-select">
-                  <select v-model="form.id_aplicacion"
-                    class="w-full p-2 bg-mono-negro text-white border border-secundary-light rounded-md">
+                  <select v-model="form.id_aplicacion" class="
+                    2xl:w-full 2xl:p-2 b
+                    order border-secundary-light rounded-md
+                    ">
                     <option value="" disabled selected>Selecciona una app</option>
                     <option v-for="app in aplicaciones" :key="app.id" :value="app.id">
-                      {{ app.nombre_app }}
+                      {{ app.nombre_app }} App
                     </option>
                   </select>
                   <div class="select-arrow"></div>
@@ -298,30 +459,38 @@ const handleInput = (event, field) => {
 
 
             <a href="https://api.whatsapp.com/send/?phone=573219631459&text=Vengo+desde+la+app%2C+quiero+activar+mi+token+por+favor.&type=phone_number&app_absent=0"
-              class="text-universal-azul text-right">Contactanos para la activación</a>
+              class="
+              2xl:my-3
+              text-right text-universal-azul 
+              ">Contactanos para la activación</a>
 
             <button type="submit" class="btn-taurus">Crear cuenta <span
                 class="material-symbols-rounded bg-transparent">bolt</span></button>
-            <div class="bg-blue-500 text-sm 
-            sm:bg-green-500 sm:text-base 
-            md:bg-yellow-500 md:text-lg 
-            lg:bg-red-500 lg:text-xl
-            xl:bg-purple-500 xl:text-2xl 
-            2xl:bg-pink-500 2xl:text-3xl h-2 rounded-lg">
-            </div>
 
-            <p class="text-center">¿Ya eres parte de Taurus Comunity?, <a :href="route('login.auth')"
-                class="text-universal-azul">Inicia Sesion</a>.</p>
+            <p class="
+            
+            2xl:mt-4
+            ">¿Ya eres parte de Taurus Comunity?, <a :href="route('login.auth')" class="
+                text-universal-azul
+                ">Inicia Sesion</a>.</p>
 
-            <p class="text-universal-azul text-center text-[12px]">Versión Deimos 1.0.0</p>
+            <p class="
+             2xl:text-[12px]
+            text-universal-azul 
+            ">Versión Deimos 1.0.0</p>
 
           </form>
         </div>
-        <div class="right w-[40%] rounded-lg flex justify-center items-center shadowM">
+        <div class="
+        2xl:w-[40%] rounded-lg 2xl:flex 2xl:justify-center 2xl:items-center
+        right shadowM
+        ">
 
           <img
             src="https://images.unsplash.com/photo-1638657527755-ca3e0d217260?q=80&w=1376&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt="Img login" class="rounded-lg" />
+            alt="Img login" class="
+            rounded-lg
+            " />
 
         </div>
 
