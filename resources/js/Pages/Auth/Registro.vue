@@ -101,7 +101,8 @@ const handleInput = (event, field) => {
             md:bg-yellow-500
             lg:bg-red-500 
             xl:bg-purple-500 
-            2xl:bg-pink-500 flex justify-center items-center">
+            2xl:bg-mono-negro
+            2xl:flex 2xl:justify-center 2xl:items-center">
       <main class="
       2xl:flex 2xl:items-center 2xl:justify-between 2xl:w-[80%] 2xl:p-[80px] 2xl:gap-16
         min-h-[100vh] 
