@@ -37,22 +37,23 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        return [
-            ...parent::share($request),
-
+        return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user()
                     ? $request->user()->load('tienda', 'rol')
                     : null,
             ],
-
-            // Añade el nombre de la ruta actual
-            'currentRoute' => fn() => $request->route()?->getName(),
-
-            // ✅ Añade el mensaje de éxito desde la sesión
-            'success' => session('success'),
-        ];
+    
+            'currentRoute' => $request->route()?->getName(),
+    
+            // ✅ Usa `session()->get()` para asegurar que se retiene el valor
+            'flash' => [
+                'error' => session()->get('error'),
+                'success' => session()->get('success'),
+            ],
+        ]);
     }
+    
 
 
 }

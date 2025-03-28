@@ -111,7 +111,7 @@ class RegisterController extends Controller
             'id_cliente' => $cliente->id,
             'id_tienda' => $tienda->id,
             'id_medio_pago' => 1, // ✅ Método de pago por defecto (puedes cambiarlo dinámicamente si es necesario)
-            'id_estado' => 9, // ✅ Estado por defecto
+            'id_estado' => 8, // ✅ Estado por defecto
             'monto_total' => $montoTotal, // ✅ Monto traído de la aplicación
             'fecha_pago' => now(),
         ]);

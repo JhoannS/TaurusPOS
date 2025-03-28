@@ -1,12 +1,8 @@
 <script setup>
 import { Head, useForm, usePage } from '@inertiajs/vue3'
-
 import { computed, ref } from 'vue';
-
-
 import { route } from 'ziggy-js';
 
-const page = usePage();
 
 defineProps({
   tiposDocumento: {
@@ -19,6 +15,7 @@ defineProps({
   }
 })
 
+const page = usePage();
 const currentRoute = computed(() => new URL(page.url, window.location.origin).pathname);
 
 const form = useForm({
@@ -57,7 +54,7 @@ const submit = () => {
       mostrarMensaje('Registro exitoso', 'success')
     },
     onError: () => {
-      mostrarMensaje('Error al registrar. Verifica los datos.', 'error')
+      mostrarMensaje('Error al registrar, verifica los datos.', 'error')
     }
   })
 }
@@ -108,6 +105,7 @@ const handleInput = (event, field) => {
               <p class="-mt-[8px] text-[14px] font-medium">Software profesional Essentials App</p>
             </div>
           </div>
+
           <div class="welcome">
             <h2 class="text-[35px] font-bold mt-[20px]">Registrate y empecemos👋</h2>
             <p class="text-[20px]">No te arrepentiras de unirte a la familia Taurus Comunity, especializado en software
@@ -299,10 +297,18 @@ const handleInput = (event, field) => {
             </div>
 
 
-            <a href="" class="text-universal-azul text-right">Contactanos para la activación</a>
+            <a href="https://api.whatsapp.com/send/?phone=573219631459&text=Vengo+desde+la+app%2C+quiero+activar+mi+token+por+favor.&type=phone_number&app_absent=0"
+              class="text-universal-azul text-right">Contactanos para la activación</a>
 
             <button type="submit" class="btn-taurus">Crear cuenta <span
                 class="material-symbols-rounded bg-transparent">bolt</span></button>
+            <div class="bg-blue-500 text-sm 
+            sm:bg-green-500 sm:text-base 
+            md:bg-yellow-500 md:text-lg 
+            lg:bg-red-500 lg:text-xl
+            xl:bg-purple-500 xl:text-2xl 
+            2xl:bg-pink-500 2xl:text-3xl h-2 rounded-lg">
+            </div>
 
             <p class="text-center">¿Ya eres parte de Taurus Comunity?, <a :href="route('login.auth')"
                 class="text-universal-azul">Inicia Sesion</a>.</p>
@@ -312,9 +318,13 @@ const handleInput = (event, field) => {
           </form>
         </div>
         <div class="right w-[40%] rounded-lg flex justify-center items-center shadowM">
+
           <img
             src="https://images.unsplash.com/photo-1638657527755-ca3e0d217260?q=80&w=1376&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            alt="Img login" class="rounded-lg" </div>
+            alt="Img login" class="rounded-lg" />
+
+        </div>
+
       </main>
       <!-- ✅ Notificación de éxito -->
       <div v-if="mostrarNotificacion && tipoNotificacion === 'success'"

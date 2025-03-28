@@ -548,7 +548,7 @@ body {
 
 /* Animación para eliminar (fade out) */
 .animate-fadeOut {
-  animation: fadeOut 0.5s ease-in-out forwards;
+  animation: fadeOut 0.1s ease-in-out forwards;
 }
 
 @keyframes fadeOut {
@@ -564,13 +564,13 @@ body {
 .notificacion {
   opacity: 0;
   visibility: hidden;
-  animation: fade-in 4s linear;
+  animation: fade-in 5s linear;
 }
 
 .progreso_notificacion {
   width: calc(100% - 8px);
   transform: scaleX(0);
-  animation: progress 4s 0.3s linear;
+  animation: progress 5s .1s linear;
 }
 
 @keyframes fade-in {
@@ -590,8 +590,4 @@ body {
   to {
     transform: scaleX(1);
   }
-}
-
-.encabezado {
-  text-align: center;
 }

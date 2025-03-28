@@ -51,7 +51,7 @@ class LoginController extends Controller
         if ($ultimoPago && $ultimoPago->id_estado === 9) {
             Auth::logout();
             return back()->withErrors([
-                'numero_documento_ct' => 'Ponte al día con tu pago para seguir con los beneficios.',
+                'numero_documento_ct' => 'Ponte al día con tu pago para seguir con los pagos.',
             ]);
         }
 

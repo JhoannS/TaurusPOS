@@ -44,7 +44,7 @@ const mostrarMensaje = (mensaje, tipo) => {
 
   setTimeout(() => {
     mostrarNotificacion.value = false
-  }, 3000)
+  }, 5000)
 }
 
 const form = useForm({
@@ -61,7 +61,7 @@ const submit = () => {
 
     },
     onError: () => {
-      mostrarMensaje('Error al iniciar sesión. Verifica los datos.', 'error')
+      mostrarMensaje('Error al iniciar sesión, verifica los datos.', 'error')
     }
   })
 }
