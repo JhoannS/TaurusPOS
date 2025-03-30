@@ -24,7 +24,7 @@ const form = useForm({
   id_tipo_documento: '',
   numero_documento_ct: '',
   email_ct: '',
-  telefono_ct: '',
+  telefono_ct: '3',
   contrasenia_ct: '',
   contrasenia_ct_confirmation: '',
   id_aplicacion: ''
@@ -100,31 +100,39 @@ const handleInput = (event, field) => {
             sm:bg-green-500 
             md:bg-yellow-500
             lg:bg-red-500 
-            xl:bg-purple-500 
+            xl:bg-mono-negro 
             2xl:bg-mono-negro
-            2xl:flex 2xl:justify-center 2xl:items-center">
+            flex justify-center items-center
+            
+            ">
       <main class="
-      2xl:flex 2xl:items-center 2xl:justify-between 2xl:w-[80%] 2xl:p-[80px] 2xl:gap-16
+      flex items-center justify-between 2xl:w-[80%] 2xl:p-[80px] 2xl:gap-16
+      xl:flex xl:items-center xl:justify-between xl:w-[100%] xl:px-[65px] xl:gap-14
         min-h-[100vh] 
       ">
         <div class="
         left 
         2xl:w-[60%]
+        xl:w-[65%]
         ">
           <div class="logo 
           2xl:flex 2xl:gap-3 2xl:items-center
+          xl:flex xl:gap-2 xl:items-center
           ">
             <div class="gota 
-            2xl:h-7 2xl:w-10 2xl:rounded-full 
-            shadow-universal-naranja bg-universal-naranja
+            2xl:h-7 2xl:w-10
+            xl:h-6 xl:w-9
+            rounded-full shadow-universal-naranja bg-universal-naranja
             "></div>
             <div class="logo">
               <h1 class="
               2xl:text-[20px] 
+              xl:text-[20px] 
               font-semibold
               ">Taurus Comunity CO</h1>
               <p class="
               2xl:-mt-[8px] 2xl:text-[14px] 
+              xl:-mt-[9px] xl:text-[14px] 
               font-medium
               ">Software profesional Essentials App</p>
             </div>
@@ -133,10 +141,12 @@ const handleInput = (event, field) => {
           <div class="welcome">
             <h2 class="
             2xl:text-[35px] d 2xl:mt-[20px]
+            xl:text-[25px] d xl:mt-[15px]
             font-bol
             ">Registrate y empecemos👋</h2>
             <p class="
-            text-[20px]
+            2xl:text-[20px]
+            xl:text-[17px]
             ">No te arrepentiras de unirte a la familia Taurus Comunity, especializado en software
             </p>
           </div>
@@ -144,23 +154,29 @@ const handleInput = (event, field) => {
 
           <form @submit.prevent="submit" class="
           2xl:mt-5 2xl:flex 2xl:flex-col 2xl:gap-2
+          xl:mt-4 xl:flex xl:flex-col xl:gap-2
           ">
 
             <div class="
             2xl:flex 2xl:justify-between 2xl:items-center 2xl:gap-2
+            xl:flex xl:justify-between xl:items-center xl:gap-2
             ">
               <div class="
-              2xl:w-[50%]
+              w-[50%]
+              xl:w-[50%]
               ">
                 <div class="
                 contador-input 
-                2xl:flex 2xl:items-center 2xl:justify-between
+                flex items-center justify-between
+                xl:flex xl:items-center xl:justify-between
                 ">
                   <p class="
                   2xl:my-[5px] 2xl:text-[16px]
+                  xl:my-[4px] xl:text-[15px]
                   ">Nombre:</p>
                   <p class="
-                  2xl:text-[10px]
+                  2xl:text-[10px]                  
+                  xl:text-[12px]
                   text-right  text-secundary-light
                   ">
                     {{ form.nombres_ct.length }} / {{ limitesCaracteres.nombres_ct }}
@@ -168,18 +184,19 @@ const handleInput = (event, field) => {
                 </div>
 
                 <div class="
-                  2xl:w-[100%] 2xl:p-[3px] 2xl:flex 2xl:items-center 2xl:gap-[8px]
+                  w-[100%] p-[3px] flex items-center gap-[8px]
+                  xl:w-[100%] xl:p-[3px] xl:flex xl:items-center xl:gap-[8px]
                   transition-all rounded-[5px] border-[1px] border-secundary-light" :class="{ 'border-universal-naranja': form.errors.nombres_ct }
                     ">
                   <span class="
-                  2xl:text-[20px] 2xl:pl-[5px]
+                  text-[20px] pl-[5px]
                   material-symbols-rounded text-universal-naranja 
                   ">
                     format_italic
                   </span>
 
                   <input type="text" class="
-                    2xl:w-full 
+                    w-full 
                     focus:outline-none focus:border-none font-normal bg-transparent
                     " placeholder="Ingresa tus nombres" v-model="form.nombres_ct"
                     @input="handleInput($event, 'nombres_ct')" @blur="handleBlur('nombres_ct')" />
@@ -192,33 +209,35 @@ const handleInput = (event, field) => {
               </div>
 
               <div class="
-              2xl:w-[50%]
+              w-[50%]
               ">
                 <div class="
                 contador-input 
-                2xl:flex 2xl:items-center 2xl:justify-between
+                flex items-center justify-between
                 ">
                   <p class="
                   2xl:my-[5px] 2xl:text-[16px]
+                  xl:my-[4px] xl:text-[15px]
                   ">Apellidos:</p>
                   <p class="
-                  2xl:text-[10px]
+                  2xl:text-[10px]                  
+                  xl:text-[12px]
                   text-right text-secundary-light">
                     {{ form.apellidos_ct.length }} / {{ limitesCaracteres.apellidos_ct }}
                   </p>
                 </div>
 
                 <div class="
-                  2xl:w-[100%] 2xl:p-[3px] 2xl:flex 2xl:items-center 2xl:gap-[8px]
+                  w-[100%] p-[3px] flex items-center gap-[8px]
                   transition-all rounded-[5px] border-[1px] border-secundary-light " :class="{ 'border-universal-naranja': form.errors.apellidos_ct }
                     ">
                   <span class="
-                  2xl:text-[20px] 2xl:pl-[5px]
+                  text-[20px] pl-[5px]
                     material-symbols-rounded text-universal-naranja 
                     ">format_italic</span>
 
                   <input type="text" class="
-                    2xl:w-full 
+                    w-full 
                     focus:outline-none focus:border-none font-normal bg-transparent
                     " placeholder="Ingresa tus apellidos" v-model="form.apellidos_ct"
                     @input="handleInput($event, 'apellidos_ct')" @blur="handleBlur('apellidos_ct')" />
@@ -233,16 +252,20 @@ const handleInput = (event, field) => {
             </div>
             <div class="
             2xl:flex 2xl:justify-between 2xl:items-center 2xl:gap-2
+                        xl:flex xl:justify-between xl:items-center xl:gap-2
             ">
               <div class="
-              2xl:w-[50%]
+              w-[50%]
               ">
                 <p class="
                 2xl:my-[5px] 2xl:text-[16px]
+                xl:my-[4px] xl:text-[15px]
                 ">Tipo de documento:</p>
                 <div class="custom-select">
                   <select v-model="form.id_tipo_documento" class="
-                    2xl:w-full 2xl:p-2 
+                    w-full 
+                    2xl:p-2
+                    xl:p-1
                     border border-secundary-light rounded-md
                     ">
                     <option value="" disabled selected>Selecciona un tipo</option>
@@ -255,17 +278,19 @@ const handleInput = (event, field) => {
               </div>
 
               <div class="
-              2xl:w-[50%]
+              w-[50%]
               ">
                 <div class="
                 cotador-input 
-                2xl:flex 2xl:items-center 2xl:justify-between
+                flex items-center justify-between
                 ">
                   <p class="
                   2xl:my-[5px] 2xl:text-[16px]
+                  xl:my-[4px] xl:text-[15px]
                   ">Número documento:</p>
                   <p class="
-                  2xl:text-[10px] 
+                  2xl:text-[10px]                  
+                  xl:text-[12px]
                   text-secundary-light text-right 
                   
                   ">
@@ -273,16 +298,16 @@ const handleInput = (event, field) => {
                   </p>
                 </div>
                 <div class="
-                  2xl:w-[100%] 2xl:p-[3px] 2xl:flex 2xl:items-center 2xl:gap-[8px]
+                  w-[100%] p-[3px] flex items-center gap-[8px]
                   transition-all rounded-[5px] border-[1px] border-secundary-light" :class="{ 'border-universal-naranja': form.errors.numero_documento_ct }
                     ">
                   <span class="
-                  2xl:text-[20px] 2xl:pl-[5px]
+                  text-[20px] pl-[5px]
                   material-symbols-rounded text-universal-naranja 
                   ">pin</span>
 
                   <input type="text" class="
-                    2xl:w-full 
+                    w-full 
                     focus:outline-none focus:border-none font-normal bg-transparent" placeholder="Ingresa solo numeros"
                     v-model="form.numero_documento_ct" @input="handleInput($event, 'numero_documento_ct')"
                     @blur="handleBlur('numero_documento_ct')" />
@@ -297,19 +322,22 @@ const handleInput = (event, field) => {
             </div>
             <div class="
             2xl:flex 2xl:justify-between 2xl:items-center 2xl:gap-2
+            xl:flex xl:justify-between xl:items-center xl:gap-2
             ">
               <div class="
-              2xl:w-[50%]
+              w-[50%]
               ">
                 <div class="
                 contador-input 
-                2xl:flex 2xl:items-center 2xl:justify-between
+                flex items-center justify-between
                 ">
                   <p class="
                   2xl:my-[5px] 2xl:text-[16px]
+                  xl:my-[4px] xl:text-[15px]
                   ">Número telefono:</p>
                   <p class="
-                  2xl:text-[10px] 
+                  2xl:text-[10px]                  
+                  xl:text-[12px]
                   text-secundary-light text-right 
                   ">
                     {{ form.telefono_ct.length }} / {{ limitesCaracteres.telefono_ct }}
@@ -317,16 +345,16 @@ const handleInput = (event, field) => {
                 </div>
 
                 <div class="
-                  2xl:w-[100%] 2xl:p-[3px] 2xl:flex 2xl:items-center 2xl:gap-[8px]
+                  w-[100%] p-[3px] flex items-center gap-[8px]
                   transition-all rounded-[5px] border-[1px] border-secundary-light" :class="{ 'border-universal-naranja': form.errors.telefono_ct }
                     ">
                   <span class="
-                  2xl:text-[20px] 2xl:pl-[5px]
+                  text-[20px] pl-[5px]
                   material-symbols-rounded text-universal-naranja 
                   ">phone</span>
 
                   <input type="text" class="
-                    2xl:w-full 
+                    w-full 
                     focus:outline-none focus:border-none font-normal bg-transparent
                     " placeholder="Ingresa solo números" v-model="form.telefono_ct"
                     @input="handleInput($event, 'telefono_ct')" @blur="handleBlur('telefono_ct')" />
@@ -341,34 +369,36 @@ const handleInput = (event, field) => {
               </div>
 
               <div class="
-              2xl:w-[50%]
+              w-[50%]
               ">
                 <div class="
                 contador-input 
-                2xl:flex 2xl:items-center 2xl:justify-between
+                flex items-center justify-between
                 ">
                   <p class="
                   2xl:my-[5px] 2xl:text-[16px]
+                  xl:my-[4px] xl:text-[15px]
                   ">Email:</p>
                   <p class="
-                  2xl:text-[10px] 
+                  2xl:text-[10px]                  
+                  xl:text-[12px]
                   text-right text-secundary-light
                   ">
                     {{ form.email_ct.length }} / {{ limitesCaracteres.email_ct }}
                   </p>
                 </div>
                 <div class="
-                  2xl:w-[100%] 2xl:p-[3px] 2xl:flex 2xl:items-center 2xl:gap-[8px]
+                  w-[100%] p-[3px] flex items-center gap-[8px]
                   transition-all rounded-[5px] border-[1px] border-secundary-light" :class="{ 'border-universal-naranja': form.errors.email_ct }
                     ">
                   <span class="
                   material-symbols-rounded 
-                  2xl:text-[20px] 2xl:pl-[5px]
+                  text-[20px] pl-[5px]
                   text-universal-naranja 
                   ">email</span>
 
                   <input type="email" class="
-                    2xl:w-full 
+                    w-full 
                     focus:outline-none focus:border-none font-normal bg-transparent
                     " placeholder="Ingresa tus email" v-model="form.email_ct" @input="handleInput($event, 'email_ct')"
                     @blur="handleBlur('email_ct')" />
@@ -383,9 +413,10 @@ const handleInput = (event, field) => {
             </div>
             <div class="
             2xl:flex 2xl:justify-between 2xl:items-center 2xl:gap-2
+                        xl:flex xl:justify-between xl:items-center xl:gap-2
             ">
               <div class="
-              2xl:w-[50%]
+              w-[50%]
               ">
                 <p class="
                 2xl:my-[5px] 2xl:text-[14px]
@@ -413,22 +444,22 @@ const handleInput = (event, field) => {
               </div>
 
               <div class="
-              2xl:w-[50%]
+              w-[50%]
               ">
                 <p class="
                 2xl:my-[5px] 2xl:text-[14px]
                 ">Confirmar contraseña:</p>
                 <div class="
-                  2xl:w-[100%] 2xl:p-[3px] 2xl:flex 2xl:items-center 2xl:gap-[8px]
+                  w-[100%] p-[3px] flex items-center gap-[8px]
                   transition-all rounded-[5px] border-[1px] border-secundary-light 
                   ">
                   <span class="
-                  2xl:text-[20px] 2xl:pl-[5px]
+                  text-[20px] pl-[5px]
                   material-symbols-rounded text-universal-naranja 
                   ">password</span>
 
                   <input type="password" class="
-                    2xl:w-full 
+                    w-full 
                     focus:outline-none focus:border-none font-normal bg-transparent"
                     placeholder="Debe ser igual la contraseña" v-model="form.contrasenia_ct_confirmation" />
                 </div>
@@ -436,16 +467,17 @@ const handleInput = (event, field) => {
             </div>
             <div class="
             2xl:flex 2xl:justify-between 2xl:items-center 2xl:gap-2
+                        xl:flex xl:justify-between xl:items-center xl:gap-2
             ">
               <div class="
-              2xl:w-[100%]
+              w-[100%]
               ">
                 <p class="
                 2xl:my-[5px] vtext-[16px]
                 ">Aplicacion de interes:</p>
                 <div class="custom-select">
                   <select v-model="form.id_aplicacion" class="
-                    2xl:w-full 2xl:p-2 b
+                    w-full 2xl:p-2 b
                     order border-secundary-light rounded-md
                     ">
                     <option value="" disabled selected>Selecciona una app</option>
@@ -470,21 +502,22 @@ const handleInput = (event, field) => {
 
             <p class="
             
-            2xl:mt-4
+            mt-4
             ">¿Ya eres parte de Taurus Comunity?, <a :href="route('login.auth')" class="
                 text-universal-azul
                 ">Inicia Sesion</a>.</p>
 
             <p class="
-             2xl:text-[12px]
+             text-[12px]
             text-universal-azul 
             ">Versión Deimos 1.0.0</p>
 
           </form>
         </div>
         <div class="
-        2xl:w-[40%] rounded-lg 2xl:flex 2xl:justify-center 2xl:items-center
-        right shadowM
+        2xl:w-[40%] 2xl:flex 2xl:justify-center 2xl:items-center
+        xl:w-[35%] xl:flex xl:justify-center xl:items-center
+        right shadowM rounded-lg
         ">
 
           <img
