@@ -17,7 +17,7 @@ const resolvePageComponent = (name) => {
 };
 
 createInertiaApp({
-    title: (title) => `${title} - TaurusPOS`,
+    title: (title) => `${title} | Taurus CO`,
     resolve: (name) => resolvePageComponent(name),
     setup({ el, App, props, plugin }) {
         const app = createApp({ render: () => h(App, props) })

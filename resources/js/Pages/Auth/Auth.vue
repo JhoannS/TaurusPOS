@@ -71,21 +71,55 @@ const submit = () => {
 <template>
   <div>
 
-    <Head title="Login" />
-    <div class="bg-mono-negro flex justify-center items-center">
-      <main class="flex items-center justify-between h-[100vh] w-[100%] p-[80px] gap-16">
-        <div class="left w-[60%]">
-          <div class="logo flex gap-3 items-center">
-            <div class="gota h-7 w-10 shadow-essentials bg-universal-naranja rounded-full"></div>
+    <Head title="Inicia Sesion" />
+    <div class="
+    bg-mono-negro
+            sm:bg-green-500 
+            md:bg-yellow-500
+            lg:bg-red-500 
+            xl:bg-mono-negro 
+            2xl:bg-mono-negro
+            flex justify-center items-center
+    ">
+      <main class="
+       2xl:w-[100%] 2xl:p-[80px] 2xl:gap-16
+      xl:w-[100%] xl:px-[80px] xl:gap-14
+      min-h-[100vh] flex items-center justify-between w-[100%] p-[40px] gap-14
+      ">
+        <div class="
+          left 
+        2xl:w-[65%]
+        xl:w-[65%]
+        w-full
+        ">
+          <div class="logo
+          2xl:flex 2xl:gap-3 2xl:items-center
+          xl:flex xl:gap-2 xl:items-center
+          flex items-center gap-2
+          ">
+            <div class="gota
+             2xl:h-7 2xl:w-10
+            xl:h-6 xl:w-9
+            h-5 w-8 rounded-full shadow-universal-naranja bg-universal-naranja
+            "></div>
             <div class="logo">
               <h1 class="text-[20px] font-semibold">Taurus Comunity CO</h1>
-              <p class="-mt-[8px] text-[14px] font-medium">Software profesional Essentials App</p>
+              <p class="-mt-[8px] text-[14px] font-medium">Empresa de software especializada</p>
             </div>
           </div>
 
           <div class="welcome">
-            <h2 class="text-[35px] font-bold mt-[20px]">Bienvenido Nuevamente 👋</h2>
-            <p class="text-[20px]">Hoy es un excelente día para vender, inicia sesión y sácale el jugo a tu App.</p>
+            <h2 class="
+            2xl:text-[35px] d 2xl:mt-[20px]
+            xl:text-[35px] d xl:mt-[20px]
+            font-bold text-[22px] mt-3
+            
+            ">Bienvenido Nuevamente 👋</h2>
+            <p class="
+            2xl:text-[20px]
+            xl:text-[20px]
+            text-[15px]
+            ">Hoy es un excelente día para vender, inicia sesión y sácale el jugo a tu App.</p>
           </div>
 
 
@@ -132,15 +166,26 @@ const submit = () => {
               <span class="material-symbols-rounded bg-transparent">bolt</span>
             </button>
 
-            <p class="text-center">¿No tienes una cuenta con nosotros?
-              <a :href="route('register.auth')" class="text-universal-azul">Registrarme</a>.
-            </p>
 
-            <p class="text-universal-azul text-center text-[12px]">Versión Deimos 1.0.0</p>
+            <p class="
+            mt-4
+            ">¿Ya eres parte de Taurus Comunity?, <a :href="route('register.auth')" class="
+                text-universal-azul
+                ">Inicia Sesion</a>.</p>
+
+            <p class="
+             text-[12px]
+            text-universal-azul 
+            ">Versión Deimos 1.0.0</p>
           </form>
         </div>
 
-        <div class="right w-[35%] rounded-lg flex justify-center items-center shadowM">
+        <div class="
+        2xl:w-[34%] 2xl:flex 2xl:justify-center 2xl:items-center 2xl:visible 2xl:p-0
+        xl:w-[35%] xl:flex xl:justify-center xl:items-center xl:visible xl:p-0
+
+        hidden right shadowM rounded-lg
+        ">
           <img src="https://images.unsplash.com/photo-1638657527755-ca3e0d217260?q=80&w=1376&auto=format&fit=crop"
             alt="Img login" class="rounded-lg" />
         </div>

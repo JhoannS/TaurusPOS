@@ -106,35 +106,35 @@ const handleInput = (event, field) => {
             
             ">
       <main class="
-      flex items-center justify-between 2xl:w-[80%] 2xl:p-[80px] 2xl:gap-16
-      xl:flex xl:items-center xl:justify-between xl:w-[100%] xl:px-[80px] xl:gap-14
-        min-h-[100vh] 
+      2xl:w-[100%] 2xl:p-[80px] 2xl:gap-16
+      xl:w-[100%] xl:px-[80px] xl:gap-14
+      min-h-[100vh] flex items-center justify-between w-[100%] p-[40px] gap-14
       ">
         <div class="
         left 
-        2xl:w-[60%]
+        2xl:w-[65%]
         xl:w-[65%]
+        w-full
         ">
           <div class="logo 
           2xl:flex 2xl:gap-3 2xl:items-center
           xl:flex xl:gap-2 xl:items-center
+          flex items-center gap-2
           ">
             <div class="gota 
             2xl:h-7 2xl:w-10
             xl:h-6 xl:w-9
-            rounded-full shadow-universal-naranja bg-universal-naranja
+            h-5 w-8 rounded-full shadow-universal-naranja bg-universal-naranja
             "></div>
             <div class="logo">
               <h1 class="
-              
               text-[20px] 
               font-semibold
               ">Taurus Comunity CO</h1>
               <p class="
               -mt-[8px] text-[14px] 
-  
               font-medium
-              ">Software profesional Essentials App</p>
+              ">Empresa de software especializada</p>
             </div>
           </div>
 
@@ -142,11 +142,12 @@ const handleInput = (event, field) => {
             <h2 class="
             2xl:text-[35px] d 2xl:mt-[20px]
             xl:text-[25px] d xl:mt-[15px]
-            font-bol
+            font-bold text-[22px] mt-3
             ">Registrate y empecemos👋</h2>
             <p class="
             2xl:text-[20px]
-            xl:text-[17px]
+            xl:text-[18px]
+            text-[15px]
             ">No te arrepentiras de unirte a la familia Taurus Comunity, especializado en software
             </p>
           </div>
@@ -155,15 +156,18 @@ const handleInput = (event, field) => {
           <form @submit.prevent="submit" class="
           2xl:mt-5 2xl:flex 2xl:flex-col 2xl:gap-2
           xl:mt-4 xl:flex xl:flex-col xl:gap-2
+          mt-3 flex flex-col gap-3
           ">
 
             <div class="
-            2xl:flex 2xl:justify-between 2xl:items-center 2xl:gap-2
-            xl:flex xl:justify-between xl:items-center xl:gap-2
+            2xl:flex 2xl:flex-row 2xl:justify-between 2xl:items-center 2xl:gap-2
+            xl:flex xl:flex-row xl:justify-between xl:items-center xl:gap-2
+            gap-3 flex flex-col items-center
             ">
               <div class="
-              w-[50%]
+              2xl:w-[50%]
               xl:w-[50%]
+              w-full
               ">
                 <div class="
                 contador-input 
@@ -209,7 +213,9 @@ const handleInput = (event, field) => {
               </div>
 
               <div class="
-              w-[50%]
+              2xl:w-[50%]
+              xl:w-[50%]
+              w-full
               ">
                 <div class="
                 contador-input 
@@ -251,11 +257,14 @@ const handleInput = (event, field) => {
               </div>
             </div>
             <div class="
-            2xl:flex 2xl:justify-between 2xl:items-center 2xl:gap-2
-                        xl:flex xl:justify-between xl:items-center xl:gap-2
+            2xl:flex 2xl:flex-row 2xl:justify-between 2xl:items-center 2xl:gap-2
+            xl:flex xl:flex-row xl:justify-between xl:items-center xl:gap-2
+             gap-3 flex flex-col items-center
             ">
               <div class="
-              w-[50%]
+              2xl:w-[50%]
+              xl:w-[50%]
+              w-full
               ">
                 <p class="
                 2xl:my-[5px] 2xl:text-[16px]
@@ -278,7 +287,9 @@ const handleInput = (event, field) => {
               </div>
 
               <div class="
-              w-[50%]
+              2xl:w-[50%]
+              xl:w-[50%]
+              w-full
               ">
                 <div class="
                 cotador-input 
@@ -321,11 +332,14 @@ const handleInput = (event, field) => {
               </div>
             </div>
             <div class="
-            2xl:flex 2xl:justify-between 2xl:items-center 2xl:gap-2
-            xl:flex xl:justify-between xl:items-center xl:gap-2
+            2xl:flex 2xl:flex-row 2xl:justify-between 2xl:items-center 2xl:gap-2
+            xl:flex xl:flex-row xl:justify-between xl:items-center xl:gap-2
+             gap-3 flex flex-col items-center
             ">
               <div class="
-              w-[50%]
+              2xl:w-[50%]
+              xl:w-[50%]
+              w-full
               ">
                 <div class="
                 contador-input 
@@ -369,7 +383,9 @@ const handleInput = (event, field) => {
               </div>
 
               <div class="
-              w-[50%]
+              2xl:w-[50%]
+              xl:w-[50%]
+              w-full
               ">
                 <div class="
                 contador-input 
@@ -412,11 +428,14 @@ const handleInput = (event, field) => {
               </div>
             </div>
             <div class="
-            2xl:flex 2xl:justify-between 2xl:items-center 2xl:gap-2
-                        xl:flex xl:justify-between xl:items-center xl:gap-2
+            2xl:flex 2xl:flex-row 2xl:justify-between 2xl:items-center 2xl:gap-2
+            xl:flex xl:flex-row xl:justify-between xl:items-center xl:gap-2
+             gap-3 flex flex-col items-center
             ">
               <div class="
-              w-[50%]
+              2xl:w-[50%]
+              xl:w-[50%]
+              w-full
               ">
                 <p class="
                 my-[5px] text-[14px]
@@ -444,7 +463,9 @@ const handleInput = (event, field) => {
               </div>
 
               <div class="
-              w-[50%]
+              2xl:w-[50%]
+              xl:w-[50%]
+              w-full
               ">
                 <p class="
                 my-[5px] text-[14px]
@@ -466,8 +487,9 @@ const handleInput = (event, field) => {
               </div>
             </div>
             <div class="
-            2xl:flex 2xl:justify-between 2xl:items-center 2xl:gap-2
-                        xl:flex xl:justify-between xl:items-center xl:gap-2
+            2xl:flex 2xl:flex-row 2xl:justify-between 2xl:items-center 2xl:gap-2
+            xl:flex xl:flex-row xl:justify-between xl:items-center xl:gap-2
+            gap-3 flex flex-col items-center
             ">
               <div class="
               w-[100%]
@@ -515,9 +537,10 @@ const handleInput = (event, field) => {
           </form>
         </div>
         <div class="
-        2xl:w-[40%] 2xl:flex 2xl:justify-center 2xl:items-center
-        xl:w-[35%] xl:flex xl:justify-center xl:items-center
-        right shadowM rounded-lg
+        2xl:w-[34%] 2xl:flex 2xl:justify-center 2xl:items-center 2xl:visible 2xl:p-0
+        xl:w-[35%] xl:flex xl:justify-center xl:items-center xl:visible xl:p-0
+
+        hidden right shadowM rounded-lg
         ">
 
           <img
