@@ -47,7 +47,7 @@ const clientesPorActivacion = ref([])
 const cargarClientesPorActivacion = async () => {
   try {
     const { data } = await axios.get(route('clientes.activacion', {
-      aplicacion: props.aplicacion, 
+      aplicacion: props.aplicacion,
       rol: props.auth.user.rol
     }))
     clientesPorActivacion.value = data
@@ -87,6 +87,8 @@ const logout = () => {
   router.post(route('logout'))
 }
 
+console.log(props.auth.user);
+
 </script>
 
 <template>
@@ -98,16 +100,17 @@ const logout = () => {
         <div class="gota h-10 w-10 rounded-full bg-universal-naranja"></div>
         <div class="logo">
           <div v-if="auth && auth.user">
-            <h3 class="font-semibold"> {{ user.tienda?.nombre_tienda || 'Sin tienda' }}</h3>
+            <h3 class="font-semibold">{{ auth.user.tienda?.nombre_tienda || 'Sin tienda' }}</h3>
             <p class="-mt-[5px] text-secundary-light text-[13px] font-medium">
-              {{ user.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }} - {{
-                user.tienda?.aplicacion?.membresia?.duracion || 'Sin duración' }} días
+              {{ auth.user.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }} - {{
+                auth.user.tienda?.aplicacion?.membresia?.duracion || 'Sin duración' }} días
             </p>
           </div>
           <div v-else>
             <p>Cargando información del usuario...</p>
           </div>
         </div>
+
       </div>
     </div>
     <header class="flex items-center border border-l-secundary-light bg-secundary-opacity p-3 rounded-md w-[80%]">
@@ -127,7 +130,7 @@ const logout = () => {
           class="border  bg-secundary-opacity border-secundary-light rounded-md w-[40%] p-2 flex justify-between items-center">
           <div class="metodoPago-monto">
             <p class="text-[14px]">Dinero activo:</p>
-            <p class="font-bold text-[18px]"> {{ totalPrecio || 'Error al obtener total'}}</p>
+            <p class="font-bold text-[18px]"> {{ totalPrecio || 'Error al obtener total' }}</p>
           </div>
           <div class="contador p-2 rounded-md flex justify-center items-center w-10 h-10 font-bold" :class="[bgClase]">
             <span class="material-symbols-rounded">
@@ -141,12 +144,12 @@ const logout = () => {
           <div class="clientesInactivos">
             <p class="text-[14px]">Clientes por activación:</p>
 
-           
+
             <div v-if="clientesPorActivacion.length === 0" class="text-semaforo-verde font-semibold">
               Estás al día, muy bien 👌
             </div>
 
-          
+
             <div v-else>
               <div v-for="cliente in clientesPorActivacion" :key="cliente.id"
                 class="clientesActivacion flex justify-between items-center gap-4 w-full">
@@ -183,4 +186,5 @@ const logout = () => {
     </div>
 
   </main>
+  
 </template>

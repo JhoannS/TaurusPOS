@@ -29,7 +29,7 @@ class DashboardController extends Controller
             'rol',
             'tienda',
             'tienda.token',
-            'tienda.token.estado', // Cargar directamente el estado desde el token
+            'tienda.token.estado',
             'tienda.estado',
             'tienda.aplicacion',
             'tienda.aplicacion.plan',
@@ -90,8 +90,8 @@ class DashboardController extends Controller
                 'totalPrecio' => $totalPrecio ?: 0, // Asegurar que no sea NULL
                 'aplicacion' => $aplicacion,
                 'rol' => $rol,
-                'user' => $user->load('tienda.aplicacion.plan.detalles')
             ]);
+            
 
 
         }

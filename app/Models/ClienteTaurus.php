@@ -69,9 +69,9 @@ class ClienteTaurus extends Authenticatable
     }
 
     public function membresia()
-{
-    return $this->belongsTo(Membresia::class, 'id_membresia');
-}
+    {
+        return $this->belongsTo(Membresia::class, 'id_membresia');
+    }
 
     // Método para obtener el identificador de autenticación (si usas un campo diferente)
     public function getAuthIdentifierName()
@@ -92,8 +92,10 @@ class ClienteTaurus extends Authenticatable
     }
 
     public function pagosMembresias()
-{
-    return $this->hasMany(PagoMembresia::class, 'id_cliente');
-}
+    {
+        return $this->hasMany(PagoMembresia::class, 'id_cliente');
+    }
 
+
+    
 }
