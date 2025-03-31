@@ -107,7 +107,7 @@ const handleInput = (event, field) => {
             ">
       <main class="
       2xl:w-[100%] 2xl:p-[80px] 2xl:gap-16
-      xl:w-[100%] xl:px-[80px] xl:gap-14
+      xl:w-[100%] xl:px-[80px] xl:gap-14 xl:py-[0px]
       min-h-[100vh] flex items-center justify-between w-[100%] p-[40px] gap-14
       ">
         <div class="
@@ -181,6 +181,7 @@ const handleInput = (event, field) => {
                   <p class="
                   2xl:text-[10px]                  
                   xl:text-[12px]
+                  text-[8px]
                   text-right  text-secundary-light
                   ">
                     {{ form.nombres_ct.length }} / {{ limitesCaracteres.nombres_ct }}
@@ -228,6 +229,7 @@ const handleInput = (event, field) => {
                   <p class="
                   2xl:text-[10px]                  
                   xl:text-[12px]
+                  text-[8px]
                   text-right text-secundary-light">
                     {{ form.apellidos_ct.length }} / {{ limitesCaracteres.apellidos_ct }}
                   </p>
@@ -302,6 +304,7 @@ const handleInput = (event, field) => {
                   <p class="
                   2xl:text-[10px]                  
                   xl:text-[12px]
+                  text-[8px]
                   text-secundary-light text-right 
                   
                   ">
@@ -352,6 +355,7 @@ const handleInput = (event, field) => {
                   <p class="
                   2xl:text-[10px]                  
                   xl:text-[12px]
+                  text-[8px]
                   text-secundary-light text-right 
                   ">
                     {{ form.telefono_ct.length }} / {{ limitesCaracteres.telefono_ct }}
@@ -398,6 +402,7 @@ const handleInput = (event, field) => {
                   <p class="
                   2xl:text-[10px]                  
                   xl:text-[12px]
+                  text-[8px]
                   text-right text-secundary-light
                   ">
                     {{ form.email_ct.length }} / {{ limitesCaracteres.email_ct }}
