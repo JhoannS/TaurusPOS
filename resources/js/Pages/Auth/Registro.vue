@@ -112,7 +112,7 @@ const handleInput = (event, field) => {
       ">
         <div class="
         left 
-        2xl:w-[65%]
+        2xl:w-[70%]
         xl:w-[65%]
         w-full
         ">
@@ -542,7 +542,7 @@ const handleInput = (event, field) => {
           </form>
         </div>
         <div class="
-        2xl:w-[34%] 2xl:flex 2xl:justify-center 2xl:items-center 2xl:visible 2xl:p-0
+        2xl:w-[30%] 2xl:flex 2xl:justify-center 2xl:items-center 2xl:visible 2xl:p-0
         xl:w-[35%] xl:flex xl:justify-center xl:items-center xl:visible xl:p-0
 
         hidden right shadowM rounded-lg

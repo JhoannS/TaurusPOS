@@ -70,7 +70,6 @@ const submit = () => {
 
 <template>
   <div>
-
     <Head title="Inicia Sesion" />
     <div class="
     bg-mono-negro
@@ -87,8 +86,8 @@ const submit = () => {
       min-h-[100vh] flex items-center justify-between w-[100%] p-[40px] gap-14
       ">
         <div class="
-          left 
-        2xl:w-[65%]
+        left 
+        2xl:w-[70%]
         xl:w-[65%]
         w-full
         ">
@@ -169,9 +168,9 @@ const submit = () => {
 
             <p class="
             mt-4
-            ">¿Ya eres parte de Taurus Comunity?, <a :href="route('register.auth')" class="
+            ">¿No tienes una cuenta?, <a :href="route('register.auth')" class="
                 text-universal-azul
-                ">Inicia Sesion</a>.</p>
+                ">Registrate aquí</a>.</p>
 
             <p class="
              text-[12px]
@@ -181,7 +180,7 @@ const submit = () => {
         </div>
 
         <div class="
-        2xl:w-[34%] 2xl:flex 2xl:justify-center 2xl:items-center 2xl:visible 2xl:p-0
+        2xl:w-[30%] 2xl:flex 2xl:justify-center 2xl:items-center 2xl:visible 2xl:p-0
         xl:w-[35%] xl:flex xl:justify-center xl:items-center xl:visible xl:p-0
 
         hidden right shadowM rounded-lg

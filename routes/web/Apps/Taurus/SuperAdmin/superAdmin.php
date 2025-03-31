@@ -9,6 +9,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])
             ->name('aplicacion.dashboard');
 
+            
         Route::get('/dashboard/detalle/{idCliente}', [DashboardController::class, 'detalle'])
             ->name('aplicacion.dashboard.detalle');
 
@@ -21,4 +22,5 @@ Route::middleware('auth')->group(function () {
             ->name('clientes.destroy');
     });
 });
+
 

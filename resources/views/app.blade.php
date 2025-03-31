@@ -16,5 +16,6 @@
 </head>
 <body class="bg-mono-negro scrollbar-custom">
   @inertia
+  
 </body>
 </html>

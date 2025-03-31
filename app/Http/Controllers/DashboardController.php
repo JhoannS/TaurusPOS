@@ -8,6 +8,9 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB; // ✅ Importa la clase DB correctamente
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Broadcast;
+use App\Events\ClienteEliminado; // Importamos el evento
+
 
 class DashboardController extends Controller
 {
@@ -96,6 +99,7 @@ class DashboardController extends Controller
         abort(404);
     }
 
+
     // Agrega este método al DashboardController
     public function detalle($aplicacion, $rol, $idCliente)
     {
@@ -147,55 +151,65 @@ class DashboardController extends Controller
 
 
 
-    use AuthorizesRequests; // 👈 Añadir este trait aquí
+    use AuthorizesRequests;
 
 
     public function destroy(Request $request, $aplicacion, $rol, $id)
     {
-        $cliente = ClienteTaurus::with('rol')->find($id); // ✅ Cargar relación 'rol'
+        $cliente = ClienteTaurus::with([
+            'rol',
+            'tienda.token',
+            'tienda.pagosMembresias',
+            'tienda.membresia.detallesPlan'
+        ])->find($id);
 
         if (!$cliente) {
             abort(404, 'Cliente no encontrado');
         }
 
-        // ✅ Guardar el nombre del rol antes de eliminarlo
         $nombreRol = $cliente->rol ? $cliente->rol->nombre_rol : 'SuperAdmin';
 
-        // ✅ Si la tienda tiene un token asociado, elimínalo primero
-        if ($cliente->tienda && $cliente->tienda->token) {
-            $cliente->tienda->token()->delete();
-        }
-
-        // ✅ Eliminar la tienda asociada (si existe)
+        // ✅ Eliminar relaciones en cascada
         if ($cliente->tienda) {
+            if ($cliente->tienda->pagosMembresias) {
+                $cliente->tienda->pagosMembresias()->delete();
+            }
+            if ($cliente->tienda->token) {
+                $cliente->tienda->token()->delete();
+            }
+            if ($cliente->tienda->membresia) {
+                if ($cliente->tienda->membresia->detallesPlan) {
+                    $cliente->tienda->membresia->detallesPlan()->delete();
+                }
+                $cliente->tienda->membresia()->delete();
+            }
             $cliente->tienda()->delete();
         }
 
-        // ✅ Eliminar relaciones dependientes
+        // ✅ Eliminar relaciones directas del cliente
         if ($cliente->estado) {
             $cliente->estado()->dissociate()->delete();
         }
-
         if ($cliente->tipoDocumento) {
             $cliente->tipoDocumento()->dissociate()->delete();
         }
-
         if ($cliente->rol) {
             $cliente->rol()->dissociate()->delete();
         }
 
-        // ✅ Finalmente eliminar el cliente
+        $clienteId = $cliente->id;
         $cliente->deleteOrFail();
 
-        // ✅ Si no hay rol, usar valor por defecto 'Invitado'
-        $nombreRol = $nombreRol ?: 'SuperAdmin';
+        // ✅ Emitir evento de WebSocket
+        broadcast(new ClienteEliminado($clienteId))->toOthers();
 
-        // ✅ Redirigir correctamente con el valor del rol
+        // ✅ Redirigir con la notificación de éxito
         return redirect()->route('aplicacion.dashboard', [
             'aplicacion' => $aplicacion,
-            'rol' => ucfirst($nombreRol) // ✅ Usa el nombre del rol
-        ]);
+            'rol' => ucfirst($nombreRol ?: 'SuperAdmin')
+        ])->with('success', 'Cliente eliminado con éxito');
     }
+
 
 
 

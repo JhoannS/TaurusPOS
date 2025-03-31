@@ -10,3 +10,8 @@ foreach (File::allFiles($routesPath) as $routeFile) {
 Route::get('/login', function () {
     return redirect()->route('login.auth');
 })->name('login');
+
+// En routes/web.php
+Route::get('/ping', function () {
+    return response()->json(['status' => 'ok']);
+});

@@ -2,8 +2,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\TipoDocumentoController;
-use App\Http\Controllers\AplicacionWebController;
 
 
 // Mostrar el formulario de login

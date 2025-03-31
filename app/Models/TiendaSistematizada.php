@@ -48,6 +48,12 @@ class TiendaSistematizada extends Model
         return $this->belongsTo(Membresia::class, 'id_membresia');
     }
 
+    public function pagosMembresias()
+{
+    return $this->hasMany(PagoMembresia::class, 'id_tienda');
+}
+
+
     
 
 

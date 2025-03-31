@@ -5,9 +5,8 @@ import axios from 'axios';
 import 'dayjs/locale/es';
 import dayjs from 'dayjs';
 import SaludoOpciones from '@/Components/header/Essentials/SaludoOpciones.vue';
-import Clientes from '@/Components/TablaDatos/TaurusCo/Clientes.vue';
-import ExportarExcel from '@/components/ExportarExcel/ExportarExcel.vue';
-import Modal from '@/Components/Modales/Essentials/Modal.vue';
+import Clientes from '@/Components/tablaDatos/TaurusCO/Clientes.vue';
+import ExportarExcel from '@/Components/exportarExcel/ExportarExcel.vue';
 
 const props = defineProps({
   auth: {

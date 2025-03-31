@@ -5,6 +5,8 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import ModalDetalles from '@/Components/Modales/ModalDetallesClientes.vue';
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
 
 
 const props = defineProps({
@@ -22,7 +24,8 @@ const props = defineProps({
   rol: {
     type: Object,
     required: true
-  }
+  },
+  success: String
 })
 
 function getEstadoClass(estado) {
@@ -91,12 +94,36 @@ function closeModal() {
 }
 
 
+const mensajeNotificacion = ref('')
+const tipoNotificacion = ref(null)
+const mostrarNotificacion = ref(false)
+
+onMounted(() => {
+  // Verificar si se pasó un mensaje de éxito en las props
+  if (props.success) {
+    mostrarMensaje(props.success, 'success')
+  }
+})
+
+const mostrarMensaje = (mensaje, tipo) => {
+  mensajeNotificacion.value = mensaje
+  tipoNotificacion.value = tipo
+  mostrarNotificacion.value = true
+
+  setTimeout(() => {
+    mostrarNotificacion.value = false
+  }, 5000)
+}
+
 const confirmDelete = (id) => {
+  // Verificar si se intenta eliminar la propia cuenta
   if (id === props.userId) {
-    alert('❌ No puedes eliminar tu propia cuenta.')
+    // Mostrar notificación de error si se intenta eliminar la propia cuenta
+    mostrarMensaje('No puedes eliminar tu propia cuenta.', 'error')
     return
   }
 
+  // Confirmar si el usuario quiere eliminar el cliente
   if (confirm('⚠️ ¿Estás seguro de que deseas eliminar este cliente?')) {
     deleteCliente(id)
   }
@@ -104,27 +131,31 @@ const confirmDelete = (id) => {
 
 const deleteCliente = (id) => {
   if (!props.aplicacion || !props.rol) {
-    console.error('❌ Faltan parámetros de aplicación o rol');
+    console.error('Faltan parámetros de aplicación o rol');
     return;
   }
 
   router.delete(route('clientes.destroy', {
     aplicacion: props.aplicacion,
-    rol: props.rol,
+    rol: props.rol.id, // Asegurar que envíe el ID del rol
     id: id
-  }, {
-    replace: true,
-    prefix: 'dashboard'
   }), {
     onSuccess: () => {
-      alert('✅ Cliente eliminado correctamente.');
+      // Filtrar la lista de clientes para eliminar el cliente eliminado
+      props.clientes = props.clientes.filter(cliente => cliente.id !== id);
+      
+      mostrarMensaje('Cliente eliminado con éxito', 'success');
+      setTimeout(() => {
+        location.reload();
+      }, 3000); 
+
     },
     onError: (error) => {
-      console.error('❌ Error:', error);
-      alert('❌ Error al eliminar el cliente.');
+      mostrarMensaje('Error al eliminar el cliente', 'error');
     }
   });
-}
+};
+
 
 function handleBeforeEnter(el) {
   el.classList.add('animate-fadeIn');
@@ -526,5 +557,29 @@ const totalPrecioFormat = computed(() => {
         </div>
       </div>
     </ModalDetalles>
+
+    <!-- Notificación de éxito -->
+<div v-if="mostrarNotificacion && tipoNotificacion === 'success'"
+     class="notificacion translate-y-8 absolute w-[max-content] left-0 right-0 top-6 ml-auto mr-auto rounded-md bg-semaforo-verde_opacity text-mono-blanco shadow-semaforo-verde">
+    <div class="notificacion_body flex justify-center gap-3 items-center py-3 px-2">
+        <div class="flex gap-2 items-center">
+            <i class="material-symbols-rounded text-semaforo-verde">check_circle</i>
+            <p>{{ mensajeNotificacion }}</p>
+        </div>
+    </div>
+    <div class="progreso_notificacion absolute left-1 bottom-1 h-1 scale-x-0 origin-left rounded-sm bg-semaforo-verde"></div>
+</div>
+
+<!-- Notificación de error -->
+<div v-if="mostrarNotificacion && tipoNotificacion === 'error'"
+     class="notificacion translate-y-8 absolute w-[max-content] left-0 right-0 top-6 ml-auto mr-auto rounded-md bg-semaforo-rojo_opacity text-mono-blanco shadow-semaforo-verde">
+    <div class="notificacion_body flex justify-center gap-3 items-center py-3 px-2">
+        <div class="flex gap-2 items-center">
+            <i class="material-symbols-rounded text-semaforo-rojo">cancel</i>
+            <p>{{ mensajeNotificacion }}</p>
+        </div>
+    </div>
+    <div class="progreso_notificacion absolute left-1 bottom-1 h-1 scale-x-0 origin-left rounded-sm bg-semaforo-rojo"></div>
+</div>
   </div>
 </template>
