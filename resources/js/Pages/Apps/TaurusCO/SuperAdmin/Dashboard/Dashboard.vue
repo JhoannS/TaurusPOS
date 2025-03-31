@@ -25,12 +25,7 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  totalPrecio: {
-    type: Number,
-    required: true // 
-  }
 })
-
 
 
 const user = props.auth.user
@@ -87,13 +82,12 @@ const logout = () => {
   router.post(route('logout'))
 }
 
-console.log(props.auth.user);
 
 </script>
 
 <template>
 
-  <Head title="Dashboard" />
+  <Head :title="`Tu App ${user.tienda?.aplicacion?.nombre_app || 'Dashboard'}`" />
   <div class="header flex items-center p-3 gap-3">
     <div class="left p-3  bg-secundary-opacity border border-secundary-light w-[20%] rounded-md">
       <div class="infoTienda flex gap-2">
@@ -130,7 +124,7 @@ console.log(props.auth.user);
           class="border  bg-secundary-opacity border-secundary-light rounded-md w-[40%] p-2 flex justify-between items-center">
           <div class="metodoPago-monto">
             <p class="text-[14px]">Dinero activo:</p>
-            <p class="font-bold text-[18px]"> {{ totalPrecio || 'Error al obtener total' }}</p>
+            <p class="font-bold text-[18px]">  $</p>
           </div>
           <div class="contador p-2 rounded-md flex justify-center items-center w-10 h-10 font-bold" :class="[bgClase]">
             <span class="material-symbols-rounded">

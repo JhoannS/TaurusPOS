@@ -25,8 +25,16 @@ const props = defineProps({
     type: Object,
     required: true
   },
-  success: String
+  success: String,
+  montoApagar: Number
 })
+
+// Propiedad computada para calcular el total de "monto a pagar"
+const totalMontoAPagar = computed(() => {
+  return props.clientes.reduce((total, cliente) => {
+    return total + (cliente.monto_pago || 0);  // Si no tiene monto_pago, lo cuenta como 0
+  }, 0);
+});
 
 function getEstadoClass(estado) {
   if (estado === 'Inactivo' || estado === 'Pendiente') return 'bg-semaforo-rojo';
@@ -225,22 +233,15 @@ const textoClase = computed(() => coloresTexto[appName.value]);
 const gotaClase = computed(() => coloresBg[appName.value]);
 
 
-// ✅ Formatear valor como COP (Peso Colombiano)
 const formatCOP = (value) => {
-  if (!value) return 'Sin precio';
-  return value.toLocaleString('es-CO', {
+  if (value === null || value === undefined || isNaN(value)) {
+    return 'Sin precio'; // Si no es un número o está vacío, muestra "Sin precio"
+  }
+  return parseFloat(value).toLocaleString('es-CO', {
     style: 'currency',
-    currency: 'COP'
+    currency: 'COP',
   });
 };
-
-// ✅ Formatear el total de precio
-const totalPrecioFormat = computed(() => {
-  return props.totalPrecio.toLocaleString('es-CO', {
-    style: 'currency',
-    currency: 'COP'
-  });
-});
 </script>
 
 <template>
@@ -271,7 +272,7 @@ const totalPrecioFormat = computed(() => {
 
           <td class="text-[14px] p-2">{{ cliente.aplicacion }}</td>
           <td class="text-[14px] p-2">{{ cliente.membresia }}</td>
-          <td>{{ cliente.monto_pago || 'Sin pago' }}</td>
+          <td>{{ formatCOP(cliente.precio) || 'Sin pago' }}</td>
           <td class="text-[14px] p-2">{{ formatFecha(cliente.fecha_pago ) }}</td>
           <td class="text-[14px] p-2">
             <span class="p-1 rounded-[5px] font-bold" :class="getEstadoClass(cliente.estado_pago)">
