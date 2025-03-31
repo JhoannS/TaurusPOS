@@ -235,11 +235,13 @@ const gotaClase = computed(() => coloresBg[appName.value]);
 
 const formatCOP = (value) => {
   if (value === null || value === undefined || isNaN(value)) {
-    return 'Sin precio'; // Si no es un número o está vacío, muestra "Sin precio"
+    return 'Sin precio';
   }
   return parseFloat(value).toLocaleString('es-CO', {
     style: 'currency',
     currency: 'COP',
+    minimumFractionDigits: 0, // No mostrar decimales
+    maximumFractionDigits: 0  // No mostrar decimales
   });
 };
 </script>
