@@ -73,7 +73,7 @@ const submit = () => {
 
     <Head title="Login" />
     <div class="bg-mono-negro flex justify-center items-center">
-      <main class="flex items-center justify-between h-[100vh] w-[80%] p-[80px] gap-16">
+      <main class="flex items-center justify-between h-[100vh] w-[100%] p-[80px] gap-16">
         <div class="left w-[60%]">
           <div class="logo flex gap-3 items-center">
             <div class="gota h-7 w-10 shadow-essentials bg-universal-naranja rounded-full"></div>
@@ -140,7 +140,7 @@ const submit = () => {
           </form>
         </div>
 
-        <div class="right w-[40%] rounded-lg flex justify-center items-center shadowM">
+        <div class="right w-[35%] rounded-lg flex justify-center items-center shadowM">
           <img src="https://images.unsplash.com/photo-1638657527755-ca3e0d217260?q=80&w=1376&auto=format&fit=crop"
             alt="Img login" class="rounded-lg" />
         </div>

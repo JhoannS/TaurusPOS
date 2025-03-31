@@ -107,7 +107,7 @@ const handleInput = (event, field) => {
             ">
       <main class="
       flex items-center justify-between 2xl:w-[80%] 2xl:p-[80px] 2xl:gap-16
-      xl:flex xl:items-center xl:justify-between xl:w-[100%] xl:px-[65px] xl:gap-14
+      xl:flex xl:items-center xl:justify-between xl:w-[100%] xl:px-[80px] xl:gap-14
         min-h-[100vh] 
       ">
         <div class="
@@ -126,13 +126,13 @@ const handleInput = (event, field) => {
             "></div>
             <div class="logo">
               <h1 class="
-              2xl:text-[20px] 
-              xl:text-[20px] 
+              
+              text-[20px] 
               font-semibold
               ">Taurus Comunity CO</h1>
               <p class="
-              2xl:-mt-[8px] 2xl:text-[14px] 
-              xl:-mt-[9px] xl:text-[14px] 
+              -mt-[8px] text-[14px] 
+  
               font-medium
               ">Software profesional Essentials App</p>
             </div>
@@ -419,12 +419,12 @@ const handleInput = (event, field) => {
               w-[50%]
               ">
                 <p class="
-                2xl:my-[5px] 2xl:text-[14px]
+                my-[5px] text-[14px]
                 ">Ingresa una contraseña:</p>
 
                 <div class="
-                  2xl:w-[100%] 
-                  2xl:p-[3px] 2xl:flex 2xl:items-center 2xl:gap-[8px]
+                  w-[100%] 
+                  p-[3px] flex items-center gap-[8px]
                   transition-all rounded-[5px] border-[1px] border-secundary-ligh" t :class="{ 'border-universal-naranja': form.errors.contrasenia_ct }
                     ">
                   <span class="material-symbols-rounded text-universal-naranja text-[20px] pl-[5px]
@@ -447,7 +447,7 @@ const handleInput = (event, field) => {
               w-[50%]
               ">
                 <p class="
-                2xl:my-[5px] 2xl:text-[14px]
+                my-[5px] text-[14px]
                 ">Confirmar contraseña:</p>
                 <div class="
                   w-[100%] p-[3px] flex items-center gap-[8px]
