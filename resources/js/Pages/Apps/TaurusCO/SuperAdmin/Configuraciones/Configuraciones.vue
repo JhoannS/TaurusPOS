@@ -6,7 +6,6 @@ import DetallesPlan from '@/Components/Dashboard/DetallesPlan.vue';
 import SaludoOpciones from '@/Components/header/Essentials/SaludoOpciones.vue';
 import CardHistorial from '@/Components/Dashboard/Essentials/CardHistorial.vue';
 
-
 export default {
     name: 'Dashboard',
     components: {
@@ -39,64 +38,32 @@ const initials = computed(() => {
     const nombres = props.auth.user?.nombres_ct || '';
     const apellidos = props.auth.user?.apellidos_ct || '';
 
-    // ⚡ Toma la primera letra del primer nombre y primer apellido
     const firstNameInitial = nombres.split(' ')[0]?.charAt(0).toUpperCase() || '';
     const lastNameInitial = apellidos.split(' ')[0]?.charAt(0).toUpperCase() || '';
 
     return firstNameInitial + lastNameInitial;
 });
 
+const coloresBg = {
+  'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
+  'Essentials': 'bg-essentials-primary shadow-essentials',
+  'Machine': 'bg-machine-primary shadow-machine',
+  'Shopper': 'bg-shopper-primary shadow-shopper',
+  'default': 'bg-gray-300 shadow-gray-300'
+};
 
+const coloresTexto = {
+  'TaurusCO': 'text-universal-naranja',
+  'Essentials': 'text-essentials-primary',
+  'Machine': 'text-machine-primary',
+  'Shopper': 'text-shopper-primary',
+  'default': 'text-gray-500'
+};
 
-//
-// Reloj en tiempo real
-//
-const dia = ref('');
-const mes = ref('');
-const anio = ref('');
-const hora = ref('');
-const saludo = ref('');
-
-function actualizarFechaHora() {
-    const fecha = new Date();
-    dia.value = fecha.getDate();
-
-    const monthNamesClock = [
-        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-    ];
-    mes.value = monthNamesClock[fecha.getMonth()];
-    anio.value = fecha.getFullYear();
-
-    let horas = fecha.getHours();
-    const minutos = fecha.getMinutes().toString().padStart(2, "0");
-    const segundos = fecha.getSeconds().toString().padStart(2, "0");
-    const periodo = horas >= 12 ? "pm" : "am";
-
-    if (horas > 12) {
-        horas -= 12;
-    } else if (horas === 0) {
-        horas = 12;
-    }
-    hora.value = `${horas}:${minutos}:${segundos} ${periodo}`;
-
-    if (fecha.getHours() < 12) {
-        saludo.value = "¡Buenos días";
-    } else if (fecha.getHours() < 18) {
-        saludo.value = "¡Buenas tardes";
-    } else {
-        saludo.value = "¡Buenas noches";
-    }
-}
-
-let clockInterval = null;
-onMounted(() => {
-    actualizarFechaHora();
-    clockInterval = setInterval(actualizarFechaHora, 1000);
-});
-onUnmounted(() => {
-    clearInterval(clockInterval);
-});
+const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app || 'default');
+const bgClase = computed(() => coloresBg[appName.value]);
+const textoClase = computed(() => coloresTexto[appName.value]);
+const gotaClase = computed(() => coloresBg[appName.value]);
 
 
 </script>
@@ -116,17 +83,24 @@ onUnmounted(() => {
                 <SaludoOpciones :auth="auth" />
 
                 <!-- navegable -->
-                <div class="options flex gap-1 items-center text-[14px]">
+                <div class="options flex gap-1 items-center text-[14px] mt-4">
                     <a :href="route('aplicacion.dashboard', { aplicacion, rol })"
                         class="hover:text-essentials-secundary">
                         <p>Dashboard</p>
                     </a>
                     <span class="material-symbols-rounded text-[18px]">chevron_right</span>
-                    <p class="font-bold">Configuraciones</p>
+                    <p class="font-bold">Información de mi cuenta</p>
+                </div>
+
+                <div class="flex justify-between items-center w-full rounded-lg border border-secundary-light min-h-[100%] my-7 bg-secundary-default p-2">
+
+                    <div class="leftUser">
+
+                    </div>
                 </div>
 
                 <div class="w-full rounded-lg border border-secundary-light min-h-[100%] my-7 bg-secundary-default p-2">
-                    <div class="header bg-essentials-primary w-full h-[100px] rounded-md"></div>
+                    <div class="header w-full h-[100px] rounded-md" :class="[bgClase]"></div>
                     <div class="img-nombre -mt-[50px] mx-6">
 
                         <div class="logo flex gap-3 items-end">
@@ -148,9 +122,8 @@ onUnmounted(() => {
                         </div>
 
                         <div class="titulos my-2">
-                            <h5 class="text-[30px] font-semibold">Configuraciones</h5>
-                            <p class="text-[17px] font-light">El apartado donde podras cambiar configuraciones para que
-                                se ajusten a tu acomodo.</p>
+                            <h5 class="text-[30px] font-semibold">Información de mi cuenta</h5>
+                            <p class="text-[17px] font-light">El apartado donde podras observar mas a detalle sobre tu cuenta.</p>
                         </div>
                         <hr class="h-[2px] w-full" />
 

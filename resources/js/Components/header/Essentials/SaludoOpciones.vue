@@ -132,7 +132,7 @@ const gotaClase = computed(() => colores[appName.value]);
                 </div>
                 <div class="logo">
                     <div v-if="auth && auth.user">
-                        <h3 class="font-semibold"> {{ auth.user.nombres_ct }}</h3>
+                        <h3 class="font-semibold"> {{ auth.user.nombres_ct }} {{ auth.user.apellidos_ct }}</h3>
                         <p class="-mt-[5px] text-secundary-light text-[13px] font-medium">
                             {{ auth.user.rol?.tipo_rol || 'Sin rol' }}
                         </p>

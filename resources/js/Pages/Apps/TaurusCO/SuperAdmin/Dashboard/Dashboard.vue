@@ -27,7 +27,6 @@ const props = defineProps({
   },
 })
 
-
 const user = props.auth.user
 const auth = usePage().props.auth;
 const clientes = ref(props.clientes);
@@ -82,6 +81,7 @@ const logout = () => {
   router.post(route('logout'))
 }
 
+const ruby = computed(() => props.auth.user.tienda?.aplicacion?.membresia?.duracion || 'sin dias');
 
 </script>
 
@@ -96,8 +96,7 @@ const logout = () => {
           <div v-if="auth && auth.user">
             <h3 class="font-semibold">{{ auth.user.tienda?.nombre_tienda || 'Sin tienda' }}</h3>
             <p class="-mt-[5px] text-secundary-light text-[13px] font-medium">
-              {{ auth.user.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }} - {{
-                auth.user.tienda?.aplicacion?.membresia?.duracion || 'Sin duración' }} días
+              {{ auth.user.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }} - {{ ruby === 999999 ? "Membresía Infinita" : ruby + " días" }}
             </p>
           </div>
           <div v-else>

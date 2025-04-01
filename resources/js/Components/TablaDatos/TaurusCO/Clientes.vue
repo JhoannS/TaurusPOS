@@ -1,12 +1,14 @@
 <script setup>
+import ModalDetalles from '@/Components/Modales/ModalDetallesClientes.vue';
 import { ref, computed, onMounted } from 'vue';
 import { router, Head, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import 'dayjs/locale/es';
-import ModalDetalles from '@/Components/Modales/ModalDetallesClientes.vue';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
+import empty from '@images/empty.svg';
+import 'dayjs/locale/es';
+
 
 
 const props = defineProps({
@@ -131,8 +133,7 @@ const confirmDelete = (id) => {
     return
   }
 
-  // Confirmar si el usuario quiere eliminar el cliente
-  if (confirm('⚠️ ¿Estás seguro de que deseas eliminar este cliente?')) {
+  if (confirm('¿Estás seguro de que deseas eliminar este cliente?')) {
     deleteCliente(id)
   }
 }
@@ -145,11 +146,10 @@ const deleteCliente = (id) => {
 
   router.delete(route('clientes.destroy', {
     aplicacion: props.aplicacion,
-    rol: props.rol.id, // Asegurar que envíe el ID del rol
+    rol: props.rol.id, 
     id: id
   }), {
     onSuccess: () => {
-      // Filtrar la lista de clientes para eliminar el cliente eliminado
       props.clientes = props.clientes.filter(cliente => cliente.id !== id);
       
       mostrarMensaje('Cliente eliminado con éxito', 'success');
@@ -172,7 +172,6 @@ function handleBeforeLeave(el) {
   el.classList.add('animate-fadeOut');
 }
 
-// ✅ Iniciales para el detalle de cliente
 const inicialesNombreCliente = computed(() => {
   if (!detalleCliente.value) return '';
 
@@ -182,12 +181,10 @@ const inicialesNombreCliente = computed(() => {
   const firstNameInitial = nombres.split(' ')[0]?.charAt(0).toUpperCase() || '';
   const lastNameInitial = apellidos.split(' ')[0]?.charAt(0).toUpperCase() || '';
 
-
-
   return firstNameInitial + lastNameInitial;
 });
 
-// ✅ Iniciales para el detalle de cliente
+
 const inicialesNombreTienda = computed(() => {
   if (!detalleCliente.value) return '';
 
@@ -197,7 +194,7 @@ const inicialesNombreTienda = computed(() => {
   return inicialTienda;
 });
 
-// ✅ Iniciales para el detalle de cliente
+
 const inicialesNombrePlan = computed(() => {
   if (!detalleCliente.value) return '';
 
@@ -207,10 +204,18 @@ const inicialesNombrePlan = computed(() => {
   return inicialPlan;
 });
 
+const formatCOP = (value) => {
+  if (value === null || value === undefined || isNaN(value)) {
+    return 'Sin precio';
+  }
+  return parseFloat(value).toLocaleString('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0, 
+    maximumFractionDigits: 0 
+  });
+};
 
-
-
-// ✅ Clases dinámicas según la aplicación
 
 const coloresBg = {
   'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
@@ -219,6 +224,7 @@ const coloresBg = {
   'Shopper': 'bg-shopper-primary shadow-shopper',
   'default': 'bg-gray-300 shadow-gray-300'
 };
+
 const coloresTexto = {
   'TaurusCO': 'text-universal-naranja',
   'Essentials': 'text-essentials-primary',
@@ -233,17 +239,6 @@ const textoClase = computed(() => coloresTexto[appName.value]);
 const gotaClase = computed(() => coloresBg[appName.value]);
 
 
-const formatCOP = (value) => {
-  if (value === null || value === undefined || isNaN(value)) {
-    return 'Sin precio';
-  }
-  return parseFloat(value).toLocaleString('es-CO', {
-    style: 'currency',
-    currency: 'COP',
-    minimumFractionDigits: 0, // No mostrar decimales
-    maximumFractionDigits: 0  // No mostrar decimales
-  });
-};
 </script>
 
 <template>
@@ -306,7 +301,11 @@ const formatCOP = (value) => {
     </table>
 
     <div v-if="filteredClientes.length === 0" class="text-center mt-10 font-bold text-2xl text-gray-500">
+      <div class="w-full flex items-center justify-center">
+        <img :src="empty" alt="Logo" class=" w-[25%] my-2" />
+      </div>
       No hay coincidencias.
+
     </div>
 
     <ModalDetalles :isOpen="showModal" @close="closeModal">
@@ -383,7 +382,7 @@ const formatCOP = (value) => {
 
               <div class=" flex justify-between items-center">
                 <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                    :class='[textoClase]'>attach_money</span>{{ detalleCliente.tienda?.aplicacion?.membresia?.precio || 'Sin precio' }} COP</p>
+                    :class='[textoClase]'>attach_money</span>{{ formatCOP(detalleCliente.tienda?.aplicacion?.membresia?.precio) || 'Sin precio' }} COP</p>
                     <div class="estadoCliente flex items-center gap-2 ">
                     <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
                       :class="getEstadoClass(detalleCliente.tienda?.aplicacion?.membresia?.estado?.tipo_estado)"></div>
@@ -480,7 +479,7 @@ const formatCOP = (value) => {
                 </div>
                 <div class="nombre-Rol w-full flex justify-between items-center">
                   <div class="nombre">
-                    <h3 class="font-semibold text-[20px] -mt-2">{{ detalleCliente.tienda?.aplicacion?.nombre_app || 'Sin app' }}</h3>
+                    <h3 class="font-semibold text-[20px] -mt-2">{{ detalleCliente.tienda?.aplicacion?.nombre_app || 'Sin app' }} App</h3>
                     <p class="text-secundary-light text-sm -mt-2">{{ detalleCliente.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }}</p>
                   </div>
                   <div class="estadoCliente flex items-center gap-2 ">
