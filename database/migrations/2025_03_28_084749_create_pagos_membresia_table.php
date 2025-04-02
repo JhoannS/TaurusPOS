@@ -28,6 +28,17 @@ return new class extends Migration
             $table->foreign('id_medio_pago')->references('id')->on('medios_pago'); // Suponiendo que ya tienes esta tabla
             $table->foreign('id_estado')->references('id')->on('estados'); // Suponiendo que tienes una tabla para estados
         });
+
+        DB::table('pagos_membresia')->insert([
+            [
+                'id_cliente' => '1',
+                'id_tienda' => '1',
+                'monto_total' => '9200000',
+                'id_medio_pago' => '1',
+                'id_estado' => '8',
+            ],
+
+        ]);
         
     }
 

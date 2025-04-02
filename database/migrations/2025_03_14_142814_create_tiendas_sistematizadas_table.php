@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_estado')->default(1);
             $table->unsignedBigInteger('id_token')->nullable();
-            $table->unsignedBigInteger('id_aplicacion_web')->default(19);
+            $table->unsignedBigInteger('id_aplicacion_web')->nullable();
             $table->string('nombre_tienda');
             $table->string('email_tienda')->unique();
-            $table->string('telefono_ct')->unique();
-            $table->string('direccion_ct');
-            $table->string('barrio_ct');
+            $table->string('telefono_tienda')->unique();
+            $table->string('direccion_tienda');
+            $table->string('barrio_tienda');
         
             $table->timestamp('fecha_creacion')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('fecha_modificacion')->default(DB::raw('CURRENT_TIMESTAMP'))->useCurrentOnUpdate();
@@ -29,6 +29,18 @@ return new class extends Migration
             $table->foreign('id_aplicacion_web')->references('id')->on('aplicaciones_web')->onDelete('cascade');
         });
 
+        DB::table('tiendas_sistematizadas')->insert([
+            [
+                'id_token' => '1',
+                'id_aplicacion_web' => '21',
+                'nombre_tienda'=> 'Taurus Comunity CO',
+                'email_tienda' => 'tauruscomunityco@gmail.com',
+                'telefono_tienda' => '3219631459',
+                'direccion_tienda' => 'Calle 58c sur #45 03',
+                'barrio_tienda' => 'Arborizadora Baja',
+            ],
+
+        ]);
         
         
         

@@ -414,7 +414,7 @@ const gotaClase = computed(() => coloresBg[appName.value]);
                 <div class="nombre-Rol w-full flex justify-between items-center">
                   <div class="nombre">
                     <h3 class="font-semibold text-[20px] -mt-2">{{ detalleCliente.tienda?.nombre_tienda || 'Sin tienda' }}</h3>
-                    <p class="text-secundary-light text-sm -mt-2">{{ detalleCliente.tienda?.direccion_ct || 'Sin dirección' }} - {{ detalleCliente.tienda?.barrio_ct || 'Sin ciudad' }}</p>
+                    <p class="text-secundary-light text-sm -mt-2">{{ detalleCliente.tienda?.direccion_tienda || 'Sin dirección' }} - {{ detalleCliente.tienda?.barrio_tienda || 'Sin ciudad' }}</p>
                   </div>
                   <div class="estadoCliente flex items-center gap-2 ">
                     <div class="p-1 h-3 w-3 rounded-[5px] font-bold"

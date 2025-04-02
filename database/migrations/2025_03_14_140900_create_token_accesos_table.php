@@ -22,6 +22,15 @@ return new class extends Migration
         
             $table->foreign('id_estado')->references('id')->on('estados')->onDelete('cascade');
         });
+
+
+        DB::table('token_accesos')->insert([
+            [
+                'id_tienda_sistematizada' => '1',
+                'token_activacion' => '3e1dce5b-cdc0-4487-9cb9-ecef60ae1a8b',
+            ],
+
+        ]);
     }
 
     /**

@@ -81,9 +81,9 @@ class RegisterController extends Controller
             'id_aplicacion_web' => $request->id_aplicacion,
             'nombre_tienda' => 'Tienda de ' . $cliente->nombres_ct,
             'email_tienda' => $cliente->email_ct,
-            'telefono_ct' => $cliente->telefono_ct,
-            'direccion_ct' => 'Dirección por defecto',
-            'barrio_ct' => 'Barrio por defecto',
+            'telefono_tienda' => $cliente->telefono_ct,
+            'direccion_tienda' => 'Dirección por defecto',
+            'barrio_tienda' => 'Barrio por defecto',
         ]);
 
         // ✅ Asignar la tienda creada al cliente

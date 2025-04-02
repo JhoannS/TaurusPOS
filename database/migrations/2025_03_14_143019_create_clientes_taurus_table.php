@@ -37,6 +37,21 @@ return new class extends Migration
             $table->foreign('id_tipo_documento')->references('id')->on('tipo_documentos')->onDelete('cascade');
         });
 
+        DB::table('clientes_taurus')->insert([
+            [
+                'id_rol' => '4',
+                'id_tienda' => '1',
+                'nombres_ct'=> 'Jhoann Sebastián',
+                'apellidos_ct' => 'Zamudio',
+                'id_tipo_documento' => '1',
+                'numero_documento_ct' => '1013580753',
+                'contrasenia_ct' => '$12$uFrepQqJhMTa4Pmpd2FH0u5Spt3m88Fao1Do3qEj05rchLC54yvFC',
+                'email_ct' => 'tauruscomunityco@gmail.com',
+                'telefono_ct' => '3165114410',
+            ],
+
+        ]);
+        
         
     }
 
