@@ -437,7 +437,7 @@ const gotaClase = computed(() => coloresBg[appName.value]);
               <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
                   :class='[textoClase]'>email</span> {{ detalleCliente.tienda?.email_tienda || 'Sin email' }}</p>
               <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>phone</span>{{ detalleCliente.tienda?.telefono_ct }}</p>
+                  :class='[textoClase]'>phone</span>{{ detalleCliente.tienda?.telefono_tienda }}</p>
             </div>
             </div>
 
