@@ -7,7 +7,7 @@ import { route } from 'ziggy-js';
 <script setup>
 // Traer datos del usuario logueado
 const props = defineProps({
-    auth: Object,
+    auth: { type: Object, required: true },
 });
 
 const page = usePage();

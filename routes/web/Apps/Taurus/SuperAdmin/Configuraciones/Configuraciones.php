@@ -1,34 +1,15 @@
 <?php
 
+use App\Http\Controllers\ConfiguracionesController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('auth')->group(function () {
     Route::prefix('{aplicacion}/{rol}')->group(function () {
-        
-        // Ruta para el Configuraciones
-        Route::get('/configuraciones', function ($aplicacion, $rol) {
-            $user = auth()->user();
-
-            if (!in_array($user->rol->id, [1, 2, 3, 4])) {
-                abort(403, 'No tienes permisos para acceder a esta sección.');
-            }
-            
-
-            if ($user->tienda && $user->tienda->aplicacion->nombre_app === $aplicacion) {
-                return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Configuraciones/Configuraciones', [
-                    'auth' => [
-                    'user' => $user,
-            ]
-                ]);
-            }
-
-            abort(404);
-        })->name('aplicacion.configuraciones');
-
+        Route::get('/configuraciones', [ConfiguracionesController::class, 'index'])
+            ->name('aplicacion.configuraciones');
     });
 });
-
 
 

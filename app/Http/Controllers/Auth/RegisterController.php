@@ -41,7 +41,7 @@ class RegisterController extends Controller
             'id_tipo_documento' => 'required|integer|exists:tipo_documentos,id',
             'numero_documento_ct' => 'required|string|max:15|unique:clientes_taurus,numero_documento_ct',
             'email_ct' => 'required|string|email|max:60|unique:clientes_taurus,email_ct',
-            'telefono_ct' => 'required|string|max:10',
+            'telefono_ct' => 'required|string|max:10|min:10',
             'contrasenia_ct' => 'required|string|min:6|confirmed',
             'id_aplicacion' => 'required|nullable|integer|exists:aplicaciones_web,id',
 
@@ -55,6 +55,7 @@ class RegisterController extends Controller
             'email_ct.unique' => 'Oh, oh, este correo ya se encuentra vinculado.',
             'telefono_ct.required' => 'El teléfono es requerido.',
             'telefono_ct.max' => 'El teléfono debe ser de maximo 10 digitos.',
+            'telefono_ct.min' => 'El teléfono debe ser de minimo 10 digitos.',
             'contrasenia_ct.required' => 'La contraseña es requerida.',
             'contrasenia_ct.min' => 'La contraseña debe ser minimo de 6 caracteres.',
             'contrasenia_ct.confirmed' => 'Las contraseñas no coinciden.',

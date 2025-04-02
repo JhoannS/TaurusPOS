@@ -5,13 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\ClienteTaurus;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB; // ✅ Importa la clase DB correctamente
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Events\ClienteEliminado; // Importamos el evento
 
 
-class DashboardController extends Controller
+class ConfiguracionesController extends Controller
 {
     /**
      * Muestra el dashboard para la aplicación y rol especificados.
@@ -83,7 +81,7 @@ class DashboardController extends Controller
 
             $totalPrecio = $clientes->sum('precio');
 
-            return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Dashboard/Dashboard', [
+            return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Configuraciones/Configuraciones', [
                 'auth' => ['user' => $user],
                 'clientes' => $clientes,
                 'totalPrecio' => $totalPrecio ?: 0, // Asegurar que no sea NULL
@@ -98,121 +96,6 @@ class DashboardController extends Controller
         abort(404);
     }
 
-
-    // Agrega este método al DashboardController
-    public function detalle($aplicacion, $rol, $idCliente)
-    {
-        // Opcional: valida permisos (rol 4, etc.)
-        $user = auth()->user()->load([
-            'rol',
-            'tienda',
-            'tienda.aplicacion',
-        ]);
-        if (!Gate::allows('access-role', 4) || $user->rol->id != 4) {
-            abort(403, 'No tienes permisos para acceder a esta sección.');
-        }
-
-        // Cargar el cliente con todas las relaciones necesarias
-        $detalleCliente = ClienteTaurus::with([
-            'rol',
-            'tienda',
-            'tienda.token',
-            'tienda.token.estado',
-            'tienda.estado',
-            'tienda.aplicacion',
-            'tienda.aplicacion.plan',
-            'tienda.aplicacion.plan.detalles',
-            'tienda.aplicacion.membresia',
-            'tienda.aplicacion.membresia.estado',
-            'estado',
-            'tipoDocumento',
-            'membresia'
-        ])->findOrFail($idCliente);
-
-        // Retornar en JSON (para usar en el modal)
-        return response()->json($detalleCliente);
-    }
-    public function getClientesPorActivacion($aplicacion, $rol)
-    {
-        $clientes = ClienteTaurus::select(
-            'clientes_taurus.id',
-            'clientes_taurus.nombres_ct',
-            'clientes_taurus.apellidos_ct',
-            'tiendas_sistematizadas.nombre_tienda'
-        )
-            ->join('tiendas_sistematizadas', 'clientes_taurus.id_tienda', '=', 'tiendas_sistematizadas.id')
-            ->join('token_accesos', 'tiendas_sistematizadas.id_token', '=', 'token_accesos.id')
-            ->where('token_accesos.id_estado', 2) // ✅ Filtrar por id_estado = 2
-            ->get();
-
-        return response()->json($clientes);
-    }
-
-
-
     use AuthorizesRequests;
-
-
-    public function destroy(Request $request, $aplicacion, $rol, $id)
-    {
-        $cliente = ClienteTaurus::with([
-            'rol',
-            'tienda.token',
-            'tienda.pagosMembresias',
-            'tienda.membresia.detallesPlan'
-        ])->find($id);
-
-        if (!$cliente) {
-            abort(404, 'Cliente no encontrado');
-        }
-
-        $nombreRol = $cliente->rol ? $cliente->rol->nombre_rol : 'SuperAdmin';
-
-        // ✅ Eliminar relaciones en cascada
-        if ($cliente->tienda) {
-            if ($cliente->tienda->pagosMembresias) {
-                $cliente->tienda->pagosMembresias()->delete();
-            }
-            if ($cliente->tienda->token) {
-                $cliente->tienda->token()->delete();
-            }
-            if ($cliente->tienda->membresia) {
-                if ($cliente->tienda->membresia->detallesPlan) {
-                    $cliente->tienda->membresia->detallesPlan()->delete();
-                }
-                $cliente->tienda->membresia()->delete();
-            }
-            $cliente->tienda()->delete();
-        }
-
-        // ✅ Eliminar relaciones directas del cliente
-        if ($cliente->estado) {
-            $cliente->estado()->dissociate()->delete();
-        }
-        if ($cliente->tipoDocumento) {
-            $cliente->tipoDocumento()->dissociate()->delete();
-        }
-        if ($cliente->rol) {
-            $cliente->rol()->dissociate()->delete();
-        }
-
-        $clienteId = $cliente->id;
-        $cliente->deleteOrFail();
-
-        // ✅ Emitir evento de WebSocket
-        broadcast(new ClienteEliminado($clienteId))->toOthers();
-
-        // ✅ Redirigir con la notificación de éxito
-        return redirect()->route('aplicacion.dashboard', [
-            'aplicacion' => $aplicacion,
-            'rol' => ucfirst($nombreRol ?: 'SuperAdmin')
-        ])->with('success', 'Cliente eliminado con éxito');
-    }
-
-
-
-
-
-
 
 }

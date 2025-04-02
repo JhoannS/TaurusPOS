@@ -18,9 +18,9 @@ class TiendaSistematizada extends Model
         'logo_tienda',
         'nombre_tienda',
         'email_tienda',
-        'telefono_ct',
-        'direccion_ct',
-        'barrio_ct',
+        'telefono_tienda',
+        'direccion_tienda',
+        'barrio_tienda',
     ];
 
     protected $with = [
