@@ -5,8 +5,8 @@ import axios from 'axios';
 import 'dayjs/locale/es';
 import dayjs from 'dayjs';
 import SaludoOpciones from '@/Components/header/Essentials/SaludoOpciones.vue';
-import Clientes from '@/Components/tablaDatos/TaurusCO/Clientes.vue';
-import ExportarExcel from '@/Components/exportarExcel/ExportarExcel.vue';
+import Clientes from '@/Components/TablaDatos/TaurusCO/Clientes.vue';
+import ExportarExcel from '@/Components/ExportarExcel/ExportarExcel.vue';
 
 const props = defineProps({
   auth: {
@@ -81,35 +81,12 @@ const logout = () => {
   router.post(route('logout'))
 }
 
-const ruby = computed(() => props.auth.user.tienda?.aplicacion?.membresia?.duracion || 'sin dias');
-
 </script>
 
 <template>
 
   <Head :title="`Tu App ${user.tienda?.aplicacion?.nombre_app || 'Dashboard'}`" />
-  <div class="header flex items-center p-3 gap-3">
-    <div class="left p-3  bg-secundary-opacity border border-secundary-light w-[20%] rounded-md">
-      <div class="infoTienda flex gap-2">
-        <div class="gota h-10 w-10 rounded-full bg-universal-naranja"></div>
-        <div class="logo">
-          <div v-if="auth && auth.user">
-            <h3 class="font-semibold">{{ auth.user.tienda?.nombre_tienda || 'Sin tienda' }}</h3>
-            <p class="-mt-[5px] text-secundary-light text-[13px] font-medium">
-              {{ auth.user.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }} - {{ ruby === 999999 ? "Membresía Infinita" : ruby + " días" }}
-            </p>
-          </div>
-          <div v-else>
-            <p>Cargando información del usuario...</p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-    <header class="flex items-center border border-l-secundary-light bg-secundary-opacity p-3 rounded-md w-[80%]">
-      <SaludoOpciones :auth="auth" />
-    </header>
-  </div>
+  <SaludoOpciones :auth="auth" />
   <main class="flex justify-between w-full h-[85vh] gap-4 py-3 px-6">
     <div class="righ w-full rounded-md">
 

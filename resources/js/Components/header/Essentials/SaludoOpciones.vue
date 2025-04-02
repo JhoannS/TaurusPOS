@@ -93,10 +93,30 @@ const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app 
 const diaClase = computed(() => colores[appName.value]);
 const separadorClase = computed(() => colores[appName.value]);
 const gotaClase = computed(() => colores[appName.value]);
+const ruby = computed(() => props.auth.user.tienda?.aplicacion?.membresia?.duracion || 'sin dias');
+
 </script>
 
 <template>
-    <header class="w-full h-[100%] flex justify-between">
+    <div class="header flex items-center gap-3 p-1">
+        <div class="left p-2  bg-secundary-opacity border border-secundary-light w-[20%] rounded-md">
+            <div class="infoTienda flex gap-2">
+                <div class="gota h-10 w-10 rounded-full" :class="[gotaClase]"></div>
+                <div class="logo">
+                    <div v-if="auth && auth.user">
+                        <h3 class="font-semibold">{{ auth.user.tienda?.nombre_tienda || 'Sin tienda' }}</h3>
+                        <p class="-mt-[5px] text-secundary-light text-[13px] font-medium">
+                            {{ auth.user.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }} - {{ ruby === 999999 ? "Membresía Infinita" : ruby + " días restantes." }}
+                        </p>
+                    </div>
+                    <div v-else>
+                        <p>Cargando información del usuario...</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <header class="p-2 bg-secundary-opacity border border-secundary-light rounded-md w-[80%] flex items-center justify-between">
         <div class="date flex gap-3 items-center">
             <div class="dia flex items-center justify-center font-semibold h-10 w-7 rounded-full" :class="[diaClase]"
                 id="dia">
@@ -144,4 +164,7 @@ const gotaClase = computed(() => colores[appName.value]);
             </div>
         </div>
     </header>
+    </div>
+    
+   
 </template>
