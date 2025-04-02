@@ -45,7 +45,7 @@ return new class extends Migration
                 'apellidos_ct' => 'Zamudio',
                 'id_tipo_documento' => '1',
                 'numero_documento_ct' => '1013580753',
-                'contrasenia_ct' => '$12$uFrepQqJhMTa4Pmpd2FH0u5Spt3m88Fao1Do3qEj05rchLC54yvFC',
+                'contrasenia_ct' => '123456',
                 'email_ct' => 'tauruscomunityco@gmail.com',
                 'telefono_ct' => '3165114410',
             ],
