@@ -1,48 +1,12 @@
-<template>
-     <div class="calendar flex flex-col justify-center items-center">
-                            <div class="month-nav flex justify-between items-center text-[12px] my-2">
-                                <span class="material-symbols-rounded cursor-pointer" @click="changeMonth(-1)">
-                                    chevron_left
-                                </span>
-
-                                <span id="monthYear" class="mx-5">{{ monthYear }}</span>
-                                <span class="material-symbols-rounded cursor-pointer" @click="changeMonth(1)">
-                                    chevron_right
-                                </span>
-                            </div>
-
-                            <!-- <div class="weekdays flex gap-5">
-              <span>Dom</span><span>Lun</span><span>Mar</span><span>Mié</span
-              ><span>Jue</span><span>Vie</span><span>Sáb</span>
-            </div> -->
-
-                            <div
-                                class="day-nav flex justify-between bg-mono-blanco shadowM rounded-2xl p-[15px] w-full">
-                                <span class="material-symbols-rounded cursor-pointer text-mono-negro"
-                                    @click="changeDays(-1)">
-                                    chevron_left
-                                </span>
-
-                                <div class="days flex gap-8 bg-transparent text-mono-negro" id="daysContainer"
-                                    v-for="day in daysArray" :key="day" :class="[
-                                        'day', 'bg-transparent', 'font-bold',
-                                        { 'text-red-400': day === today && currentMonth === new Date().getMonth() && currentYear === new Date().getFullYear() }
-                                    ]">
-                                    {{ day }}
-                                </div>
-                                <span class="material-symbols-rounded cursor-pointer text-mono-negro"
-                                    @click="changeDays(1)">
-                                    chevron_right
-                                </span>
-                            </div>
-                        </div>
-</template>
-
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
-//
-// Funcionalidad del calendario
-//
+
+
+const props = defineProps({
+    auth: { type: Object, required: true }
+});
+
+
 const monthNames = [
     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
@@ -112,4 +76,52 @@ function changeMonth(step) {
     // Al cambiar de mes, reiniciamos el índice al primer día
     startDayIndex.value = 0;
 }
+
+// Definir los colores
+const colores = {
+    'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
+    'Essentials': 'bg-essentials-primary shadow-essentials rounded-full text-mono-blanco',
+    'Machine': 'bg-machine-primary shadow-machine',
+    'Shopper': 'bg-shopper-primary shadow-shopper',
+    'Smart': 'bg-smart-primary shadow-smart rounded-full z-10 text-mono-negro',
+    'default': 'bg-gray-300 shadow-gray-300'
+};
+
+
+// Primero definimos appName para obtener el nombre de la app
+const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app || 'default');
+const bgFocus = computed(() => colores[appName.value]);
 </script>
+
+<template>
+    <div class="calendar flex flex-col justify-center items-center">
+        <div class="month-nav flex justify-between items-center text-[12px] my-2">
+            <span class="material-symbols-rounded cursor-pointer" @click="changeMonth(-1)">
+                chevron_left
+            </span>
+
+            <span id="monthYear" class="mx-5">{{ monthYear }}</span>
+            <span class="material-symbols-rounded cursor-pointer" @click="changeMonth(1)">
+                chevron_right
+            </span>
+        </div>
+
+        <div class="day-nav flex items-center justify-between bg-mono-blanco shadowM rounded-2xl p-[15px] w-full">
+            <span class="material-symbols-rounded cursor-pointer text-mono-negro" @click="changeDays(-1)">
+                chevron_left
+            </span>
+
+            <div class="days flex gap-8 p-[6px] text-mono-negro" id="daysContainer" v-for="day in daysArray"
+                :key="day" :class="[
+                    'day', 'font-bold', 'text-mono-blanco' ,
+                    (day === today && currentMonth === new Date().getMonth() && currentYear === new Date().getFullYear()) ? bgFocus : ''
+                ]">
+                {{ day }}
+            </div>
+
+            <span class="material-symbols-rounded cursor-pointer text-mono-negro" @click="changeDays(1)">
+                chevron_right
+            </span>
+        </div>
+    </div>
+</template>

@@ -64,26 +64,46 @@ const formatFecha = (fecha) => {
   return dayjs(fecha).format('dddd D [de] MMMM [de] YYYY [a las] h:mm a');
 };
 
-const coloresBg = {
+// ✅ Clases dinámicas según la aplicación
+const colores = {
   'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
-  'Essentials': 'bg-essentials-primary shadow-essentials',
+  'Essentials': 'bg-essentials-primary shadow-essentials rounded-full z-10 ',
   'Machine': 'bg-machine-primary shadow-machine',
-  'Shopper': 'bg-shopper-primary shadow-shopper',
+  'Shopper': 'bg-shopper-primary shadow-shopper', 
+  'Smart': 'bg-smart-primary shadow-smart rounded-full z-10 text-mono-negro',
+  'default': 'bg-gray-300 shadow-gray-300'
+};
+const colores2 = {
+  'TaurusCO': 'bg-universal-naranja',
+  'Essentials': 'bg-essentials-primary rounded-full z-10  ',
+  'Machine': 'bg-machine-primary',
+  'Shopper': 'bg-shopper-primary', 
+  'Smart': 'bg-smart-primary',
   'default': 'bg-gray-300 shadow-gray-300'
 };
 
-const coloresTexto = {
-  'TaurusCO': 'text-universal-naranja',
-  'Essentials': 'text-essentials-primary',
-  'Machine': 'text-machine-primary',
-  'Shopper': 'text-shopper-primary',
-  'default': 'text-gray-500'
-};
+const hoverClass = computed(() => {
+    switch (appName.value) {
+        case 'TaurusCO':
+            return 'hover:bg-universal-naranja';
+        case 'Essentials':
+            return 'hover:bg-essentials-primary';
+        case 'Machine':
+            return 'hover:bg-machine-primary';
+        case 'Shopper':
+            return 'hover:bg-shopper-primary';
+        case 'Smart':
+            return 'hover:bg-smart-primary hover:text-mono-negro';
+        default:
+            return 'hover:bg-gray-300';
+    }
+});
 
 const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app || 'default');
-const bgClase = computed(() => coloresBg[appName.value]);
-const textoClase = computed(() => coloresTexto[appName.value]);
-const gotaClase = computed(() => coloresBg[appName.value]);
+const bgFocus = computed(() => colores[appName.value]);
+const bg = computed(() => colores2[appName.value]);
+
+
 
 
 </script>
@@ -120,7 +140,7 @@ const gotaClase = computed(() => coloresBg[appName.value]);
                 </div>
 
                 <div class="w-full rounded-lg border border-secundary-light min-h-[100%] my-7 bg-secundary-default p-2">
-                    <div class="header w-full h-[100px] rounded-md" :class="[bgClase]"></div>
+                    <div class="header w-full h-[100px] rounded-md" :class="[bgFocus]"></div>
                     <div class="img-nombre -mt-[50px] mx-6">
 
                         <div class="logo flex gap-3 items-end">
@@ -241,7 +261,7 @@ const gotaClase = computed(() => coloresBg[appName.value]);
 
                 </div>
                 <button @click="logout"
-                                    class="opcion flex items-center gap- shadow-essentials cursor-pointer px-4 rounded-lg" :class="[bgClase]">
+                                    class="opcion flex items-center gap- shadow-essentials cursor-pointer px-4 rounded-lg" :class="[bgFocus]">
                                     <p>Salir</p>
                                     <div class="icono flex justify-center items-center h-[40px] w-[40px]">
                                         <span class="material-symbols-rounded">logout</span>

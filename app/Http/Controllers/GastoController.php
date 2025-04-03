@@ -7,7 +7,7 @@ use Inertia\Inertia;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 
-class MultisucursalController extends Controller
+class GastoController extends Controller
 {
     /**
      * Muestra el dashboard para la aplicación y rol especificados.
@@ -44,7 +44,7 @@ class MultisucursalController extends Controller
         if ($user->tienda && $user->tienda->aplicacion->nombre_app === $aplicacion) {
 
 
-            return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Multisucursales/Multisucursales', [
+            return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Gastos/Gastos', [
                 'auth' => ['user' => $user],
                 'aplicacion' => $aplicacion,
                 'rol' => $rol,

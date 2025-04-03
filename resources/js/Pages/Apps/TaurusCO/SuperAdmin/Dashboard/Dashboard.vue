@@ -4,7 +4,7 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import axios from 'axios';
 import 'dayjs/locale/es';
 import dayjs from 'dayjs';
-import SaludoOpciones from '@/Components/header/Essentials/SaludoOpciones.vue';
+import SaludoOpciones from '@/Components/header/SaludoOpciones.vue';
 import Clientes from '@/Components/TablaDatos/TaurusCO/Clientes.vue';
 import ExportarExcel from '@/Components/ExportarExcel/ExportarExcel.vue';
 

@@ -1,10 +1,11 @@
 <script>
-import { ref } from 'vue';
-import { usePage, Head } from '@inertiajs/vue3';
+
+import { Head } from '@inertiajs/vue3';
+import { computed } from 'vue';
 import { route } from 'ziggy-js';
 import Sidebar from '@/Components/Sidebar/Sidebar.vue';
 import SaludoOpciones from '@/Components/header/SaludoOpciones.vue';
-import Modal from '@/Components/Modales/Essentials/Modal.vue';
+
 
 
 </script>
@@ -13,30 +14,73 @@ import Modal from '@/Components/Modales/Essentials/Modal.vue';
 
 
 const props = defineProps({
-    auth: Object,
+    auth: { type: Object, required: true },
 });
-
-const page = usePage();
 
 const aplicacion = props.auth?.user?.tienda?.aplicacion?.nombre_app || 'Sin app';
 const rol = props.auth.user.rol?.tipo_rol || 'Sin rol'; // Obtén el tipo de rol
 
-
-const showModal = ref(false);
-const branchTitle = ref('');
-const branchDescription = ref('');
-
-const createBranch = () => {
-    if (branchTitle.value && branchDescription.value) {
-        console.log('Sucursal creada:', {
-            title: branchTitle.value,
-            description: branchDescription.value,
-        });
-        showModal.value = false; // Cierra el modal después de crear
-    } else {
-        alert('Por favor completa todos los campos.');
-    }
+// Definir los colores
+const bgColor = {
+    'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
+    'Essentials': 'bg-essentials-primary shadow-essentials',
+    'Machine': 'bg-machine-primary shadow-machine',
+    'Shopper': 'bg-shopper-primary shadow-shopper',
+    'Smart': 'bg-smart-primary shadow-smart text-mono-negro',
+    'default': 'bg-gray-300 shadow-gray-300'
 };
+
+const button = {
+    'TaurusCO': 'bg-universal-naranja shadow-universal-naranja rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+    'Essentials': 'bg-essentials-primary shadow-essentials rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+    'Machine': 'bg-machine-primary shadow-machine rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+    'Shopper': 'bg-shopper-primary shadow-shopper rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+    'Smart': 'bg-smart-primary shadow-smart text-mono-negro rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+    'default': 'bg-gray-300 shadow-gray-300'
+};
+
+const bgText = {
+    'TaurusCO': 'text-universal-naranja',
+    'Essentials': 'text-essentials-primary',
+    'Machine': 'text-machine-primary',
+    'Shopper': 'text-shopper-primary',
+    'Smart': 'text-smart-primary',
+    'default': 'text-gray-300'
+};
+const colores2 = {
+    'TaurusCO': 'bg-universal-naranja',
+    'Essentials': 'bg-essentials-primary',
+    'Machine': 'bg-machine-primary',
+    'Shopper': 'bg-shopper-primary',
+    'Smart': 'bg-smart-primary',
+    'default': 'bg-gray-300 shadow-gray-300'
+};
+
+// Primero definimos appName para obtener el nombre de la app
+const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app || 'default');
+
+// Luego definimos hoverClass usando appName
+const hoverClass = computed(() => {
+    switch (appName.value) {
+        case 'TaurusCO':
+            return 'hover:border-universal-naranja ';
+        case 'Essentials':
+            return 'hover:border-essentials-primary ';
+        case 'Machine':
+            return 'hover:border-machine-primary ';
+        case 'Shopper':
+            return 'hover:border-shopper-primary ';
+        case 'Smart':
+            return 'hover:border-smart-primary ';
+        default:
+            return 'hover:border-gray-300';
+    }
+});
+
+const bgFocus = computed(() => bgColor[appName.value]);
+const textFocus = computed(() => bgText[appName.value]);
+const buttonFocus = computed(() => button[appName.value]);
+const bg = computed(() => colores2[appName.value]);
 </script>
 
 <template>
@@ -48,7 +92,7 @@ const createBranch = () => {
         <div class="bg-mono flex scrollbar-custom">
             <Sidebar :auth="auth" />
 
-            <main class="w-full h-[100%] px-[40px] py-[20px] bg-transparent">
+            <main class="w-full h-[100%] px-[40px] bg-transparent">
                 <SaludoOpciones :auth="auth" />
 
                 <!-- navegable -->
@@ -66,11 +110,12 @@ const createBranch = () => {
                     <h4 class="font-semibold text-[25px]">Overview de tienda</h4>
                     <div class="input-buscador">
                         <input type="search" placeholder="Buscar contenido...">
-                        <span class="material-symbols-rounded text-essentials-primary">travel_explore</span>
+                        <span class="material-symbols-rounded" :class="[textFocus]">travel_explore</span>
                     </div>
 
+                   
                     <!-- Botón para abrir el modal -->
-                    <button class="btn-essentials">
+                    <button class="" :class="[buttonFocus]">
                         Exportar informacion del día
                         <span class="material-symbols-rounded"> outbound </span>
                     </button>
@@ -83,7 +128,7 @@ const createBranch = () => {
                             <p class="font-bold text-[25px]">$ 0,00</p>
                         </div>
                         <div
-                            class="contador bg-essentials-primary p-2 rounded-md flex justify-center items-center w-6 h-6 font-bold">
+                            class="contador p-2 rounded-md flex justify-center items-center w-6 h-6 font-bold" :class="[bgFocus]">
                             0</div>
                     </div>
                     <div class="border border-secundary-light rounded-lg w-full p-2 flex justify-between items-center">
@@ -92,7 +137,7 @@ const createBranch = () => {
                             <p class="font-bold text-[25px]">$ 0,00</p>
                         </div>
                         <div
-                            class="contador bg-essentials-primary p-2 rounded-md flex justify-center items-center w-6 h-6 font-bold">
+                            class="contador p-2 rounded-md flex justify-center items-center w-6 h-6 font-bold" :class="[bgFocus]">
                             0</div>
                     </div>
                     <div class="border border-secundary-light rounded-lg w-full p-2 flex justify-between items-center">
@@ -101,7 +146,7 @@ const createBranch = () => {
                             <p class="font-bold text-[25px]">$ 0,00</p>
                         </div>
                         <div
-                            class="contador bg-essentials-primary p-2 rounded-md flex justify-center items-center w-6 h-6 font-bold">
+                            class="contadorp-2 rounded-md flex justify-center items-center w-6 h-6 font-bold" :class="[bgFocus]">
                             0</div>
                     </div>
                     <div class="border border-secundary-light rounded-lg w-full p-2 flex justify-between items-center">
@@ -110,7 +155,7 @@ const createBranch = () => {
                             <p class="font-bold text-[25px]">$ 0,00</p>
                         </div>
                         <div
-                            class="contador bg-essentials-primary p-2 rounded-md flex justify-center items-center w-6 h-6 font-bold">
+                            class="contadorp-2 rounded-md flex justify-center items-center w-6 h-6 font-bold" :class="[bgFocus]">
                             0</div>
                     </div>
                 </div>
@@ -124,32 +169,34 @@ const createBranch = () => {
 
                         <div class="ticket w-full flex justify-between items-center gap-5">
                             <div
-                                class=" w-[33.3%] relative cursor-pointer border border-secundary-opacity  hover:border-essentials-primary transition-all rounded-[5px] bg-secundary-opacity text-center text-blanco text-[12px] p-3">
+                                class=" w-[33.3%] relative cursor-pointer border border-secundary-opacity transition-all rounded-[5px] bg-secundary-opacity text-center text-blanco text-[12px] p-3" :class="[hoverClass]">
                                 <div
-                                    class="absolute shadow-essentials w-[15px] h-[15px] bg-essentials-primary -left-[8px] top-[40%] rounded-full">
+                                    class="absolute shadow-essentials w-[15px] h-[15px] -left-[8px] top-[40%] rounded-full" :class="[bgFocus]">
                                 </div>
                                 <p class="bg-transparent">Orden #1</p>
                                 <p class="bg-transparent">14:20:45</p>
                                 <p class="bg-transparent">Fecha creación: Nov 29,2024</p>
                             </div>
                             <div
-                                class=" w-[33.3%] relative cursor-pointer border border-secundary-opacity  hover:border-essentials-primary transition-all rounded-[5px] bg-secundary-opacity text-center text-blanco text-[12px] p-3">
+                                class=" w-[33.3%] relative cursor-pointer border border-secundary-opacity transition-all rounded-[5px] bg-secundary-opacity text-center text-blanco text-[12px] p-3" :class="[hoverClass]">
                                 <div
-                                    class="absolute shadow-essentials w-[15px] h-[15px] bg-essentials-primary -left-[8px] top-[40%] rounded-full">
+                                    class="absolute shadow-essentials w-[15px] h-[15px] -left-[8px] top-[40%] rounded-full" :class="[bgFocus]">
                                 </div>
                                 <p class="bg-transparent">Orden #2</p>
                                 <p class="bg-transparent">14:20:45</p>
                                 <p class="bg-transparent">Fecha creación: Nov 29,2024</p>
                             </div>
                             <div
-                                class=" w-[33.3%] relative cursor-pointer border border-secundary-opacity  hover:border-essentials-primary transition-all rounded-[5px] bg-secundary-opacity text-center text-blanco text-[12px] p-3">
+                                class=" w-[33.3%] relative cursor-pointer border border-secundary-opacity transition-all rounded-[5px] bg-secundary-opacity text-center text-blanco text-[12px] p-3" :class="[hoverClass]">
                                 <div
-                                    class="absolute shadow-essentials w-[15px] h-[15px] bg-essentials-primary -left-[8px] top-[40%] rounded-full">
+                                    class="absolute shadow-essentials w-[15px] h-[15px] -left-[8px] top-[40%] rounded-full" :class="[bgFocus]">
                                 </div>
                                 <p class="bg-transparent">Orden #3</p>
                                 <p class="bg-transparent">14:20:45</p>
                                 <p class="bg-transparent">Fecha creación: Nov 29,2024</p>
                             </div>
+                            
+                            
                         </div>
                         <div id="mensaje-no-resultados"
                             class="hidden text-center mt-10 font-bold text-[35px] text-secundary-light fade-in">No hay
@@ -177,24 +224,24 @@ const createBranch = () => {
 
                         <div class="text-blanco flex items-center justify-between text-[14px]">
                             <p class="flex items-center gap-2">Método de pago:
-                                <span class="material-symbols-rounded text-[15px] text-essentials-primary">
+                                <span class="material-symbols-rounded text-[15px]" :class="[textFocus]">
                                     account_balance_wallet
                                 </span>
                                 Efectivo
                             </p>
                             <p class="flex items-center gap-2">Monto a pagar: <span
-                                    class="material-symbols-rounded text-[15px] text-essentials-primary">payments</span>
+                                    class="material-symbols-rounded text-[15px]" :class="[textFocus]">payments</span>
                                 $18.400
                             </p>
                         </div>
 
                         <div class="text-blanco flex items-center justify-between text-[14px]">
                             <p class="flex items-center gap-2">Dinero recibido: <span
-                                    class="material-symbols-rounded text-[15px] text-essentials-primary">payments</span>
+                                    class="material-symbols-rounded text-[15px]" :class="[textFocus]">payments</span>
                                 $20.000
                             </p>
                             <p class="flex items-center gap-2">Dinero a devolver: <span
-                                    class="material-symbols-rounded text-[15px] text-essentials-primary">payments</span>
+                                    class="material-symbols-rounded text-[15px]" :class="[textFocus]">payments</span>
                                 $600
                             </p>
                         </div>
@@ -220,7 +267,7 @@ const createBranch = () => {
                                 </div>
 
                                 <p class="flex items-center gap-2">
-                                    <span class="material-symbols-rounded text-[15px] text-essentials-primary">
+                                    <span class="material-symbols-rounded text-[15px]" :class="[textFocus]">
                                         pin
                                     </span>
                                     x1
@@ -231,7 +278,7 @@ const createBranch = () => {
                         </div>
                         <div class="flex items-center text-[14px] my-[10px]">
                             <p class="flex items-center gap-2">Comentario de la orden: <span
-                                    class="material-symbols-rounded text-[15px] text-essentials-primary">format_italic</span>
+                                    class="material-symbols-rounded text-[15px]" :class="[textFocus]">format_italic</span>
                                 Comentario del cliente</p>
                         </div>
 

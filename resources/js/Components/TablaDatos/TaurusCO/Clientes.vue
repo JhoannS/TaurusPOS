@@ -4,8 +4,6 @@ import { ref, computed, onMounted } from 'vue';
 import { router, Head, usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import Echo from 'laravel-echo';
-import Pusher from 'pusher-js';
 import empty from '@images/empty.svg';
 import 'dayjs/locale/es';
 
@@ -31,12 +29,6 @@ const props = defineProps({
   montoApagar: Number
 })
 
-// Propiedad computada para calcular el total de "monto a pagar"
-const totalMontoAPagar = computed(() => {
-  return props.clientes.reduce((total, cliente) => {
-    return total + (cliente.monto_pago || 0);  // Si no tiene monto_pago, lo cuenta como 0
-  }, 0);
-});
 
 function getEstadoClass(estado) {
   if (estado === 'Inactivo' || estado === 'Pendiente') return 'bg-semaforo-rojo';
@@ -222,6 +214,7 @@ const coloresBg = {
   'Essentials': 'bg-essentials-primary shadow-essentials',
   'Machine': 'bg-machine-primary shadow-machine',
   'Shopper': 'bg-shopper-primary shadow-shopper',
+  'Smart': 'bg-smart-primary shadow-smart rounded-full z-10 text-mono-negro',
   'default': 'bg-gray-300 shadow-gray-300'
 };
 
@@ -230,6 +223,7 @@ const coloresTexto = {
   'Essentials': 'text-essentials-primary',
   'Machine': 'text-machine-primary',
   'Shopper': 'text-shopper-primary',
+  'Smart': 'text-smart-primary',
   'default': 'text-gray-500'
 };
 

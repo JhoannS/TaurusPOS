@@ -1,97 +1,91 @@
-<script>
+<script setup>
 import { Head } from '@inertiajs/vue3';
+import { defineProps, ref, onMounted, computed } from 'vue';
 import Sidebar from '@/Components/Sidebar/Sidebar.vue';
 import BarraCalendario from '@/Components/BarraCalendario/BarraCalendario.vue';
 import DetallesPlan from '@/Components/Dashboard/DetallesPlan.vue';
 import SaludoOpciones from '@/Components/header/SaludoOpciones.vue';
 import CardHistorial from '@/Components/Dashboard/CardHistorial.vue';
 
+const props = defineProps({
+    auth: { type: Object, required: true },
+    user: { type: Object, required: true },
+});
 
-export default {
-    name: 'Dashboard',
-    components: {
-        Head,
-    },
-}
-</script>
-
-<script setup>
-
-import { ref, onMounted, onUnmounted } from 'vue';
-
-//
-// Reloj en tiempo real
-//
-const dia = ref('');
-const mes = ref('');
-const anio = ref('');
-const hora = ref('');
 const saludo = ref('');
 
-function actualizarFechaHora() {
-    const fecha = new Date();
-    dia.value = fecha.getDate();
+const actualizarSaludo = () => {
+    const hora = new Date().getHours();
+    if (hora < 12) saludo.value = '¡Buenos días!';
+    else if (hora < 18) saludo.value = '¡Buenas tardes!';
+    else saludo.value = '¡Buenas noches!';
+};
 
-    const monthNamesClock = [
-        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-    ];
-    mes.value = monthNamesClock[fecha.getMonth()];
-    anio.value = fecha.getFullYear();
-
-    let horas = fecha.getHours();
-    const minutos = fecha.getMinutes().toString().padStart(2, "0");
-    const segundos = fecha.getSeconds().toString().padStart(2, "0");
-    const periodo = horas >= 12 ? "pm" : "am";
-
-    if (horas > 12) {
-        horas -= 12;
-    } else if (horas === 0) {
-        horas = 12;
-    }
-    hora.value = `${horas}:${minutos}:${segundos} ${periodo}`;
-
-    if (fecha.getHours() < 12) {
-        saludo.value = "¡Buenos días";
-    } else if (fecha.getHours() < 18) {
-        saludo.value = "¡Buenas tardes";
-    } else {
-        saludo.value = "¡Buenas noches";
-    }
-}
-
-let clockInterval = null;
 onMounted(() => {
-    actualizarFechaHora();
-    clockInterval = setInterval(actualizarFechaHora, 1000);
+    actualizarSaludo();
 });
-onUnmounted(() => {
-    clearInterval(clockInterval);
+
+// Definir los colores
+const colores = {
+  'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
+  'Essentials': 'bg-essentials-primary shadow-essentials',
+  'Machine': 'bg-machine-primary shadow-machine',
+  'Shopper': 'bg-shopper-primary shadow-shopper',
+  'Smart': 'bg-smart-primary shadow-smart rounded-full z-10 text-mono-negro',
+  'default': 'bg-gray-300 shadow-gray-300'
+};
+const colores2 = {
+  'TaurusCO': 'bg-universal-naranja',
+  'Essentials': 'bg-essentials-primary rounded-full z-10',
+  'Machine': 'bg-machine-primary',
+  'Shopper': 'bg-shopper-primary',
+  'Smart': 'bg-smart-primary',
+  'default': 'bg-gray-300 shadow-gray-300'
+};
+
+// Primero definimos appName para obtener el nombre de la app
+const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app || 'default');
+
+// Luego definimos hoverClass usando appName
+const hoverClass = computed(() => {
+  switch (appName.value) {
+    case 'TaurusCO':
+      return 'hover:bg-universal-naranja';
+    case 'Essentials':
+      return 'hover:bg-essentials-primary';
+    case 'Machine':
+      return 'hover:bg-machine-primary';
+    case 'Shopper':
+      return 'hover:bg-shopper-primary';
+    case 'Smart':
+      return 'hover:bg-smart-primary hover:text-mono-negro';
+    default:
+      return 'hover:bg-gray-300';
+  }
 });
+
+const bgFocus = computed(() => colores[appName.value]);
+const bg = computed(() => colores2[appName.value]);
 </script>
 
 <template>
     <div>
 
         <Head title="Dashboard Essentials" />
-
-
         <div class="bg-mono flex scrollbar-custom">
-            <Sidebar />
-
-            <main class="w-full h-[100%] px-[40px] py-[20px] bg-transparent">
-                <SaludoOpciones/>
-
-                <div class="flex gap-[10px] ">
+            <Sidebar :auth="auth" />
+            <main class="w-full h-[100%] px-[40px] bg-transparent">
+                <SaludoOpciones :auth="auth" />
+                <div class="flex gap-[10px] my-6">
                     <div class="left w-[35%] h-[85vh] flex flex-col gap-5 justify-between px-3">
                         <div class="saludo-btn flex flex-col justify-center items-center gap-3">
                             <h4 class="text-[25px] text-center">
-                                <span id="saludo">{{ saludo }}</span> Nombre usuario!, espero te encuentres
+                                <span id="saludo">{{ saludo }}</span> {{ auth.user.nombres_ct }}, espero te encuentres
                                 muy bien, ¿Listo para vender?
                             </h4>
                             <p>La aplicación más profesional del mercado.</p>
                             <button
-                                class="flex items-center justify-center gap-3 shadow-essentials bg-essentials-primary py-[10px] px-[40px] rounded-xl hover:shadow-lg">
+                                class="flex items-center cursor-pointer justify-center gap-3 py-[10px] px-[40px] rounded-xl hover:shadow-lg" :class="[bgFocus]">
                                 Vender con POS
                                 <span class="material-symbols-rounded"> outbound </span>
                             </button>
@@ -131,16 +125,14 @@ onUnmounted(() => {
                                 </div>
                             </div>
                         </div>
-
-                        <BarraCalendario />
-
+                        <BarraCalendario :auth="auth" />
                     </div>
 
                     <div class="right w-[65%] px-3 flex flex-col ">
                         <div class="encabezadoPanelDerecho">
                             <div class="encabezado flex gap-2 items-center bg-transparent">
                                 <div
-                                    class="gota h-[20px] w-[20px] rounded-full bg-essentials-primary shadow-essentials">
+                                    class=" h-[20px] w-[20px] rounded-full" :class="[bgFocus]">
                                 </div>
                                 <p class="bg-transparent">Historial de movimientos:</p>
                             </div>
@@ -211,14 +203,12 @@ onUnmounted(() => {
                             </div>
                         </div>
 
-                        <CardHistorial/>
-                        <DetallesPlan/>
-
+                        <CardHistorial :auth="auth" />
+                        <DetallesPlan v-if="user?.tienda?.aplicacion?.plan?.detalles"
+                            :detalles="user.tienda.aplicacion.plan.detalles" />
                     </div>
                 </div>
             </main>
-
-
         </div>
     </div>
 </template>

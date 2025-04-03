@@ -1,98 +1,24 @@
-<script>
-import { Head } from '@inertiajs/vue3';
+<script setup>
+import { Head, usePage } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import { route } from 'ziggy-js';
 import Sidebar from '@/Components/Sidebar/Sidebar.vue';
 import SaludoOpciones from '@/Components/header/SaludoOpciones.vue';
-import ExportarExcel from '@/components/ExportarExcel/ExportarExcel.vue';
+import ExportarExcel from '@/Components/ExportarExcel/ExportarExcel.vue';
 import Modal from '@/Components/Modales/Essentials/Modal.vue';
 import Gastos from '@/Components/TablaDatos/Essentials/Gastos.vue';
 
 
-
-
-export default {
-    name: 'InfoSucursales',
-    components: {
-        Head,
-    },
-}
-</script>
-
-<script setup>
-
-import { ref, onMounted, onUnmounted, computed } from 'vue';
-import { usePage } from '@inertiajs/inertia-vue3';
-import { route } from 'ziggy-js'; // Importación nombrada
-
-
-//
-// Reloj en tiempo real
-//
-const dia = ref('');
-const mes = ref('');
-const anio = ref('');
-const hora = ref('');
-const saludo = ref('');
-
-function actualizarFechaHora() {
-    const fecha = new Date();
-    dia.value = fecha.getDate();
-
-    const monthNamesClock = [
-        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-    ];
-    mes.value = monthNamesClock[fecha.getMonth()];
-    anio.value = fecha.getFullYear();
-
-    let horas = fecha.getHours();
-    const minutos = fecha.getMinutes().toString().padStart(2, "0");
-    const segundos = fecha.getSeconds().toString().padStart(2, "0");
-    const periodo = horas >= 12 ? "pm" : "am";
-
-    if (horas > 12) {
-        horas -= 12;
-    } else if (horas === 0) {
-        horas = 12;
-    }
-    hora.value = `${horas}:${minutos}:${segundos} ${periodo}`;
-
-    if (fecha.getHours() < 12) {
-        saludo.value = "¡Buenos días";
-    } else if (fecha.getHours() < 18) {
-        saludo.value = "¡Buenas tardes";
-    } else {
-        saludo.value = "¡Buenas noches";
-    }
-}
-
-let clockInterval = null;
-onMounted(() => {
-    actualizarFechaHora();
-    clockInterval = setInterval(actualizarFechaHora, 1000);
-});
-onUnmounted(() => {
-    clearInterval(clockInterval);
+const props = defineProps({
+    auth: Object,
 });
 
+
+const aplicacion = props.auth?.user?.tienda?.aplicacion?.nombre_app || 'Sin app';
+const rol = props.auth.user.rol?.tipo_rol || 'Sin rol'; // Obtén el tipo de rol
 const page = usePage();
 const currentRoute = computed(() => page.props.value.currentRoute);
-
 const showModal = ref(false);
-const branchTitle = ref('');
-const branchDescription = ref('');
-
-const createBranch = () => {
-    if (branchTitle.value && branchDescription.value) {
-        console.log('Sucursal creada:', {
-            title: branchTitle.value,
-            description: branchDescription.value,
-        });
-        showModal.value = false; // Cierra el modal después de crear
-    } else {
-        alert('Por favor completa todos los campos.');
-    }
-};
-
 const searchQuery = ref('');
 
 // ✅ Función para validar y formatear números mientras escribes
@@ -133,6 +59,68 @@ const validarNumero = (event, field) => {
         maximumFractionDigits: 0
     })
 }
+
+// Definir los colores
+const bgColor = {
+    'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
+    'Essentials': 'bg-essentials-primary shadow-essentials',
+    'Machine': 'bg-machine-primary shadow-machine',
+    'Shopper': 'bg-shopper-primary shadow-shopper',
+    'Smart': 'bg-smart-primary shadow-smart text-mono-negro',
+    'default': 'bg-gray-300 shadow-gray-300'
+};
+
+const button = {
+    'TaurusCO': 'bg-universal-naranja shadow-universal-naranja rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+    'Essentials': 'bg-essentials-primary shadow-essentials rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+    'Machine': 'bg-machine-primary shadow-machine rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+    'Shopper': 'bg-shopper-primary shadow-shopper rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+    'Smart': 'bg-smart-primary shadow-smart text-mono-negro rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+    'default': 'bg-gray-300 shadow-gray-300'
+};
+
+const bgText = {
+    'TaurusCO': 'text-universal-naranja',
+    'Essentials': 'text-essentials-primary',
+    'Machine': 'text-machine-primary',
+    'Shopper': 'text-shopper-primary',
+    'Smart': 'text-smart-primary',
+    'default': 'text-gray-300'
+};
+const colores2 = {
+    'TaurusCO': 'bg-universal-naranja',
+    'Essentials': 'bg-essentials-primary',
+    'Machine': 'bg-machine-primary',
+    'Shopper': 'bg-shopper-primary',
+    'Smart': 'bg-smart-primary',
+    'default': 'bg-gray-300 shadow-gray-300'
+};
+
+// Primero definimos appName para obtener el nombre de la app
+const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app || 'default');
+
+// Luego definimos hoverClass usando appName
+const hoverClass = computed(() => {
+    switch (appName.value) {
+        case 'TaurusCO':
+            return 'hover:border-universal-naranja ';
+        case 'Essentials':
+            return 'hover:border-essentials-primary ';
+        case 'Machine':
+            return 'hover:border-machine-primary ';
+        case 'Shopper':
+            return 'hover:border-shopper-primary ';
+        case 'Smart':
+            return 'hover:border-smart-primary ';
+        default:
+            return 'hover:border-gray-300';
+    }
+});
+
+const bgFocus = computed(() => bgColor[appName.value]);
+const textFocus = computed(() => bgText[appName.value]);
+const buttonFocus = computed(() => button[appName.value]);
+const bg = computed(() => colores2[appName.value]);
 </script>
 
 <template>
@@ -142,14 +130,15 @@ const validarNumero = (event, field) => {
 
 
         <div class="bg-mono flex scrollbar-custom">
-            <Sidebar />
+            <Sidebar :auth="auth" />
 
-            <main class="w-full h-[100%] px-[40px] py-[20px] bg-transparent">
-                <SaludoOpciones />
+            <main class="w-full h-[100%] px-[40px] bg-transparent">
+                <SaludoOpciones :auth="auth" />
 
                 <!-- navegable -->
-                <div class="options flex gap-1 items-center text-[14px]">
-                    <a :href="route('essentials.admin.dashboard')" class="hover:text-essentials-secundary">
+                <div class="options flex gap-1 my-3 items-center text-[14px]">
+                    <a :href="route('aplicacion.dashboard', { aplicacion, rol })"
+                        class="hover:text-essentials-secundary">
                         <p>Dashboard</p>
                     </a>
                     <span class="material-symbols-rounded text-[18px]">chevron_right</span>
@@ -161,13 +150,13 @@ const validarNumero = (event, field) => {
                     <h4 class="font-semibold text-[25px]">Control de gastos</h4>
                     <div class="input-buscador">
                         <input v-model="searchQuery" type="search" placeholder="Buscar producto..." class="" />
-                        <span class="material-symbols-rounded text-essentials-primary">travel_explore</span>
+                        <span class="material-symbols-rounded" :class="[textFocus]">travel_explore</span>
                     </div>
 
 
 
                     <!-- Botón para abrir el modal -->
-                    <button @click="showModal = true" class="btn-essentials">
+                    <button @click="showModal = true" class="" :class="[buttonFocus]">
                         Crear nueva sucursal
                         <span class="material-symbols-rounded"> outbound </span>
                     </button>
@@ -182,8 +171,8 @@ const validarNumero = (event, field) => {
                             <p class="text-[14px]">Imprevistos</p>
                             <p class="font-bold text-[25px]">$ 0,00</p>
                         </div>
-                        <div
-                            class="contador bg-essentials-primary p-2 rounded-md flex justify-center items-center w-auto h-6 font-bold">
+                        <div class="contador p-2 rounded-md flex justify-center items-center w-auto h-6 font-bold"
+                            :class="[bgFocus]">
                             1% <span class="material-symbols-rounded"> arrow_drop_up </span>
                         </div>
                     </div>
@@ -192,8 +181,8 @@ const validarNumero = (event, field) => {
                             <p class="text-[14px]">Variables</p>
                             <p class="font-bold text-[25px]">$ 0,00</p>
                         </div>
-                        <div
-                            class="contador bg-essentials-primary p-2 rounded-md flex justify-center items-center w-auto h-6 font-bold">
+                        <div class="contador p-2 rounded-md flex justify-center items-center w-auto h-6 font-bold"
+                            :class="[bgFocus]">
                             1% <span class="material-symbols-rounded"> arrow_drop_up </span>
                         </div>
                     </div>
@@ -202,8 +191,8 @@ const validarNumero = (event, field) => {
                             <p class="text-[14px]">Fijos</p>
                             <p class="font-bold text-[25px]">$ 0,00</p>
                         </div>
-                        <div
-                            class="contador bg-essentials-primary p-2 rounded-md flex justify-center items-center w-auto h-6 font-bold">
+                        <div class="contador p-2 rounded-md flex justify-center items-center w-auto h-6 font-bold"
+                            :class="[bgFocus]">
                             1% <span class="material-symbols-rounded"> arrow_drop_up </span>
                         </div>
                     </div>
@@ -224,7 +213,7 @@ const validarNumero = (event, field) => {
                 <Gastos :searchQuery="searchQuery" />
             </main>
 
-            <Modal :isOpen="showModal" titulo="Crear nuevo gasto"
+            <Modal :auth="auth" :isOpen="showModal" titulo="Crear nuevo gasto"
                 descripcion="EnEn este apartado podrás crear gastos de diferentes categorías, recuerda llenar los datos a conciencia para tener un registro exitoso."
                 confirmText="Confirmar creación" @close="showModal = false" @confirm="createBranch">
                 <!-- contenido del modal -->
@@ -247,7 +236,7 @@ const validarNumero = (event, field) => {
                         <div
                             class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]">
                             <span
-                                class="material-symbols-rounded text-essentials-primary text-[20px] pl-[5px]">payments</span>
+                                class="material-symbols-rounded text-[20px] pl-[5px]" :class="[textFocus]">payments</span>
 
                             <input type="text" min="0" max="999999999999999" :value="form.monto"
                                 @input="validarNumero($event, 'monto')"
@@ -262,7 +251,7 @@ const validarNumero = (event, field) => {
                     <div
                         class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]">
                         <span
-                            class="material-symbols-rounded text-essentials-primary text-[20px] pl-[5px]">format_italic</span>
+                            class="material-symbols-rounded text-[20px] pl-[5px]" :class="[textFocus]">format_italic</span>
 
                         <input type="text" id="monto"
                             class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro"
@@ -274,7 +263,7 @@ const validarNumero = (event, field) => {
                     <div
                         class="w-[100%] transition-all rounded-[5px] border-[1px] border-secundary-light p-[3px] flex items-center gap-[8px]">
                         <span
-                            class="material-symbols-rounded text-essentials-primary text-[20px] pl-[5px]">format_italic</span>
+                            class="material-symbols-rounded text-[20px] pl-[5px]" :class="[textFocus]">format_italic</span>
 
                         <input type="text" id="monto"
                             class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro "

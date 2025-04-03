@@ -1,24 +1,15 @@
-<script>
-import { Head } from '@inertiajs/vue3';
-import { defineProps, ref, onMounted, onUnmounted } from 'vue';
-import Sidebar from '@/Components/Sidebar/Essentials/Sidebar.vue';
-import BarraCalendario from '@/Components/BarraCalendario/BarraCalendario.vue';
-import DetallesPlan from '@/Components/Dashboard/DetallesPlan.vue';
-import SaludoOpciones from '@/Components/header/Essentials/SaludoOpciones.vue';
-import CardHistorial from '@/Components/Dashboard/Essentials/CardHistorial.vue';
-</script>
-
 <script setup>
 import { Head } from '@inertiajs/vue3';
-import { ref, onMounted, onUnmounted } from 'vue';
-import Sidebar from '@/Components/Sidebar/Essentials/Sidebar.vue';
+import { defineProps, ref, onMounted, computed } from 'vue';
+import Sidebar from '@/Components/Sidebar/Sidebar.vue';
 import BarraCalendario from '@/Components/BarraCalendario/BarraCalendario.vue';
 import DetallesPlan from '@/Components/Dashboard/DetallesPlan.vue';
-import SaludoOpciones from '@/Components/header/Essentials/SaludoOpciones.vue';
+import SaludoOpciones from '@/Components/header/SaludoOpciones.vue';
+import CardHistorial from '@/Components/Dashboard/CardHistorial.vue';
 
-defineProps({
-    auth: Object,
-    user: Object
+const props = defineProps({
+    auth: { type: Object, required: true },
+    user: { type: Object, required: true },
 });
 
 const saludo = ref('');
@@ -33,6 +24,48 @@ const actualizarSaludo = () => {
 onMounted(() => {
     actualizarSaludo();
 });
+
+// Definir los colores
+const colores = {
+  'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
+  'Essentials': 'bg-essentials-primary shadow-essentials',
+  'Machine': 'bg-machine-primary shadow-machine',
+  'Shopper': 'bg-shopper-primary shadow-shopper',
+  'Smart': 'bg-smart-primary shadow-smart rounded-full z-10 text-mono-negro',
+  'default': 'bg-gray-300 shadow-gray-300'
+};
+const colores2 = {
+  'TaurusCO': 'bg-universal-naranja',
+  'Essentials': 'bg-essentials-primary rounded-full z-10',
+  'Machine': 'bg-machine-primary',
+  'Shopper': 'bg-shopper-primary',
+  'Smart': 'bg-smart-primary',
+  'default': 'bg-gray-300 shadow-gray-300'
+};
+
+// Primero definimos appName para obtener el nombre de la app
+const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app || 'default');
+
+// Luego definimos hoverClass usando appName
+const hoverClass = computed(() => {
+  switch (appName.value) {
+    case 'TaurusCO':
+      return 'hover:bg-universal-naranja';
+    case 'Essentials':
+      return 'hover:bg-essentials-primary';
+    case 'Machine':
+      return 'hover:bg-machine-primary';
+    case 'Shopper':
+      return 'hover:bg-shopper-primary';
+    case 'Smart':
+      return 'hover:bg-smart-primary hover:text-mono-negro';
+    default:
+      return 'hover:bg-gray-300';
+  }
+});
+
+const bgFocus = computed(() => colores[appName.value]);
+const bg = computed(() => colores2[appName.value]);
 </script>
 
 <template>
@@ -41,9 +74,9 @@ onMounted(() => {
         <Head title="Dashboard Essentials" />
         <div class="bg-mono flex scrollbar-custom">
             <Sidebar :auth="auth" />
-            <main class="w-full h-[100%] px-[40px] py-[20px] bg-transparent">
+            <main class="w-full h-[100%] px-[40px] bg-transparent">
                 <SaludoOpciones :auth="auth" />
-                <div class="flex gap-[10px] ">
+                <div class="flex gap-[10px] my-6">
                     <div class="left w-[35%] h-[85vh] flex flex-col gap-5 justify-between px-3">
                         <div class="saludo-btn flex flex-col justify-center items-center gap-3">
                             <h4 class="text-[25px] text-center">
@@ -52,7 +85,7 @@ onMounted(() => {
                             </h4>
                             <p>La aplicación más profesional del mercado.</p>
                             <button
-                                class="flex items-center justify-center gap-3 shadow-essentials bg-essentials-primary py-[10px] px-[40px] rounded-xl hover:shadow-lg">
+                                class="flex items-center cursor-pointer justify-center gap-3 py-[10px] px-[40px] rounded-xl hover:shadow-lg" :class="[bgFocus]">
                                 Vender con POS
                                 <span class="material-symbols-rounded"> outbound </span>
                             </button>
@@ -92,14 +125,14 @@ onMounted(() => {
                                 </div>
                             </div>
                         </div>
-                        <BarraCalendario />
+                        <BarraCalendario :auth="auth" />
                     </div>
 
                     <div class="right w-[65%] px-3 flex flex-col ">
                         <div class="encabezadoPanelDerecho">
                             <div class="encabezado flex gap-2 items-center bg-transparent">
                                 <div
-                                    class="gota h-[20px] w-[20px] rounded-full bg-essentials-primary shadow-essentials">
+                                    class=" h-[20px] w-[20px] rounded-full" :class="[bgFocus]">
                                 </div>
                                 <p class="bg-transparent">Historial de movimientos:</p>
                             </div>
@@ -170,7 +203,7 @@ onMounted(() => {
                             </div>
                         </div>
 
-                        <CardHistorial />
+                        <CardHistorial :auth="auth" />
                         <DetallesPlan v-if="user?.tienda?.aplicacion?.plan?.detalles"
                             :detalles="user.tienda.aplicacion.plan.detalles" />
                     </div>

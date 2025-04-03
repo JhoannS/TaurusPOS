@@ -2,8 +2,8 @@
 import { ref } from 'vue';
 import { usePage, Head } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
-import Sidebar from '@/Components/Sidebar/Essentials/Sidebar.vue';
-import SaludoOpciones from '@/Components/header/Essentials/SaludoOpciones.vue';
+import Sidebar from '@/Components/Sidebar/Sidebar.vue';
+import SaludoOpciones from '@/Components/header/SaludoOpciones.vue';
 import Modal from '@/Components/Modales/Essentials/Modal.vue';
 
 

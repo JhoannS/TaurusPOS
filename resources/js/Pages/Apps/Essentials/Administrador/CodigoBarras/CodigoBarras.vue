@@ -1,7 +1,7 @@
 <script>
 import { Head } from '@inertiajs/vue3';
-import Sidebar from '@/Components/Sidebar/Essentials/Sidebar.vue';
-import SaludoOpciones from '@/Components/header/Essentials/SaludoOpciones.vue';
+import Sidebar from '@/Components/Sidebar/Sidebar.vue';
+import SaludoOpciones from '@/Components/header/SaludoOpciones.vue';
 import Modal from '@/Components/Modales/Essentials/Modal.vue';
 import GeneradorEtiquetas from '@/Components/Etiquetas/GeneradorEtiquetas.vue';
 import JsBarcode from 'jsbarcode'
