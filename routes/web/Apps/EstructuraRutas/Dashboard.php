@@ -9,7 +9,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])
             ->name('aplicacion.dashboard');
 
-            
+
         Route::get('/dashboard/detalle/{idCliente}', [DashboardController::class, 'detalle'])
             ->name('aplicacion.dashboard.detalle');
 
@@ -20,6 +20,10 @@ Route::middleware('auth')->group(function () {
         // ✅ Ruta para eliminar cliente
         Route::delete('/clientes/{id}', [DashboardController::class, 'destroy'])
             ->name('clientes.destroy');
+
+        // ✅ Ruta para actualizar cliente    
+        Route::put('/clientes/{id}', [DashboardController::class, 'update'])->name('clientes.update');
+
     });
 });
 

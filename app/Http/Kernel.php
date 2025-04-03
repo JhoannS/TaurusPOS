@@ -57,6 +57,13 @@ class Kernel extends HttpKernel
 
         
     ];
+
+    protected function schedule(Schedule $schedule)
+{
+    // Ejecutar el comando todos los días a medianoche
+    $schedule->command('membresias:reducir-dias')->dailyAt('00:00');
+}
+
     
 
 }

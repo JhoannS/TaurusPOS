@@ -61,6 +61,14 @@ class AppServiceProvider extends ServiceProvider
                 }
                 return null;
             },
+
+             // Compartir mensajes flash para éxito y error
+             'flash' => function () {
+                return [
+                    'success' => session('success'),
+                    'error'   => session('error'),
+                ];
+            },
         ]);
     }
 }

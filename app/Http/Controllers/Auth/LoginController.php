@@ -85,7 +85,8 @@ class LoginController extends Controller
         return redirect()->route('aplicacion.dashboard', [
             'aplicacion' => ucfirst($nombreAplicacion),
             'rol' => ucfirst($rol),
-        ]);
+        ])->with('success', 'Bienvenido por aquí');
+        
 
     }
 
@@ -101,7 +102,7 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         // 👇 Redirige correctamente al login
-        return redirect()->route('login.auth');
+        return redirect()->route('login.auth')->with('success', 'Nos vemos luego');;
     }
 
 

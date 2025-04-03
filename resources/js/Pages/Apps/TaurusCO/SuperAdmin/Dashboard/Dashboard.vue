@@ -27,6 +27,36 @@ const props = defineProps({
   },
 })
 
+// Acceder a los datos de Inertia, incluyendo flash
+const { flash } = usePage().props;
+
+// Definir variables reactivas para notificaciones
+const mensajeNotificacion = ref('');
+const tipoNotificacion = ref(null);
+const mostrarNotificacion = ref(false);
+
+// Función para mostrar notificaciones
+const mostrarMensaje = (mensaje, tipo) => {
+  mensajeNotificacion.value = mensaje;
+  tipoNotificacion.value = tipo;
+  mostrarNotificacion.value = true;
+  setTimeout(() => {
+    mostrarNotificacion.value = false;
+  }, 5000);
+};
+
+onMounted(() => {
+  console.log("Flash messages:", usePage().props.flash); // Verificar si llega el mensaje
+
+  if (usePage().props.flash && usePage().props.flash.success) {
+    mostrarMensaje(usePage().props.flash.success, 'success');
+  } else if (usePage().props.flash.error) {
+    mostrarMensaje(usePage().props.flash.error, 'error');
+  }
+});
+
+
+
 const user = props.auth.user
 const auth = usePage().props.auth;
 const clientes = ref(props.clientes);
@@ -124,7 +154,7 @@ const logout = () => {
               <div v-for="cliente in clientesPorActivacion" :key="cliente.id"
                 class="clientesActivacion flex justify-between items-center gap-4 w-full">
                 <div class="flex items-center gap-2">
-                  <div class="gota bg-semaforo-rojo h-3 w-5 rounded-full"></div>
+                  <div class="h-[12px] w-[20px] rounded-full" :class="[bgClase]" ></div>
                   <div>
                     <h3 class="font-semibold">{{ cliente.nombres_ct }} {{ cliente.apellidos_ct }}</h3>
                     <p class="-mt-[5px] text-secundary-light text-[13px] font-medium">
@@ -151,10 +181,32 @@ const logout = () => {
       <Clientes :auth="auth" :user-id="auth.user.id"
         :rol="typeof auth.user.rol === 'object' ? auth.user.rol : { id: auth.user.rol }" :aplicacion="aplicacion"
         :clientes="clientes" :searchQuery="searchQuery" />
-
-
     </div>
-    
+    <div v-if="mostrarNotificacion && tipoNotificacion === 'success'"
+        class="notificacion translate-y-8 absolute w-[max-content] left-0 right-0 top-6 ml-auto mr-auto rounded-md bg-semaforo-verde_opacity text-mono-blanco shadow-semaforo-verde">
+        <div class="notificacion_body flex justify-center gap-3 items-center py-3 px-2">
+          <div class="flex gap-2 items-center">
+            <i class="material-symbols-rounded text-semaforo-verde">check_circle</i>
+            <p>{{ mensajeNotificacion }}</p>
+          </div>
+        </div>
+        <div
+          class="progreso_notificacion absolute left-1 bottom-1 h-1 scale-x-0 origin-left rounded-sm bg-semaforo-verde">
+        </div>
+      </div>
+      <!-- ✅ Notificación de error -->
+      <div v-if="mostrarNotificacion && tipoNotificacion === 'error'"
+        class="notificacion translate-y-8 absolute w-[max-content] left-0 right-0 top-6 ml-auto mr-auto rounded-md bg-semaforo-rojo_opacity text-mono-blanco shadow-semaforo-verde">
+        <div class="notificacion_body flex justify-center gap-3 items-center py-3 px-2">
+          <div class="flex gap-2 items-center">
+            <i class="material-symbols-rounded text-semaforo-rojo">cancel</i>
+            <p>{{ mensajeNotificacion }}</p>
+          </div>
+        </div>
+        <div
+          class="progreso_notificacion absolute left-1 bottom-1 h-1 scale-x-0 origin-left rounded-sm bg-semaforo-rojo">
+        </div>
+      </div>
   </main>
   
 </template>

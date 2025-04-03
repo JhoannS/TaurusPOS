@@ -1,13 +1,25 @@
 <script setup>
 import ModalDetalles from '@/Components/Modales/ModalDetallesClientes.vue';
+import ModalEditarCliente from '@/Components/Modales/ModalEditarClientes.vue';
 import { ref, computed, onMounted } from 'vue';
-import { router, Head, usePage } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import empty from '@images/empty.svg';
 import 'dayjs/locale/es';
+import { route } from 'ziggy-js';
 
 
+const showModalEditar = ref(false);
+
+function openEditModal() {
+  // Abre el modal de edición usando los datos ya cargados en detalleCliente
+  showModalEditar.value = true;
+}
+
+function closeEditModal() {
+  showModalEditar.value = false;
+}
 
 const props = defineProps({
   auth: { type: Object, required: true },
@@ -138,16 +150,16 @@ const deleteCliente = (id) => {
 
   router.delete(route('clientes.destroy', {
     aplicacion: props.aplicacion,
-    rol: props.rol.id, 
+    rol: props.rol.id,
     id: id
   }), {
     onSuccess: () => {
       props.clientes = props.clientes.filter(cliente => cliente.id !== id);
-      
+
       mostrarMensaje('Cliente eliminado con éxito', 'success');
       setTimeout(() => {
         location.reload();
-      }, 3000); 
+      }, 3000);
 
     },
     onError: (error) => {
@@ -203,8 +215,8 @@ const formatCOP = (value) => {
   return parseFloat(value).toLocaleString('es-CO', {
     style: 'currency',
     currency: 'COP',
-    minimumFractionDigits: 0, 
-    maximumFractionDigits: 0 
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
   });
 };
 
@@ -231,6 +243,7 @@ const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app 
 const bgClase = computed(() => coloresBg[appName.value]);
 const textoClase = computed(() => coloresTexto[appName.value]);
 const gotaClase = computed(() => coloresBg[appName.value]);
+
 
 
 </script>
@@ -264,10 +277,10 @@ const gotaClase = computed(() => coloresBg[appName.value]);
           <td class="text-[14px] p-2">{{ cliente.aplicacion }}</td>
           <td class="text-[14px] p-2">{{ cliente.membresia }}</td>
           <td>{{ formatCOP(cliente.precio) || 'Sin pago' }}</td>
-          <td class="text-[14px] p-2">{{ formatFecha(cliente.fecha_pago ) }}</td>
+          <td class="text-[14px] p-2">{{ formatFecha(cliente.fecha_pago) }}</td>
           <td class="text-[14px] p-2">
             <span class="p-1 rounded-[5px] font-bold" :class="getEstadoClass(cliente.estado_pago)">
-               {{ cliente.estado_pago || 'Sin pago' }}
+              {{ cliente.estado_pago || 'Sin pago' }}
             </span>
           </td>
           <td class="text-[14px] p-2">
@@ -362,26 +375,36 @@ const gotaClase = computed(() => coloresBg[appName.value]);
               <p class="text-secundary-light font-semibold">Detalles membresía:</p>
               <div class=" flex justify-between items-center">
                 <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                    :class='[textoClase]'>card_membership</span> {{ detalleCliente.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }}</p>
+                    :class='[textoClase]'>card_membership</span> {{
+                      detalleCliente.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }}</p>
                 <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                    :class='[textoClase]'>timer</span>{{ detalleCliente.tienda?.aplicacion?.membresia?.duracion || 'Sin duración' }} días</p>
+                    :class='[textoClase]'>timer</span>{{ detalleCliente.tienda?.aplicacion?.membresia?.duracion || 'Pago pendiente' }} días</p>
+              </div>
+
+              <div class=" flex justify-end items-center">
+               
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>timer</span>{{ detalleCliente.tienda?.aplicacion?.dias_restantes || 'Sin duración' }} días restantes</p>
               </div>
 
               <div class=" flex justify-between items-center">
                 <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                    :class='[textoClase]'>format_italic</span> {{ detalleCliente.tienda?.aplicacion?.membresia?.descripcion || 'Sin descripcion' }}</p>
+                    :class='[textoClase]'>format_italic</span> {{
+                      detalleCliente.tienda?.aplicacion?.membresia?.descripcion || 'Sin descripcion' }}</p>
                 <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                    :class='[textoClase]'>history_toggle_off</span> {{ detalleCliente.tienda?.aplicacion?.membresia?.periodo || 'Sin periodo' }} </p>
+                    :class='[textoClase]'>history_toggle_off</span> {{
+                      detalleCliente.tienda?.aplicacion?.membresia?.periodo || 'Sin periodo' }} </p>
               </div>
 
               <div class=" flex justify-between items-center">
                 <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                    :class='[textoClase]'>attach_money</span>{{ formatCOP(detalleCliente.tienda?.aplicacion?.membresia?.precio) || 'Sin precio' }} COP</p>
-                    <div class="estadoCliente flex items-center gap-2 ">
-                    <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
-                      :class="getEstadoClass(detalleCliente.tienda?.aplicacion?.membresia?.estado?.tipo_estado)"></div>
-                    <p> {{ detalleCliente.tienda?.aplicacion?.membresia?.estado?.tipo_estado || 'Sin estado' }} </p>
-                  </div>
+                    :class='[textoClase]'>attach_money</span>{{
+                      formatCOP(detalleCliente.tienda?.aplicacion?.membresia?.precio) || 'Sin precio' }} COP</p>
+                <div class="estadoCliente flex items-center gap-2 ">
+                  <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
+                    :class="getEstadoClass(detalleCliente.tienda?.aplicacion?.membresia?.estado?.tipo_estado)"></div>
+                  <p> {{ detalleCliente.tienda?.aplicacion?.membresia?.estado?.tipo_estado || 'Sin estado' }} </p>
+                </div>
               </div>
             </div>
 
@@ -403,53 +426,57 @@ const gotaClase = computed(() => coloresBg[appName.value]);
                 <div class="flex w-full items-center justify-between mb-2">
                   <p class="text-[12px]">{{ detalleCliente.tienda?.id }}</p>
                   <p class="flex items-center gap-1 text-[12px]"><span class="material-symbols-rounded text-[20px]"
-                      :class='[textoClase]'>history</span>{{ formatFecha(detalleCliente.tienda?.fecha_modificacion) }}</p>
+                      :class='[textoClase]'>history</span>{{ formatFecha(detalleCliente.tienda?.fecha_modificacion) }}
+                  </p>
                 </div>
                 <div class="nombre-Rol w-full flex justify-between items-center">
                   <div class="nombre">
-                    <h3 class="font-semibold text-[20px] -mt-2">{{ detalleCliente.tienda?.nombre_tienda || 'Sin tienda' }}</h3>
+                    <h3 class="font-semibold text-[20px] -mt-2">{{ detalleCliente.tienda?.nombre_tienda || 'Sin tienda'
+                      }}</h3>
                     <p class="text-secundary-light text-sm -mt-2">{{ detalleCliente.tienda?.direccion_tienda || 'Sin dirección' }} - {{ detalleCliente.tienda?.barrio_tienda || 'Sin ciudad' }}</p>
                   </div>
                   <div class="estadoCliente flex items-center gap-2 ">
                     <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
-                    :class="getEstadoClass(detalleCliente.tienda?.estado?.tipo_estado)"></div>
+                      :class="getEstadoClass(detalleCliente.tienda?.estado?.tipo_estado)"></div>
                     <p>{{ detalleCliente.tienda?.estado?.tipo_estado || 'Sin estado' }}</p>
                   </div>
                 </div>
               </div>
             </div>
-            
+
 
             <div class="my-2">
               <p class="text-secundary-light font-semibold">Datos del establecimiento:</p>
               <div class="documento flex justify-between items-center">
-              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>verified</span> {{ detalleCliente.tienda?.aplicacion?.nombre_app || 'Sin app' }}
-                App</p>
-            </div>
-            <div class="email-telefono flex justify-between items-center">
-              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>email</span> {{ detalleCliente.tienda?.email_tienda || 'Sin email' }}</p>
-              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>phone</span>{{ detalleCliente.tienda?.telefono_tienda }}</p>
-            </div>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>verified</span> {{ detalleCliente.tienda?.aplicacion?.nombre_app || 'Sin app'
+                  }}
+                  App</p>
+              </div>
+              <div class="email-telefono flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>email</span> {{ detalleCliente.tienda?.email_tienda || 'Sin email' }}</p>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>phone</span>{{ detalleCliente.tienda?.telefono_tienda }}</p>
+              </div>
             </div>
 
             <div class="my-2">
               <p class="text-secundary-light font-semibold">Detalles del token:</p>
               <div class="token">
-              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>key</span> {{ detalleCliente.tienda?.token?.token_activacion }}</p>
-            </div>
-            <div class="email-telefono flex justify-between items-center">
-              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>timer</span> {{ formatFecha(detalleCliente.tienda?.token?.fecha_modificacion) }}</p>
-                  <div class="estadoCliente flex items-center gap-2 ">
-                    <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>key</span> {{ detalleCliente.tienda?.token?.token_activacion }}</p>
+              </div>
+              <div class="email-telefono flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>timer</span> {{ formatFecha(detalleCliente.tienda?.token?.fecha_modificacion)
+                  }}</p>
+                <div class="estadoCliente flex items-center gap-2 ">
+                  <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
                     :class="getEstadoClass(detalleCliente.tienda?.token?.estado?.tipo_estado)"></div>
-                    <p>{{ detalleCliente.tienda?.token?.estado?.tipo_estado || 'Sin estado' }}</p>
-                  </div>
-            </div>
+                  <p>{{ detalleCliente.tienda?.token?.estado?.tipo_estado || 'Sin estado' }}</p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -469,12 +496,14 @@ const gotaClase = computed(() => coloresBg[appName.value]);
                 <div class="flex w-full items-center justify-between mb-2">
                   <p class="text-[12px]">{{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.id }}</p>
                   <p class="flex items-center gap-1 text-[12px]"><span class="material-symbols-rounded text-[20px]"
-                      :class='[textoClase]'>history</span> {{formatFecha(detalleCliente.tienda?.aplicacion?.plan?.detalles?.fecha_modificacion) }}</p>
+                      :class='[textoClase]'>history</span>
+                    {{ formatFecha(detalleCliente.tienda?.aplicacion?.plan?.detalles?.fecha_modificacion) }}</p>
                 </div>
                 <div class="nombre-Rol w-full flex justify-between items-center">
                   <div class="nombre">
                     <h3 class="font-semibold text-[20px] -mt-2">{{ detalleCliente.tienda?.aplicacion?.nombre_app || 'Sin app' }} App</h3>
-                    <p class="text-secundary-light text-sm -mt-2">{{ detalleCliente.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }}</p>
+                    <p class="text-secundary-light text-sm -mt-2">{{
+                      detalleCliente.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }}</p>
                   </div>
                   <div class="estadoCliente flex items-center gap-2 ">
                     <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
@@ -488,94 +517,138 @@ const gotaClase = computed(() => coloresBg[appName.value]);
             <div class="my-2">
               <p class="text-secundary-light font-semibold">Detalles del plan:</p>
               <div class="documento flex justify-between items-center">
-              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>swap_horiz</span> Sucursales virtuales: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_sucursales || 0}}</p>
-              <p>Usadas: 0</p>
-            </div>
-            <div class="documento flex justify-between items-center">
-              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>identity_platform</span> Empleados: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_empleados || 0
-          }}</p>
-              <p>Usadas: 0</p>
-            </div>
-            <div class="documento flex justify-between items-center">
-              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>identity_platform</span> Proveedores: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_proveedores || 0 }}</p>
-              <p>Usadas: 0</p>
-            </div>
-            <div class="documento flex justify-between items-center">
-              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>category</span> Productos: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_productos || 0}}</p>
-              <p>Usadas: 0</p>
-            </div>
-            <div class="documento flex justify-between items-center">
-              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>category</span> Servicios: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_servicios || 0}}</p>
-              <p>Usadas: 0</p>
-            </div>
-            <div class="documento flex justify-between items-center">
-              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>receipt</span> Facturación electrónica: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_electronica || 0 }}</p>
-              <p>Usadas: 0</p>
-            </div>
-            <div class="documento flex justify-between items-center">
-              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>picture_As_pdf</span> Facturación física: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_fisica || 0}}</p>
-              <p>Usadas: 0</p>
-            </div>
-            <div class="documento flex justify-between items-center">
-              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>event</span> Manejo reservas: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_reservas ||'No aplica' }}</p>
-                  <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                    :class='[textoClase]'>savings</span> Manejo POS: {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_pos || 'No aplica' }}</p>
-            </div>
-            <div class="documento flex justify-between items-center">
-              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>verified</span> Contabilidad: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_contabilidad ||'No aplica' }}</p>
-                  <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                    :class='[textoClase]'>monitoring</span> Manejo gastos: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_control_gastos ||'No aplica' }}</p>
-            </div>
-            <div class="documento flex justify-between items-center">
-              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>barcode_scanner</span> Etiquetado barras: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_etiquetado_barras ||'No aplica' }}</p>
-                  <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                    :class='[textoClase]'>qr_code_2</span> Códigos Qr: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_codigos_qr ||'No aplica' }}</p>
-            </div>
-            <div class="documento flex justify-between items-center">
-              <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                  :class='[textoClase]'>diversity_1</span> Orden trabajo: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_orden_trabajo ||'No aplica' }}</p>
-                  <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                    :class='[textoClase]'>theater_comedy</span> Encuestas: {{detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_encuestas ||'No aplica' }}</p>
-            </div>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>swap_horiz</span> Sucursales virtuales: {{
+                      detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_sucursales || 0}}</p>
+                <p>Usadas: 0</p>
+              </div>
+              <div class="documento flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>identity_platform</span> Empleados: {{
+                      detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_empleados || 0
+                  }}</p>
+                <p>Usadas: 0</p>
+              </div>
+              <div class="documento flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>identity_platform</span> Proveedores: {{
+                      detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_proveedores || 0 }}</p>
+                <p>Usadas: 0</p>
+              </div>
+              <div class="documento flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>category</span> Productos: {{
+                      detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_productos || 0}}</p>
+                <p>Usadas: 0</p>
+              </div>
+              <div class="documento flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>category</span> Servicios: {{
+                      detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_servicios || 0}}</p>
+                <p>Usadas: 0</p>
+              </div>
+              <div class="documento flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>receipt</span> Facturación electrónica:
+                  {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_electronica || 0 }}</p>
+                <p>Usadas: 0</p>
+              </div>
+              <div class="documento flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>picture_As_pdf</span> Facturación física:
+                  {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.cantidad_facturacion_fisica || 0 }}</p>
+                <p>Usadas: 0</p>
+              </div>
+              <div class="documento flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>event</span> Manejo reservas: {{
+                      detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_reservas || 'No aplica' }}</p>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>savings</span> Manejo POS: {{
+                      detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_pos || 'No aplica' }}</p>
+              </div>
+              <div class="documento flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>verified</span> Contabilidad:
+                  {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_contabilidad || 'No aplica' }}</p>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>monitoring</span> Manejo gastos:
+                  {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_control_gastos || 'No aplica' }}</p>
+              </div>
+              <div class="documento flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>barcode_scanner</span> Etiquetado barras:
+                  {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_etiquetado_barras || 'No aplica' }}</p>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>qr_code_2</span> Códigos Qr:
+                  {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_codigos_qr || 'No aplica' }}</p>
+              </div>
+              <div class="documento flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>diversity_1</span> Orden trabajo:
+                  {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_orden_trabajo || 'No aplica' }}</p>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textoClase]'>theater_comedy</span> Encuestas:
+                  {{ detalleCliente.tienda?.aplicacion?.plan?.detalles?.manejo_encuestas || 'No aplica' }}</p>
+              </div>
             </div>
 
-          </div> 
+          </div>
         </div>
       </div>
     </ModalDetalles>
 
-    <!-- Notificación de éxito -->
-<div v-if="mostrarNotificacion && tipoNotificacion === 'success'"
-     class="notificacion translate-y-8 absolute w-[max-content] left-0 right-0 top-6 ml-auto mr-auto rounded-md bg-semaforo-verde_opacity text-mono-blanco shadow-semaforo-verde">
-    <div class="notificacion_body flex justify-center gap-3 items-center py-3 px-2">
-        <div class="flex gap-2 items-center">
-            <i class="material-symbols-rounded text-semaforo-verde">check_circle</i>
-            <p>{{ mensajeNotificacion }}</p>
+    <!-- Modal para ver detalles -->
+    <ModalDetalles :isOpen="showModalDetalle" @close="closeDetalle">
+      <div v-if="detalleCliente">
+        <div>
+          <p><strong>Nombre:</strong> {{ detalleCliente.nombres_ct }} {{ detalleCliente.apellidos_ct }}</p>
+          <!-- Icono para editar -->
+          <button @click="openEditModal" class="ml-4">
+            <span class="material-symbols-rounded">edit</span>
+          </button>
         </div>
-    </div>
-    <div class="progreso_notificacion absolute left-1 bottom-1 h-1 scale-x-0 origin-left rounded-sm bg-semaforo-verde"></div>
-</div>
+        <!-- Aquí muestras otros detalles -->
+      </div>
+    </ModalDetalles>
 
-<!-- Notificación de error -->
-<div v-if="mostrarNotificacion && tipoNotificacion === 'error'"
-     class="notificacion translate-y-8 absolute w-[max-content] left-0 right-0 top-6 ml-auto mr-auto rounded-md bg-semaforo-rojo_opacity text-mono-blanco shadow-semaforo-verde">
-    <div class="notificacion_body flex justify-center gap-3 items-center py-3 px-2">
+    <!-- Modal para editar datos del cliente -->
+    <ModalEditarCliente 
+      :isOpen="showModalEditar" 
+      :detalle-cliente="detalleCliente" 
+      @close="closeEditModal"
+      @updated="(updatedCliente) => { 
+          // Opcional: Actualiza la lista o refresca los datos
+          closeEditModal();
+          closeDetalle(); // Cierra el modal de detalles si lo deseas
+          // Aquí podrías actualizar la lista de clientes en vivo si fuera necesario
+        }" />
+
+    <!-- Notificación de éxito -->
+    <div v-if="mostrarNotificacion && tipoNotificacion === 'success'"
+      class="notificacion translate-y-8 absolute w-[max-content] left-0 right-0 top-6 ml-auto mr-auto rounded-md bg-semaforo-verde_opacity text-mono-blanco shadow-semaforo-verde">
+      <div class="notificacion_body flex justify-center gap-3 items-center py-3 px-2">
         <div class="flex gap-2 items-center">
-            <i class="material-symbols-rounded text-semaforo-rojo">cancel</i>
-            <p>{{ mensajeNotificacion }}</p>
+          <i class="material-symbols-rounded text-semaforo-verde">check_circle</i>
+          <p>{{ mensajeNotificacion }}</p>
         </div>
+      </div>
+      <div
+        class="progreso_notificacion absolute left-1 bottom-1 h-1 scale-x-0 origin-left rounded-sm bg-semaforo-verde">
+      </div>
     </div>
-    <div class="progreso_notificacion absolute left-1 bottom-1 h-1 scale-x-0 origin-left rounded-sm bg-semaforo-rojo"></div>
-</div>
+
+    <!-- Notificación de error -->
+    <div v-if="mostrarNotificacion && tipoNotificacion === 'error'"
+      class="notificacion translate-y-8 absolute w-[max-content] left-0 right-0 top-6 ml-auto mr-auto rounded-md bg-semaforo-rojo_opacity text-mono-blanco shadow-semaforo-verde">
+      <div class="notificacion_body flex justify-center gap-3 items-center py-3 px-2">
+        <div class="flex gap-2 items-center">
+          <i class="material-symbols-rounded text-semaforo-rojo">cancel</i>
+          <p>{{ mensajeNotificacion }}</p>
+        </div>
+      </div>
+      <div class="progreso_notificacion absolute left-1 bottom-1 h-1 scale-x-0 origin-left rounded-sm bg-semaforo-rojo">
+      </div>
+    </div>
   </div>
 </template>

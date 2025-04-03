@@ -90,7 +90,7 @@ class DashboardController extends Controller
                 'aplicacion' => $aplicacion,
                 'rol' => $rol,
             ]);
-            
+
 
 
         }
@@ -132,6 +132,25 @@ class DashboardController extends Controller
         // Retornar en JSON (para usar en el modal)
         return response()->json($detalleCliente);
     }
+
+    public function update(Request $request, $aplicacion, $rol, $id)
+    {
+        $cliente = ClienteTaurus::findOrFail($id);
+
+        // Validar datos (ajusta las reglas según sea necesario)
+        $request->validate([
+            'nombres_ct' => 'required|string|max:25',
+            'apellidos_ct' => 'required|string|max:25',
+            // Otras validaciones...
+        ]);
+
+        $cliente->update($request->only('nombres_ct', 'apellidos_ct'));
+        // Si hay otras relaciones o campos, actualízalos según sea necesario
+
+        return response()->json($cliente);
+    }
+
+
     public function getClientesPorActivacion($aplicacion, $rol)
     {
         $clientes = ClienteTaurus::select(

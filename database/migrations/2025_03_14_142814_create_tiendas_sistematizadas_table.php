@@ -32,7 +32,7 @@ return new class extends Migration
         DB::table('tiendas_sistematizadas')->insert([
             [
                 'id_token' => '1',
-                'id_aplicacion_web' => '21',
+                'id_aplicacion_web' => '26',
                 'nombre_tienda'=> 'Taurus Comunity CO',
                 'email_tienda' => 'tauruscomunityco@gmail.com',
                 'telefono_tienda' => '3219631459',
