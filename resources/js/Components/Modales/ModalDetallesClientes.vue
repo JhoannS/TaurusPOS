@@ -9,7 +9,7 @@
         <span class="material-symbols-rounded">chevron_left</span>
         <p class="text-[12px]">Volver</p>
       </div>
-      <span class="material-symbols-rounded text-[18px] text-semaforo-amarillo cursor-pointer"  @click="editUser(detalleCliente)">ink_marker</span>
+      
       </div>
       
       <slot></slot>

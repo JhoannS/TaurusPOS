@@ -61,6 +61,8 @@ const user = props.auth.user
 const auth = usePage().props.auth;
 const clientes = ref(props.clientes);
 
+
+
 dayjs.locale('es')
 const formatFecha = (fecha) => {
   if (!fecha) return 'Sin fecha'

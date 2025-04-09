@@ -2,7 +2,7 @@
 import ModalDetalles from '@/Components/Modales/ModalDetallesClientes.vue';
 import ModalEditarCliente from '@/Components/Modales/ModalEditarClientes.vue';
 import { ref, computed, onMounted } from 'vue';
-import { router } from '@inertiajs/vue3';
+import { router,usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import empty from '@images/empty.svg';
@@ -38,8 +38,14 @@ const props = defineProps({
     required: true
   },
   success: String,
-  montoApagar: Number
+  montoApagar: Number,
 })
+
+const page = usePage()
+const aplicacion = page.props.aplicacion
+const rol = props.rol.nombre_rol
+
+console.log(rol)
 
 
 function getEstadoClass(estado) {
@@ -57,13 +63,15 @@ function getEstadoTokenClass(token) {
 }
 
 
+const listaClientes = ref([...props.clientes])
+
 const filteredClientes = computed(() => {
-  if (!props.clientes || !Array.isArray(props.clientes)) return [];
-  if (!props.searchQuery.trim()) return props.clientes;
+  if (!listaClientes.value || !Array.isArray(listaClientes.value)) return [];
+  if (!props.searchQuery.trim()) return listaClientes.value;
 
   const query = props.searchQuery.toLowerCase().trim();
 
-  return props.clientes.filter(cliente => {
+  return listaClientes.value.filter(cliente => {
     return (
       String(cliente.id).toLowerCase().includes(query) ||
       cliente.nombre_completo?.toLowerCase().includes(query) ||
@@ -77,6 +85,7 @@ const filteredClientes = computed(() => {
     );
   });
 });
+
 
 dayjs.locale('es');
 const formatFecha = (fecha) => {
@@ -107,6 +116,16 @@ function closeModal() {
   detalleCliente.value = null;
 }
 
+const goToEditarCliente = (id) => {
+  const aplicacion = props.aplicacion
+  const rol = props.rol.id // recuerda que `rol` es un objeto, usamos su ID
+
+  router.visit(route('aplicacion.editarClienteTaurus.id', {
+    aplicacion,
+    rol,
+    id
+  }))
+}
 
 const mensajeNotificacion = ref('')
 const tipoNotificacion = ref(null)
@@ -296,10 +315,16 @@ const gotaClase = computed(() => coloresBg[appName.value]);
                 class="material-symbols-rounded hover:text-essentials-primary cursor-pointer">
                 delete
               </button>
+              <button  @click="goToEditarCliente(cliente.id)"
+                class="material-symbols-rounded text-[18px] hover:text-semaforo-amarillo cursor-pointer">
+                ink_marker
+              </button>
               <button @click="openDetalle(cliente.id)"
                 class="material-symbols-rounded hover:text-blue-400 cursor-pointer">
-                eye_tracking
+                info
               </button>
+              
+              
             </div>
           </td>
         </tr>
