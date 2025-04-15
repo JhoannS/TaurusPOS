@@ -1,17 +1,12 @@
 <script>
 import { Head, usePage, router } from '@inertiajs/vue3';
+import { defineProps, computed } from 'vue';
 import Sidebar from '@/Components/Sidebar/Sidebar.vue';
-import BarraCalendario from '@/Components/BarraCalendario/BarraCalendario.vue';
-import DetallesPlan from '@/Components/Dashboard/DetallesPlan.vue';
 import SaludoOpciones from '@/Components/header/SaludoOpciones.vue';
-import CardHistorial from '@/Components/Dashboard/CardHistorial.vue';
 import dayjs from 'dayjs'
 import 'dayjs/locale/es' // ✅ Importa el idioma español
 
 dayjs.locale('es')
-
-import { defineProps, ref, onMounted, onUnmounted, computed } from 'vue';
-
 
 </script>
 

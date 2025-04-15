@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('id_plan_aplicacion')->nullable(false);
             $table->unsignedBigInteger('id_membresia')->nullable(false);
             $table->integer('dias_restantes')->nullable();
-            $table->timestamp('fecha_activacion')->nullable();
             $table->string('nombre_app')->nullable(false);
             $table->timestamp('fecha_creacion')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('fecha_modificacion')->default(DB::raw('CURRENT_TIMESTAMP'))->useCurrentOnUpdate();

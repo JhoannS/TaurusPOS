@@ -14,10 +14,11 @@ class PagoMembresia extends Model
     protected $fillable = [
         'id_cliente',
         'id_tienda',
-        'monto_total', // ✅ Agregado
+        'monto_total',
         'id_medio_pago',
         'id_estado',
-        'fecha_pago'
+        'fecha_pago',
+        'fecha_activacion' // ✅ nuevo
     ];
 
     public function cliente()

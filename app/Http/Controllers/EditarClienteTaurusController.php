@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\ClienteTaurus;
+use App\Models\Rol;
 use App\Models\TiendaSistematizada;
+use App\Models\TipoDocumento;
 use App\Models\Estados;
 use App\Models\Membresia;
+use App\Models\AplicacionWeb;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\Request;
 
 
 class EditarClienteTaurusController extends Controller
@@ -25,7 +29,22 @@ class EditarClienteTaurusController extends Controller
 
     public function editar($aplicacion, $rol, $id)
     {
-        $user = auth()->user();
+
+        // Cargar relaciones necesarias del usuario autenticado
+        $user = auth()->user()->load([
+            'rol',
+            'tienda',
+            'tienda.token',
+            'tienda.token.estado',
+            'tienda.estado',
+            'tienda.aplicacion',
+            'tienda.aplicacion.plan',
+            'tienda.aplicacion.plan.detalles',
+            'tienda.aplicacion.membresia',
+            'tienda.aplicacion.membresia.estado',
+            'estado',
+            'tipoDocumento'
+        ]);
 
         if (!in_array($user->rol->id, [1, 2, 3, 4])) {
             abort(403);
@@ -37,12 +56,22 @@ class EditarClienteTaurusController extends Controller
             DB::raw("CONCAT(clientes_taurus.nombres_ct, ' ', clientes_taurus.apellidos_ct) AS nombre_completo"),
             'clientes_taurus.nombres_ct',
             'clientes_taurus.apellidos_ct',
-            'clientes_taurus.telefono_ct as telefono',
-            'clientes_taurus.id_tienda',
+            'clientes_taurus.numero_documento_ct',
+            'clientes_taurus.email_ct',
+            'clientes_taurus.telefono_ct',
+            'clientes_taurus.id',
+            'clientes_taurus.id_rol',
             'clientes_taurus.id_estado',
+            'clientes_taurus.id_tienda',
+            'clientes_taurus.id_tipo_documento',
+            'clientes_taurus.id_estado',
+
+            'clientes_taurus.fecha_creacion',
+            'clientes_taurus.fecha_modificacion',
 
             DB::raw('COALESCE(tiendas_sistematizadas.nombre_tienda, "Sin tienda") as nombre_tienda'),
             'token_accesos.token_activacion as token',
+            'token_accesos.id_estado as id_estado_token',
             'aplicaciones_web.id as id_aplicacion',
             'aplicaciones_web.nombre_app as aplicacion',
             'membresias.id as id_membresia',
@@ -77,6 +106,27 @@ class EditarClienteTaurusController extends Controller
         $tiendas = TiendaSistematizada::all();
         $membresias = Membresia::all();
         $estados = Estados::all();
+        $roles = Rol::all();
+        $tipoDocumentos = TipoDocumento::all();
+        $aplicacionesAgrupadas = AplicacionWeb::with('membresia')
+            ->get()
+            ->groupBy('id_membresia')
+            ->map(function ($grupo, $idMembresia) {
+                return [
+                    'id_membresia' => $idMembresia,
+                    'nombre_membresia' => optional($grupo->first()->membresia)->nombre_membresia ?? 'Sin Membresía',
+                    'apps' => $grupo->map(function ($app) {
+                        return [
+                            'id' => $app->id,
+                            'nombre_app' => $app->nombre_app,
+                        ];
+                    })->values(),
+                ];
+            })
+            ->values();
+
+
+
 
         return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/EditarClienteTaurus/EditarClienteTaurus', [
             'auth' => ['user' => $user],
@@ -84,10 +134,45 @@ class EditarClienteTaurusController extends Controller
             'tiendas' => $tiendas,
             'membresias' => $membresias,
             'estados' => $estados,
-            'aplicacion' => $aplicacion,
-            'rol' => $rol,
+            'aplicacionesAgrupadas' => $aplicacionesAgrupadas, // 👈 nuevo
+            'roles' => $roles,
+            'tiposDocumento' => $tipoDocumentos,
         ]);
+
     }
+
+    public function actualizar(Request $request, $aplicacion, $rol, $id)
+    {
+        $cliente = ClienteTaurus::findOrFail($id);
+        $cliente->load('tienda.token'); // 👈 importante
+
+        $validated = $request->validate([
+            'nombres_ct' => 'required|string|max:100',
+            'apellidos_ct' => 'required|string|max:100',
+            'numero_documento_ct' => 'required|string|max:50|unique:clientes_taurus,numero_documento_ct,' . $cliente->id,
+            'email_ct' => 'nullable|email|max:100',
+            'telefono_ct' => 'nullable|string|max:20',
+            'id_rol' => 'required|exists:roles_administrativos,id',
+            'id_estado' => 'required|exists:estados,id',
+            'id_tienda' => 'required|exists:tiendas_sistematizadas,id',
+            'id_tipo_documento' => 'required|exists:tipo_documentos,id',
+            'id_estado_token' => 'nullable|exists:estados,id',
+        ]);
+
+        // Actualizar cliente
+        $cliente->fill($validated);
+        $cliente->fecha_modificacion = now();
+        $cliente->save();
+
+        // Actualizar token si existe
+        if ($request->filled('id_estado_token') && $cliente->tienda?->token) {
+            $cliente->tienda->token->id_estado = $request->id_estado_token;
+            $cliente->tienda->token->save();
+        }
+
+        return redirect()->back()->with('success', 'Cliente y estado del token actualizados correctamente');
+    }
+
 
     use AuthorizesRequests;
 

@@ -86,7 +86,7 @@ class DashboardController extends Controller
             return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Dashboard/Dashboard', [
                 'auth' => ['user' => $user],
                 'clientes' => $clientes,
-                'totalPrecio' => $totalPrecio ?: 0, // Asegurar que no sea NULL
+                'totalPrecio' => $totalPrecio ?: 'Sin precio', // Asegurar que no sea NULL
                 'aplicacion' => $aplicacion,
                 'rol' => $rol,
             ]);

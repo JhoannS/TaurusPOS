@@ -1,6 +1,5 @@
 <script setup>
 import ModalDetalles from '@/Components/Modales/ModalDetallesClientes.vue';
-import ModalEditarCliente from '@/Components/Modales/ModalEditarClientes.vue';
 import { ref, computed, onMounted } from 'vue';
 import { router,usePage } from '@inertiajs/vue3';
 import axios from 'axios';
@@ -43,10 +42,16 @@ const props = defineProps({
 
 const page = usePage()
 const aplicacion = page.props.aplicacion
-const rol = props.rol.nombre_rol
+const rol = props.rol.tipo_rol  
 
-console.log(rol)
+const goToEditarCliente = (id) => {
+  const nombreRol = props.rol.tipo_rol // 👈 Aquí obtienes el nombre del rol
+  const app = props.aplicacion // 👈 nombre de la app como "TaurusCO"
 
+  router.visit(route('aplicacion.editarClienteTaurus.id', { aplicacion: app, rol: nombreRol, id }))
+
+
+}
 
 function getEstadoClass(estado) {
   if (estado === 'Inactivo' || estado === 'Pendiente') return 'bg-semaforo-rojo';
@@ -116,16 +121,8 @@ function closeModal() {
   detalleCliente.value = null;
 }
 
-const goToEditarCliente = (id) => {
-  const aplicacion = props.aplicacion
-  const rol = props.rol.id // recuerda que `rol` es un objeto, usamos su ID
 
-  router.visit(route('aplicacion.editarClienteTaurus.id', {
-    aplicacion,
-    rol,
-    id
-  }))
-}
+
 
 const mensajeNotificacion = ref('')
 const tipoNotificacion = ref(null)
@@ -623,31 +620,6 @@ const gotaClase = computed(() => coloresBg[appName.value]);
       </div>
     </ModalDetalles>
 
-    <!-- Modal para ver detalles -->
-    <ModalDetalles :isOpen="showModalDetalle" @close="closeDetalle">
-      <div v-if="detalleCliente">
-        <div>
-          <p><strong>Nombre:</strong> {{ detalleCliente.nombres_ct }} {{ detalleCliente.apellidos_ct }}</p>
-          <!-- Icono para editar -->
-          <button @click="openEditModal" class="ml-4">
-            <span class="material-symbols-rounded">edit</span>
-          </button>
-        </div>
-        <!-- Aquí muestras otros detalles -->
-      </div>
-    </ModalDetalles>
-
-    <!-- Modal para editar datos del cliente -->
-    <ModalEditarCliente 
-      :isOpen="showModalEditar" 
-      :detalle-cliente="detalleCliente" 
-      @close="closeEditModal"
-      @updated="(updatedCliente) => { 
-          // Opcional: Actualiza la lista o refresca los datos
-          closeEditModal();
-          closeDetalle(); // Cierra el modal de detalles si lo deseas
-          // Aquí podrías actualizar la lista de clientes en vivo si fuera necesario
-        }" />
 
     <!-- Notificación de éxito -->
     <div v-if="mostrarNotificacion && tipoNotificacion === 'success'"
