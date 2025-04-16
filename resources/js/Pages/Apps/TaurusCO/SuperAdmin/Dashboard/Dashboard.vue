@@ -117,9 +117,12 @@ const logout = () => {
 
 <template>
 
-  <Head :title="`Tu App ${user.tienda?.aplicacion?.nombre_app || 'Dashboard'}`" />
-  <SaludoOpciones :auth="auth" />
-  <main class="flex justify-between w-full h-[85vh] gap-4 py-3 px-6">
+  <Head :title="`Bienvenido ${user.nombres_ct || 'Dashboard'}`" />
+
+  <div class="w-full h-[100%] px-[40px] py-[20px]">
+    <SaludoOpciones :auth="auth" />
+
+    <main class="flex justify-between w-full h-[80vh] gap-4 mt-3">
     <div class="righ w-full rounded-md">
 
       <!-- navegable -->
@@ -210,5 +213,7 @@ const logout = () => {
         </div>
       </div>
   </main>
+  </div>
+  
   
 </template>

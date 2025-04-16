@@ -279,7 +279,6 @@ const gotaClase = computed(() => coloresBg[appName.value]);
           <th class="p-2 text-left">Fecha pago</th>
           <th class="p-2 text-left">Estado pago</th>
           <th class="p-2 text-left">Token</th>
-          <th class="p-2 text-left">Creación</th>
           <th class="p-2 text-left">Acciones</th>
         </tr>
       </thead>
@@ -305,7 +304,7 @@ const gotaClase = computed(() => coloresBg[appName.value]);
             </span>
           </td>
 
-          <td class="text-[14px] p-2">{{ formatFecha(cliente.fecha_creacion) }}</td>
+        
           <td>
             <div class="flex gap-2 items-center">
               <button @click="confirmDelete(cliente.id)"

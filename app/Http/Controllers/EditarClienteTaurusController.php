@@ -187,8 +187,14 @@ class EditarClienteTaurusController extends Controller
 
         }
 
+        $nombreAplicacion = $cliente->tienda->aplicacion->nombre_app ?? null;
+        $rol = $cliente->rol->tipo_rol ?? null;
 
-        return redirect()->back()->with('success', 'Cliente y estado del token actualizados correctamente');
+        return redirect()->route('aplicacion.dashboard', [
+            'aplicacion' => ucfirst($nombreAplicacion),
+            'rol' => ucfirst($rol),
+        ])->with('success', 'Usuario módificado con éxito.');
+        
     }
 
 
