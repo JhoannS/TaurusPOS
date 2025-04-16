@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('membresias', function (Blueprint $table) {
             $table->id(); // ID autoincremental (clave primaria)
             $table->unsignedBigInteger('id_estado')->default(1); // Relación con la tabla estados
-            $table->unsignedBigInteger('id_pago')->default(1);
         
             $table->string('nombre_membresia'); // Nombre de la membresía
             $table->string('precio'); // Precio de la membresía

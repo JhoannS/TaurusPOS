@@ -15,13 +15,14 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_cliente');
             $table->unsignedBigInteger('id_tienda');
-            $table->string('monto_total')->default(0);
             $table->unsignedBigInteger('id_medio_pago');
             $table->unsignedBigInteger('id_estado');
+            $table->string('monto_total')->default(0);
         
             $table->timestamp('fecha_creacion')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('fecha_pago')->default(DB::raw('CURRENT_TIMESTAMP'))->useCurrentOnUpdate();
             $table->timestamp('fecha_activacion')->nullable();
+            $table->integer('dias_restantes')->nullable();
         
             $table->foreign('id_cliente')->references('id')->on('clientes_taurus');
             $table->foreign('id_tienda')->references('id')->on('tiendas_sistematizadas');
@@ -38,6 +39,7 @@ return new class extends Migration
                 'id_estado' => '8',
                 'fecha_pago'       => now(),
                 'fecha_activacion' => now(),
+                'dias_restantes' => '999999',
             ],
 
         ]);

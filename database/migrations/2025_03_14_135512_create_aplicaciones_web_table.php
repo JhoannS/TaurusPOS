@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->unsignedBigInteger('id_estado')->default(1);
             $table->unsignedBigInteger('id_plan_aplicacion')->nullable(false);
             $table->unsignedBigInteger('id_membresia')->nullable(false);
-            $table->integer('dias_restantes')->nullable();
             $table->string('nombre_app')->nullable(false);
             $table->timestamp('fecha_creacion')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('fecha_modificacion')->default(DB::raw('CURRENT_TIMESTAMP'))->useCurrentOnUpdate();
@@ -31,162 +30,136 @@ return new class extends Migration {
             [
                 'id_plan_aplicacion' => '1',
                 'id_membresia' => '1',
-                'dias_restantes' => '7',
                 'nombre_app' => 'Machine'
             ],
             [
                 'id_plan_aplicacion' => '1',
                 'id_membresia' => '1',
-                'dias_restantes' => '7',
                 'nombre_app' => 'Guru'
             ],
             [
                 'id_plan_aplicacion' => '1',
                 'id_membresia' => '1',
-                'dias_restantes' => '7',
                 'nombre_app' => 'Smart'
             ],
             [
                 'id_plan_aplicacion' => '1',
                 'id_membresia' => '1',
-                'dias_restantes' => '7',
                 'nombre_app' => 'Essentials'
             ],
             [
                 'id_plan_aplicacion' => '1',
                 'id_membresia' => '1',
-                'dias_restantes' => '30',
                 'nombre_app' => 'Shopper'
             ],
 
             [
                 'id_plan_aplicacion' => '2',
                 'id_membresia' => '2',
-                'dias_restantes' => '30',
                 'nombre_app' => 'Machine'
             ],
             [
                 'id_plan_aplicacion' => '2',
                 'id_membresia' => '2',
-                'dias_restantes' => '30',
                 'nombre_app' => 'Guru'
             ],
             [
                 'id_plan_aplicacion' => '2',
                 'id_membresia' => '2',
-                'dias_restantes' => '30',
                 'nombre_app' => 'Smart'
             ],
             [
                 'id_plan_aplicacion' => '2',
                 'id_membresia' => '2',
-                'dias_restantes' => '30',
                 'nombre_app' => 'Essentials'
             ],
             [
                 'id_plan_aplicacion' => '2',
                 'id_membresia' => '2',
-                'dias_restantes' => '30',
                 'nombre_app' => 'Shopper'
             ],
 
             [
                 'id_plan_aplicacion' => '3',
                 'id_membresia' => '3',
-                'dias_restantes' => '90',
                 'nombre_app' => 'Machine'
             ],
             [
                 'id_plan_aplicacion' => '3',
                 'id_membresia' => '3',
-                'dias_restantes' => '90',
                 'nombre_app' => 'Guru'
             ],
             [
                 'id_plan_aplicacion' => '3',
                 'id_membresia' => '3',
-                'dias_restantes' => '90',
                 'nombre_app' => 'Smart'
             ],
             [
                 'id_plan_aplicacion' => '3',
                 'id_membresia' => '3',
-                'dias_restantes' => '90',
                 'nombre_app' => 'Essentials'
             ],
             [
                 'id_plan_aplicacion' => '3',
                 'id_membresia' => '3',
-                'dias_restantes' => '90',
                 'nombre_app' => 'Shopper'
             ],
 
             [
                 'id_plan_aplicacion' => '4',
                 'id_membresia' => '4',
-                'dias_restantes' => '180',
                 'nombre_app' => 'Machine'
             ],
             [
                 'id_plan_aplicacion' => '4',
                 'id_membresia' => '4',
-                'dias_restantes' => '180',
                 'nombre_app' => 'Guru'
             ],
             [
                 'id_plan_aplicacion' => '4',
                 'id_membresia' => '4',
-                'dias_restantes' => '180',
                 'nombre_app' => 'Smart'
             ],
             [
                 'id_plan_aplicacion' => '4',
                 'id_membresia' => '4',
-                'dias_restantes' => '180',
                 'nombre_app' => 'Essentials'
             ],
             [
                 'id_plan_aplicacion' => '4',
                 'id_membresia' => '4',
-                'dias_restantes' => '180',
                 'nombre_app' => 'Shopper'
             ],
 
             [
                 'id_plan_aplicacion' => '3',
                 'id_membresia' => '5',
-                'dias_restantes' => '365',
                 'nombre_app' => 'Machine'
             ],
             [
                 'id_plan_aplicacion' => '3',
                 'id_membresia' => '5',
-                'dias_restantes' => '365',
                 'nombre_app' => 'Guru'
             ],
             [
                 'id_plan_aplicacion' => '3',
                 'id_membresia' => '5',
-                'dias_restantes' => '365',
                 'nombre_app' => 'Smart'
             ],
             [
                 'id_plan_aplicacion' => '3',
                 'id_membresia' => '5',
-                'dias_restantes' => '365',
                 'nombre_app' => 'Essentials'
             ],
             [
                 'id_plan_aplicacion' => '3',
                 'id_membresia' => '5',
-                'dias_restantes' => '365',
                 'nombre_app' => 'Shopper'
             ],
 
             [
                 'id_plan_aplicacion' => '4',
                 'id_membresia' => '6',
-                'dias_restantes' => '9999999',
                 'nombre_app' => 'TaurusCO'
             ],
 

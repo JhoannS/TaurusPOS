@@ -22,7 +22,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('membresias:reducir-dias')->hourly(); // Se ejecuta cada hora
+        $schedule->command('membresias:reducir-dias')->daily(); // o cada minuto para pruebas: ->everyMinute()
     }
 
 

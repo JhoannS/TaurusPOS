@@ -143,7 +143,7 @@ class EditarClienteTaurusController extends Controller
 
     public function actualizar(Request $request, $aplicacion, $rol, $id)
     {
-        $cliente = ClienteTaurus::findOrFail($id);
+        $cliente = ClienteTaurus::with(['tienda.token', 'tienda.pagoMembresiaActual'])->findOrFail($id);
         $cliente->load('tienda.token'); // 👈 importante
 
         $validated = $request->validate([
@@ -164,11 +164,29 @@ class EditarClienteTaurusController extends Controller
         $cliente->fecha_modificacion = now();
         $cliente->save();
 
-        // Actualizar token si existe
         if ($request->filled('id_estado_token') && $cliente->tienda?->token) {
             $cliente->tienda->token->id_estado = $request->id_estado_token;
             $cliente->tienda->token->save();
+
+            // Buscar el pago de membresía actual
+            $pagoMembresia = $cliente->tienda?->pagoMembresiaActual;
+
+
+
+            if ($pagoMembresia) {
+                \Log::info('Entrando a actualización de fecha_activacion', ['antes' => $pagoMembresia->fecha_activacion]);
+            
+                $pagoMembresia->fecha_activacion = now();
+                $pagoMembresia->save();
+            
+                \Log::info('Actualización hecha', ['después' => $pagoMembresia->fecha_activacion]);
+            } else {
+                \Log::warning('No se encontró pago activo para tienda ID: ' . $cliente->id_tienda);
+            }
+            
+
         }
+
 
         return redirect()->back()->with('success', 'Cliente y estado del token actualizados correctamente');
     }

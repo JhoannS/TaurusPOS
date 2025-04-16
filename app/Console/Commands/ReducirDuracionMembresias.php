@@ -12,27 +12,23 @@ class ReducirDuracionMembresias extends Command
 
     public function handle()
     {
-        // Reducir los días restantes en aplicaciones activas
-        DB::table('aplicaciones_web')
-            ->join('membresias', 'aplicaciones_web.id_membresia', '=', 'membresias.id')
-            ->join('tiendas_sistematizadas', 'tiendas_sistematizadas.id_aplicacion_web', '=', 'aplicaciones_web.id')
-            ->join('token_accesos', 'tiendas_sistematizadas.id_token', '=', 'token_accesos.id')
-            ->where('token_accesos.id_estado', 1)
-            ->where('aplicaciones_web.dias_restantes', '>', 0)
-            ->update([
-                'aplicaciones_web.dias_restantes' => DB::raw('dias_restantes - 1'),
-            ]);
-
-        // Cambiar estado en pagos_membresia cuando dias_restantes sea 0
+        // 1. Reducir días restantes en pagos_membresia activos (token activo y días > 0)
         DB::table('pagos_membresia')
-            ->join('clientes_taurus', 'pagos_membresia.id_cliente', '=', 'clientes_taurus.id')
             ->join('tiendas_sistematizadas', 'pagos_membresia.id_tienda', '=', 'tiendas_sistematizadas.id')
-            ->join('aplicaciones_web', 'tiendas_sistematizadas.id_aplicacion_web', '=', 'aplicaciones_web.id')
-            ->where('aplicaciones_web.dias_restantes', '<=', 0) // Si ya está en 0 o menos
+            ->join('token_accesos', 'tiendas_sistematizadas.id_token', '=', 'token_accesos.id')
+            ->where('token_accesos.id_estado', 1) // Token activo
+            ->where('pagos_membresia.dias_restantes', '>', 0)
             ->update([
-                'pagos_membresia.id_estado' => 9, // Estado "vencido"
+                'pagos_membresia.dias_restantes' => DB::raw('dias_restantes - 1'),
             ]);
 
-            $this->info('Días de membresías reducidos y estados actualizados.');
+        // 2. Cambiar estado cuando los días se agoten (estado vencido: id 9)
+        DB::table('pagos_membresia')
+            ->where('dias_restantes', '<=', 0)
+            ->update([
+                'id_estado' => 9, // Estado vencido
+            ]);
+
+        $this->info('Días de membresías reducidos correctamente y estados actualizados si era necesario.');
     }
 }
