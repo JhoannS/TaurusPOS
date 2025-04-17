@@ -43,6 +43,7 @@ class TiendaSistematizada extends Model
         return $this->belongsTo(TokenAcceso::class, 'id_token');
     }
 
+
     public function membresia()
     {
         return $this->belongsTo(Membresia::class, 'id_membresia');
@@ -55,11 +56,10 @@ class TiendaSistematizada extends Model
     }
 
     public function pagoMembresiaActual()
-{
-    return $this->hasOne(PagoMembresia::class, 'id_tienda')
-        ->where('id_estado', 1) // o el estado que uses para indicar “activo”
-        ->latestOfMany('fecha_creacion'); // ✅ Esto traerá el más reciente si hay varios
-}
+    {
+        return $this->hasOne(PagoMembresia::class, 'id_tienda')
+            ->latestOfMany(); // O usa un scope si quieres solo los activos
+    }
 
 
 

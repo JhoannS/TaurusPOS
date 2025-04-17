@@ -142,60 +142,70 @@ class EditarClienteTaurusController extends Controller
     }
 
     public function actualizar(Request $request, $aplicacion, $rol, $id)
-    {
-        $cliente = ClienteTaurus::with(['tienda.token', 'tienda.pagoMembresiaActual'])->findOrFail($id);
-        $cliente->load('tienda.token'); // 👈 importante
+{
+    $cliente = ClienteTaurus::with(['tienda.token', 'tienda.aplicacion.membresia', 'tienda.pagoMembresiaActual'])->findOrFail($id);
 
-        $validated = $request->validate([
-            'nombres_ct' => 'required|string|max:100',
-            'apellidos_ct' => 'required|string|max:100',
-            'numero_documento_ct' => 'required|string|max:50|unique:clientes_taurus,numero_documento_ct,' . $cliente->id,
-            'email_ct' => 'nullable|email|max:100',
-            'telefono_ct' => 'nullable|string|max:20',
-            'id_rol' => 'required|exists:roles_administrativos,id',
-            'id_estado' => 'required|exists:estados,id',
-            'id_tienda' => 'required|exists:tiendas_sistematizadas,id',
-            'id_tipo_documento' => 'required|exists:tipo_documentos,id',
-            'id_estado_token' => 'nullable|exists:estados,id',
-        ]);
+    $validated = $request->validate([
+        'nombres_ct' => 'required|string|max:100',
+        'apellidos_ct' => 'required|string|max:100',
+        'numero_documento_ct' => 'required|string|max:50|unique:clientes_taurus,numero_documento_ct,' . $cliente->id,
+        'email_ct' => 'nullable|email|max:100',
+        'telefono_ct' => 'nullable|string|max:20',
+        'id_rol' => 'required|exists:roles_administrativos,id',
+        'id_estado' => 'required|exists:estados,id',
+        'id_tienda' => 'required|exists:tiendas_sistematizadas,id',
+        'id_tipo_documento' => 'required|exists:tipo_documentos,id',
+        'id_estado_token' => 'nullable|exists:estados,id',
+    ]);
 
-        // Actualizar cliente
-        $cliente->fill($validated);
-        $cliente->fecha_modificacion = now();
-        $cliente->save();
+    // Actualizar cliente
+    $cliente->fill($validated);
+    $cliente->fecha_modificacion = now();
+    $cliente->save();
 
-        if ($request->filled('id_estado_token') && $cliente->tienda?->token) {
-            $cliente->tienda->token->id_estado = $request->id_estado_token;
-            $cliente->tienda->token->save();
+    // Actualizar el token si viene estado
+    if ($request->filled('id_estado_token') && $cliente->tienda?->token) {
+        $cliente->tienda->token->id_estado = $request->id_estado_token;
+        $cliente->tienda->token->save();
 
-            // Buscar el pago de membresía actual
-            $pagoMembresia = $cliente->tienda?->pagoMembresiaActual;
+        // Si el token está en estado activo, actualizamos la fecha de activación y días restantes
+        $estadoActivo = 1; // ID del estado "activo", cámbialo si tienes otro ID
 
+        if ((int)$request->id_estado_token === $estadoActivo) {
+            $pagoMembresia = $cliente->tienda->pagoMembresiaActual;
+            $membresia = $cliente->tienda->aplicacion->membresia;
 
-
-            if ($pagoMembresia) {
-                \Log::info('Entrando a actualización de fecha_activacion', ['antes' => $pagoMembresia->fecha_activacion]);
-            
+            if ($pagoMembresia && $membresia) {
                 $pagoMembresia->fecha_activacion = now();
+                $pagoMembresia->dias_restantes = $membresia->duracion ?? 0; // valor por defecto si no hay duracion
                 $pagoMembresia->save();
-            
-                \Log::info('Actualización hecha', ['después' => $pagoMembresia->fecha_activacion]);
-            } else {
-                \Log::warning('No se encontró pago activo para tienda ID: ' . $cliente->id_tienda);
             }
-            
-
         }
-
-        $nombreAplicacion = $cliente->tienda->aplicacion->nombre_app ?? null;
-        $rol = $cliente->rol->tipo_rol ?? null;
-
-        return redirect()->route('aplicacion.dashboard', [
-            'aplicacion' => ucfirst($nombreAplicacion),
-            'rol' => ucfirst($rol),
-        ])->with('success', 'Usuario módificado con éxito.');
-        
     }
+
+    $user = auth()->user()->load([
+        'rol',
+        'tienda',
+        'tienda.token',
+        'tienda.token.estado',
+        'tienda.estado',
+        'tienda.aplicacion',
+        'tienda.aplicacion.plan',
+        'tienda.aplicacion.plan.detalles',
+        'tienda.aplicacion.membresia',
+        'tienda.aplicacion.membresia.estado',
+        'estado',
+        'tipoDocumento'
+    ]);
+
+    $nombreAplicacion = $user->tienda->aplicacion->nombre_app ?? null;
+    $rol = $user->rol->tipo_rol ?? null;
+
+    return redirect()->route('aplicacion.dashboard', [
+        'aplicacion' => ucfirst($nombreAplicacion),
+        'rol' => ucfirst($rol),
+    ])->with('success', 'Usuario módificado con éxito.');
+}
 
 
     use AuthorizesRequests;
