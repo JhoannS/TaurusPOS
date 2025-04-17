@@ -30,6 +30,7 @@
         "mitt": "^3.0.1",
         "pusher-js": "^8.4.0",
         "qrcode": "^1.5.4",
+        "socket.io-client": "^4.8.1",
         "vue-router": "^4.5.0",
         "xlsx": "^0.18.5",
         "ziggy": "^2.4.0",

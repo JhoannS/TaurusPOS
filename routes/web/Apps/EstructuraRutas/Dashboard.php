@@ -24,6 +24,14 @@ Route::middleware('auth')->group(function () {
         // ✅ Ruta para actualizar cliente    
         Route::put('/clientes/{id}', [DashboardController::class, 'update'])->name('clientes.update');
 
+        // ✅ Ruta para dinero activo (con prefijo de aplicación y rol)
+        Route::get('/dashboard/dinero-activo', [DashboardController::class, 'getDineroActivo'])
+            ->name('dinero.activo');
+
+        Route::get('/clientes/lista', [DashboardController::class, 'listarClientes'])
+            ->name('clientes.lista');
+
+
     });
 });
 

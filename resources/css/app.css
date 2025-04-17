@@ -593,3 +593,22 @@ body {
     transform: scaleX(1);
   }
 }
+
+@keyframes pingTexto {
+  0% { color: #00c853; transform: scale(1.05); }
+  50% { color: #43a047; transform: scale(1.08); }
+  100% { color: inherit; transform: scale(1); }
+}
+
+.animate-ping-texto {
+  animation: pingTexto 0.8s ease-in-out;
+}
+
+@keyframes parpadeo {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.animate-parpadeo {
+  animation: parpadeo 1s ease-in-out;
+}

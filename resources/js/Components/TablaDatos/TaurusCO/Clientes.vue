@@ -68,15 +68,15 @@ function getEstadoTokenClass(token) {
 }
 
 
-const listaClientes = ref([...props.clientes])
+const searchQuery = ref('');
 
 const filteredClientes = computed(() => {
-  if (!listaClientes.value || !Array.isArray(listaClientes.value)) return [];
-  if (!props.searchQuery.trim()) return listaClientes.value;
+  if (!props.clientes || !Array.isArray(props.clientes)) return [];
+  if (!searchQuery.value.trim()) return props.clientes;
 
-  const query = props.searchQuery.toLowerCase().trim();
+  const query = searchQuery.value.toLowerCase().trim();
 
-  return listaClientes.value.filter(cliente => {
+  return props.clientes.filter(cliente => {
     return (
       String(cliente.id).toLowerCase().includes(query) ||
       cliente.nombre_completo?.toLowerCase().includes(query) ||
@@ -90,7 +90,6 @@ const filteredClientes = computed(() => {
     );
   });
 });
-
 
 dayjs.locale('es');
 const formatFecha = (fecha) => {
@@ -173,9 +172,7 @@ const deleteCliente = (id) => {
       props.clientes = props.clientes.filter(cliente => cliente.id !== id);
 
       mostrarMensaje('Cliente eliminado con éxito', 'success');
-      setTimeout(() => {
-        location.reload();
-      }, 3000);
+      
 
     },
     onError: (error) => {
@@ -236,6 +233,36 @@ const formatCOP = (value) => {
   });
 };
 
+const clientes = ref([])
+const clientesPrevios = ref([])
+const animarTabla = ref(false)
+
+const cargarClientes = async () => {
+  try {
+    const { data } = await axios.get(route('clientes.lista', {
+      aplicacion: props.aplicacion,
+      rol: props.auth.user.rol
+    }))
+
+    const nuevoHash = JSON.stringify(data)
+    const previoHash = JSON.stringify(clientesPrevios.value)
+
+    if (nuevoHash !== previoHash) {
+      clientes.value = data
+      clientesPrevios.value = data
+
+      animarTabla.value = true
+      setTimeout(() => animarTabla.value = false, 1000)
+    }
+  } catch (error) {
+    console.error('Error al cargar los clientes:', error)
+  }
+}
+
+onMounted(() => {
+  cargarClientes()
+  // setInterval(cargarClientes, 5000)
+})
 
 const coloresBg = {
   'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
@@ -283,7 +310,7 @@ const gotaClase = computed(() => coloresBg[appName.value]);
         </tr>
       </thead>
       <transition-group tag="tbody" @before-enter="handleBeforeEnter" @before-leave="handleBeforeLeave">
-        <tr v-for="cliente in filteredClientes" :key="cliente.id">
+        <tr v-for="cliente in clientes" :key="cliente.id">
           <td class="text-[14px] p-2">{{ cliente.id }}</td>
           <td class="text-[14px] p-2">{{ cliente.nombre_completo }}</td>
           <td class="text-[14px] p-2">{{ cliente.telefono }}</td>
@@ -328,7 +355,7 @@ const gotaClase = computed(() => coloresBg[appName.value]);
       </transition-group>
     </table>
 
-    <div v-if="filteredClientes.length === 0" class="text-center mt-10 font-bold text-2xl text-gray-500">
+    <div v-if="clientes.length === 0" class="text-center mt-10 font-bold text-2xl text-gray-500">
       <div class="w-full flex items-center justify-center">
         <img :src="empty" alt="Logo" class=" w-[25%] my-2" />
       </div>
@@ -404,8 +431,8 @@ const gotaClase = computed(() => coloresBg[appName.value]);
 
               <div class=" flex justify-end items-center">
                
-                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
-                    :class='[textoClase]'>timer</span>{{ detalleCliente.tienda?.aplicacion?.dias_restantes || 'Sin duración' }} días restantes</p>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]" :class="[textoClase]">timer</span>{{ 
+                  detalleCliente.tienda?.pagos_membresia?.dias_restantes || 'Sin duración' }} días restantes</p>
               </div>
 
               <div class=" flex justify-between items-center">

@@ -1,6 +1,6 @@
 <script setup>
 import { router, Head, usePage } from '@inertiajs/vue3';
-import { ref, onMounted, onUnmounted, computed } from 'vue';
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
 import axios from 'axios';
 import 'dayjs/locale/es';
 import dayjs from 'dayjs';
@@ -70,20 +70,62 @@ const formatFecha = (fecha) => {
 }
 
 const clientesPorActivacion = ref([])
+const clientesPrevios = ref([])
+const animarClientes = ref(false)
+
 const cargarClientesPorActivacion = async () => {
   try {
     const { data } = await axios.get(route('clientes.activacion', {
       aplicacion: props.aplicacion,
       rol: props.auth.user.rol
     }))
-    clientesPorActivacion.value = data
+
+    // Comparar si hay cambios
+    const nuevoHash = JSON.stringify(data)
+    const previoHash = JSON.stringify(clientesPrevios.value)
+
+    if (nuevoHash !== previoHash) {
+      clientesPrevios.value = data
+      clientesPorActivacion.value = data
+
+      animarClientes.value = true
+      setTimeout(() => (animarClientes.value = false), 1000)
+    }
   } catch (error) {
     console.error('Error al cargar clientes:', error)
   }
 }
 
+
+const dineroActivo = ref(0)
+const dineroAnterior = ref(0)
+const animarCambio = ref(false)
+
+const cargarDineroActivo = async () => {
+  try {
+    const { data } = await axios.get(route('dinero.activo', {
+      aplicacion: props.aplicacion,
+      rol: props.auth.user.rol
+    }))
+
+    if (data.total_activo !== dineroActivo.value) {
+      dineroAnterior.value = dineroActivo.value
+      dineroActivo.value = data.total_activo
+
+      animarCambio.value = true
+      setTimeout(() => animarCambio.value = false, 1000)
+    }
+  } catch (error) {
+    console.error('Error al cargar dinero activo:', error)
+  }
+}
+
 onMounted(() => {
+  cargarDineroActivo()
   cargarClientesPorActivacion()
+
+  //  setInterval(cargarDineroActivo, 5000)
+  //  setInterval(cargarClientesPorActivacion, 5000)
 })
 
 
@@ -123,71 +165,72 @@ const logout = () => {
     <SaludoOpciones :auth="auth" />
 
     <main class="flex justify-between w-full h-[80vh] gap-4 mt-3">
-    <div class="righ w-full rounded-md">
+      <div class="righ w-full rounded-md">
 
-      <!-- navegable -->
-      <div class="options flex gap-1 items-center text-[14px]">
-        <p class="font-bold flex items-center gap-1"><span class="material-symbols-rounded">home</span> Inicio</p>
-      </div>
-      <h1 class="text-[25px] my-3">Dashboard:</h1>
-      <div class="cards flex justify-between gap-3">
-        <div
-          class="border  bg-secundary-opacity border-secundary-light rounded-md w-[40%] p-2 flex justify-between items-center">
-          <div class="metodoPago-monto">
-            <p class="text-[14px]">Dinero activo:</p>
-            <p class="font-bold text-[18px]">  $</p>
-          </div>
-          <div class="contador p-2 rounded-md flex justify-center items-center w-10 h-10 font-bold" :class="[bgClase]">
-            <span class="material-symbols-rounded">
-              attach_money
-            </span>
-          </div>
+        <!-- navegable -->
+        <div class="options flex gap-1 items-center text-[14px]">
+          <p class="font-bold flex items-center gap-1"><span class="material-symbols-rounded">home</span> Inicio</p>
         </div>
+        <h1 class="text-[25px] my-3">Dashboard:</h1>
+        <div class="cards flex justify-between gap-3">
 
-        <div
-          class="border  bg-secundary-opacity border-secundary-light rounded-md w-full p-2 flex justify-between items-center">
-          <div class="clientesInactivos">
-            <p class="text-[14px]">Clientes por activación:</p>
-
-
-            <div v-if="clientesPorActivacion.length === 0" class="text-semaforo-verde font-semibold">
-              Estás al día, muy bien 👌
+          <div
+            class="border bg-secundary-opacity border-secundary-light rounded-md w-[40%] p-2 flex justify-between items-center">
+            <div class="metodoPago-monto">
+              <p class="text-[14px]">Dinero activo:</p>
+              <p :class="['font-bold text-[18px]', { 'animate-ping-texto': animarCambio }]">
+                $ {{ dineroActivo.toLocaleString() }}
+              </p>
             </div>
+            <div class="contador p-2 rounded-md flex justify-center items-center w-10 h-10 font-bold"
+              :class="[bgClase]">
+              <span class="material-symbols-rounded">attach_money</span>
+            </div>
+          </div>
 
 
-            <div v-else>
-              <div v-for="cliente in clientesPorActivacion" :key="cliente.id"
-                class="clientesActivacion flex justify-between items-center gap-4 w-full">
-                <div class="flex items-center gap-2">
-                  <div class="h-[12px] w-[20px] rounded-full" :class="[bgClase]" ></div>
-                  <div>
-                    <h3 class="font-semibold">{{ cliente.nombres_ct }} {{ cliente.apellidos_ct }}</h3>
-                    <p class="-mt-[5px] text-secundary-light text-[13px] font-medium">
-                      {{ cliente.nombre_tienda }}
-                    </p>
+          <div
+            class="border  bg-secundary-opacity border-secundary-light rounded-md w-full p-2 flex justify-between items-center">
+            <div class="clientesInactivos">
+              <p class="text-[14px]">Clientes por activación:</p>
+
+              <div v-if="clientesPorActivacion.length === 0" class="text-semaforo-verde font-semibold">
+                Estás al día, muy bien 👌
+              </div>
+
+              <div v-else :class="{ 'animate-ping-texto': animarClientes }" class="transition-all duration-500">
+                <div v-for="cliente in clientesPorActivacion" :key="cliente.id"
+                  class="clientesActivacion flex justify-between items-center gap-4 w-full">
+                  <div class="flex items-center gap-2">
+                    <div class="h-[12px] w-[20px] rounded-full" :class="[bgClase]"></div>
+                    <div>
+                      <h3 class="font-semibold">{{ cliente.nombres_ct }} {{ cliente.apellidos_ct }}</h3>
+                      <p class="-mt-[5px] text-secundary-light text-[13px] font-medium">
+                        {{ cliente.nombre_tienda }}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
+          </div>
         </div>
-      </div>
-      <!-- header administrativo -->
-      <div class="titulo-input-btn my-4 flex justify-between items-center gap-5">
-        <h4 class="font-semibold text-[25px]">Gestion de tauranos</h4>
-        <div class="input-buscador">
-          <input v-model="searchQuery" type="search" placeholder="Buscar clientes..." class="" />
-          <span class="material-symbols-rounded" :class='[textoClase]'>travel_explore</span>
+        <!-- header administrativo -->
+        <div class="titulo-input-btn my-4 flex justify-between items-center gap-5">
+          <h4 class="font-semibold text-[25px]">Gestion de tauranos</h4>
+          <div class="input-buscador">
+            <input v-model="searchQuery" type="search" placeholder="Buscar clientes..." class="" />
+            <span class="material-symbols-rounded" :class='[textoClase]'>travel_explore</span>
+          </div>
         </div>
+        <ExportarExcel idTabla="tabla" nombreArchivo="Movimientos_Almacenados" titulo="Movimientos almacenados" />
+        <!-- formulario -->
+        <Clientes :auth="auth" :user-id="auth.user.id"
+          :rol="typeof auth.user.rol === 'object' ? auth.user.rol : { id: auth.user.rol }" :aplicacion="aplicacion"
+          :clientes="clientes" :searchQuery="searchQuery" />
       </div>
-      <ExportarExcel idTabla="tabla" nombreArchivo="Movimientos_Almacenados" titulo="Movimientos almacenados" />
-      <!-- formulario -->
-      <Clientes :auth="auth" :user-id="auth.user.id"
-        :rol="typeof auth.user.rol === 'object' ? auth.user.rol : { id: auth.user.rol }" :aplicacion="aplicacion"
-        :clientes="clientes" :searchQuery="searchQuery" />
-    </div>
-    <div v-if="mostrarNotificacion && tipoNotificacion === 'success'"
+      <div v-if="mostrarNotificacion && tipoNotificacion === 'success'"
         class="notificacion translate-y-8 absolute w-[max-content] left-0 right-0 top-6 ml-auto mr-auto rounded-md bg-semaforo-verde_opacity text-mono-blanco shadow-semaforo-verde">
         <div class="notificacion_body flex justify-center gap-3 items-center py-3 px-2">
           <div class="flex gap-2 items-center">
@@ -212,8 +255,8 @@ const logout = () => {
           class="progreso_notificacion absolute left-1 bottom-1 h-1 scale-x-0 origin-left rounded-sm bg-semaforo-rojo">
         </div>
       </div>
-  </main>
+    </main>
   </div>
-  
-  
+
+
 </template>

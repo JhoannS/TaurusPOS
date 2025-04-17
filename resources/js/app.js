@@ -8,6 +8,8 @@ import { Ziggy } from './ziggy';
 import Notifications from './Components/DeteccionInternet/Notifications.vue';
 
 const pages = import.meta.glob('./Pages/**/*.vue');
+import Echo from 'laravel-echo';
+
 
 const resolvePageComponent = (name) => {
     const path = `./Pages/${name}.vue`;
@@ -37,6 +39,8 @@ createInertiaApp({
 
         app.mount(el);
         return app;
+
+        
     },
 });
 

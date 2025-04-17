@@ -35,6 +35,7 @@ class DashboardController extends Controller
             'tienda.aplicacion.plan.detalles',
             'tienda.aplicacion.membresia',
             'tienda.aplicacion.membresia.estado',
+            'tienda.pagosMembresia',  // Nota que "pagosMembresia" está en singular
             'estado',
             'tipoDocumento'
         ]);
@@ -64,7 +65,7 @@ class DashboardController extends Controller
                 // ✅ Estado, monto y fecha desde pagos_membresia
                 'pagos_membresia.monto_total as monto_pago',
                 'pagos_membresia.fecha_pago as fecha_pago',
-                'estado_pago.tipo_estado as estado_pago'
+                'estado_pago.tipo_estado as estado_pago',
 
             )
                 ->leftJoin('tiendas_sistematizadas', 'clientes_taurus.id_tienda', '=', 'tiendas_sistematizadas.id')
@@ -99,6 +100,50 @@ class DashboardController extends Controller
     }
 
 
+    public function listarClientes($aplicacion, $rol)
+    {
+        $user = auth()->user()->load(['rol', 'tienda.aplicacion']);
+
+        if (!in_array($user->rol->id, [1, 2, 3, 4])) {
+            abort(403, 'No tienes permisos para acceder a esta sección.');
+        }
+
+        if ($user->tienda && $user->tienda->aplicacion->nombre_app === $aplicacion) {
+            $clientes = ClienteTaurus::select(
+                'clientes_taurus.id',
+                \DB::raw("CONCAT(clientes_taurus.nombres_ct, ' ', clientes_taurus.apellidos_ct) AS nombre_completo"),
+                'clientes_taurus.telefono_ct as telefono',
+                \DB::raw('COALESCE(tiendas_sistematizadas.nombre_tienda, "Sin tienda") as nombre_tienda'),
+                'token_accesos.token_activacion as token',
+                'aplicaciones_web.nombre_app as aplicacion',
+                'membresias.nombre_membresia as membresia',
+                \DB::raw('IFNULL(membresias.precio, 0) as precio'),
+                \DB::raw('COALESCE(estados.tipo_estado, "Sin estado") as estado_tipo'),
+                \DB::raw('COALESCE(token_estado.tipo_estado, "Sin estado") as estado_token'),
+                'clientes_taurus.fecha_creacion',
+                'pagos_membresia.monto_total as monto_pago',
+                'pagos_membresia.fecha_pago as fecha_pago',
+                'estado_pago.tipo_estado as estado_pago'
+            )
+                ->leftJoin('tiendas_sistematizadas', 'clientes_taurus.id_tienda', '=', 'tiendas_sistematizadas.id')
+                ->leftJoin('token_accesos', 'tiendas_sistematizadas.id_token', '=', 'token_accesos.id')
+                ->leftJoin('aplicaciones_web', 'tiendas_sistematizadas.id_aplicacion_web', '=', 'aplicaciones_web.id')
+                ->leftJoin('membresias', 'aplicaciones_web.id_membresia', '=', 'membresias.id')
+                ->leftJoin('estados', 'clientes_taurus.id_estado', '=', 'estados.id')
+                ->leftJoin('estados as token_estado', 'token_accesos.id_estado', '=', 'token_estado.id')
+                ->leftJoin('pagos_membresia', 'clientes_taurus.id', '=', 'pagos_membresia.id_cliente')
+                ->leftJoin('estados as estado_pago', 'pagos_membresia.id_estado', '=', 'estado_pago.id')
+                ->orderBy('clientes_taurus.fecha_creacion', 'DESC')
+                ->get();
+
+            return response()->json($clientes);
+        }
+
+        return response()->json([], 403);
+    }
+
+
+
     // Agrega este método al DashboardController
     public function detalle($aplicacion, $rol, $idCliente)
     {
@@ -124,6 +169,7 @@ class DashboardController extends Controller
             'tienda.aplicacion.plan.detalles',
             'tienda.aplicacion.membresia',
             'tienda.aplicacion.membresia.estado',
+            'tienda.pagosMembresia',  // Nota que "pagosMembresia" está en singular
             'estado',
             'tipoDocumento',
             'membresia'
@@ -167,6 +213,17 @@ class DashboardController extends Controller
         return response()->json($clientes);
     }
 
+    public function getDineroActivo()
+    {
+        $dineroActivo = DB::table('pagos_membresia')
+            ->where('id_estado', 8) // Estado activo
+            ->where('dias_restantes', '>', 0) // Opcional: solo los que aún están vigentes
+            ->sum('monto_total'); // Asegúrate que este campo exista
+
+        return response()->json([
+            'total_activo' => ($dineroActivo),
+        ]);
+    }
 
 
     use AuthorizesRequests;
@@ -177,7 +234,7 @@ class DashboardController extends Controller
         $cliente = ClienteTaurus::with([
             'rol',
             'tienda.token',
-            'tienda.pagosMembresias',
+            'tienda.pagosMembresia',
             'tienda.membresia.detallesPlan'
         ])->find($id);
 
@@ -189,8 +246,8 @@ class DashboardController extends Controller
 
         // ✅ Eliminar relaciones en cascada
         if ($cliente->tienda) {
-            if ($cliente->tienda->pagosMembresias) {
-                $cliente->tienda->pagosMembresias()->delete();
+            if ($cliente->tienda->pagosMembresia) {
+                $cliente->tienda->pagosMembresia()->delete();
             }
             if ($cliente->tienda->token) {
                 $cliente->tienda->token()->delete();

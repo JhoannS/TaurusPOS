@@ -46,7 +46,10 @@ const props = defineProps({
   },
 })
 
+const aplicacion = props.auth?.user?.tienda?.aplicacion?.nombre_app || 'Sin app';
+const rol = props.auth.user.rol?.tipo_rol || 'Sin rol'; // Obtén el tipo de rol
 
+const dashboardRoute = computed(() => new URL(route('aplicacion.dashboard', { aplicacion, rol }), window.location.origin).pathname);
 
 const form = ref({
   nombres_ct: props.cliente.nombres_ct || '',
@@ -194,8 +197,9 @@ const handleInput = (event, field) => {
 
 
       <!-- navegable -->
-      <div class="options flex gap-1 items-center text-[14px] mt-4">
-        <a class="hover:text-essentials-secundary">
+      <div class="options flex gap-1 items-center text-[14px] mt-4 cursor-pointer">
+        <a :href="route('aplicacion.dashboard', { aplicacion, rol })"
+        class="hover:text-essentials-secundary">
           <p>Dashboard</p>
         </a>
         <span class="material-symbols-rounded text-[18px]">chevron_right</span>

@@ -119,7 +119,7 @@ const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app 
 
 const bgFocus = computed(() => colores[appName.value]);
 const bg = computed(() => colores2[appName.value]);
-const ruby = computed(() => props.auth.user.tienda?.aplicacion?.membresia?.duracion || 'sin dias');
+const diasRestantes = computed(() => props.auth.user?.tienda?.pagos_membresia?.dias_restantes ?? 'sin días');
 
 </script>
 
@@ -132,10 +132,11 @@ const ruby = computed(() => props.auth.user.tienda?.aplicacion?.membresia?.durac
                     <div v-if="auth && auth.user">
                         <h3 class="font-semibold">{{ auth.user.tienda?.nombre_tienda || 'Sin tienda' }}</h3>
                         <p class="-mt-[5px] text-secundary-light text-[13px] font-medium">
-                            {{ auth.user.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }} - {{ ruby
-                                === 999999 ? "Membresía Infinita" : ruby + " días restantes." }}
-                        </p>
+    {{ auth.user.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }} -
+    {{ diasRestantes === 999999 ? "Membresía Infinita" : diasRestantes + " días restantes." }}
+  </p>
                     </div>
+                  
                     <div v-else>
                         <p>Cargando información del usuario...</p>
                     </div>

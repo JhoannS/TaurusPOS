@@ -42,6 +42,7 @@ class EditarClienteTaurusController extends Controller
             'tienda.aplicacion.plan.detalles',
             'tienda.aplicacion.membresia',
             'tienda.aplicacion.membresia.estado',
+            'tienda.pagosMembresia',  // Nota que "pagosMembresia" está en singular
             'estado',
             'tipoDocumento'
         ]);
