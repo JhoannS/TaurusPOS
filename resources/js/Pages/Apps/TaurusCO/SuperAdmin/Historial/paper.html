@@ -1,0 +1,25 @@
+<div v-for="a in auditorias" :key="a.id"
+                        class="anuncio mr-2 flex justify-between gap-3 items-center border border-secundary-light rounded-lg p-3">
+                        <div class="iconoIfo flex items-center gap-3">
+                            <span class="material-symbols-rounded p-3 rounded-lg"
+                                :class="iconos[a.accion]?.color || iconos.default.color">
+                                {{ iconos[a.accion]?.icon || iconos.default.icon }}
+                            </span>
+                            <div class="info">
+                                <p>
+                                    Se ha <strong>{{ a.accion }}</strong> el <strong>{{ a.modelo }}</strong>
+                                    <template v-if="a.modelo_id"> con ID <strong>#{{ a.modelo_id }}</strong></template>
+                                </p>
+                                <div class="creacion-id flex justify-between text-[12px]">
+                                    <p>Acción realizada por: <span>{{ a.usuario }}</span>.</p>
+                                    <p>ID movimiento: <span>{{ a.id }}</span>.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fecha-categoria flex flex-col items-end gap-2 text-[12px]">
+                            <p>{{ formatFecha(a.fecha) }}</p>
+                            <p class="p-2 rounded" :class="iconos[a.accion]?.color || iconos.default.color">
+                                {{ a.comentario }}
+                            </p>
+                        </div>
+                    </div>

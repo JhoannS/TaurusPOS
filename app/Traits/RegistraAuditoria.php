@@ -8,7 +8,7 @@ use App\Models\ClienteTaurus;
 
 trait RegistraAuditoria
 {
-    public function registrarAuditoria($accion, $modelo = null, $modelo_id = null, $comentario = null, $cambios = null)
+    public function registrarAuditoria($accion, $modelo, $modelo_id, $comentario, $cambios = [])
     {
         $userAgent = request()->header('User-Agent');
         $plataforma = null;
@@ -28,8 +28,11 @@ trait RegistraAuditoria
 
         $user = ClienteTaurus::where('numero_documento_ct', auth()->id())->first();
 
+        $user = auth()->user();
+
+
         Auditoria::create([
-            'user_id' => $user?->id,
+            'user_id' => $user->id,
             'modelo' => $modelo,
             'modelo_id' => $modelo_id,
             'accion' => $accion,
@@ -38,7 +41,7 @@ trait RegistraAuditoria
             'url' => request()->fullUrl(),
             'navegador' => request()->header('User-Agent'),
             'plataforma' => $plataforma,
-            'cambios' => is_array($cambios) ? json_encode($cambios) : $cambios,
+            'cambios' => !empty($cambios) ? json_encode($cambios) : null,
             'created_at' => now(),
         ]);
     }

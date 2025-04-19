@@ -4,6 +4,15 @@ import { usePage, Head } from '@inertiajs/vue3';
 import { route } from 'ziggy-js';
 import Sidebar from '@/Components/Sidebar/Sidebar.vue';
 import SaludoOpciones from '@/Components/header/SaludoOpciones.vue';;
+import dayjs from 'dayjs'
+import 'dayjs/locale/es'
+import localizedFormat from 'dayjs/plugin/localizedFormat'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(localizedFormat)
+dayjs.extend(relativeTime)
+dayjs.locale('es')
+
 
 const props = defineProps({
     auth: Object,
@@ -16,6 +25,14 @@ const page = usePage();
 const aplicacion = props.auth?.user?.tienda?.aplicacion?.nombre_app || 'Sin app';
 const rol = props.auth.user.rol?.tipo_rol || 'Sin rol'; // Obtén el tipo de rol
 
+const formatFecha = (fecha) => {
+    if (!fecha) return 'Sin fecha'
+
+    const fechaStr = typeof fecha === 'string' ? fecha : new Date(fecha).toISOString()
+    const fechaObj = dayjs(fechaStr)
+
+    return `${fechaObj.format('dddd D [de] MMMM [de] YYYY [a las] h:mm a')} (${fechaObj.fromNow()})`
+}
 
 // Definir los colores
 const bgColor = {
@@ -78,13 +95,16 @@ const hoverClass = computed(() => {
 
 // Mapeo de acciones a iconos y colores
 const iconos = {
-  create: { icon: 'add_circle', color: 'bg-green-200 text-green-800' },
-  update: { icon: 'edit', color: 'bg-yellow-200 text-yellow-800' },
-  delete: { icon: 'delete', color: 'bg-red-200 text-red-800' },
-  login:  { icon: 'login', color: 'bg-blue-200 text-blue-800' },
-  navegacion: { icon: 'visibility', color: 'bg-gray-200 text-gray-800' },
-  default: { icon: 'info', color: 'bg-slate-200 text-slate-800' }
+    create: { icon: 'add_circle', color: 'bg-green-200 text-green-800' },
+    Modificado: { icon: 'edit', color: 'bg-gradient-to-r from-green-200 to-green-400 text-green-900' },
+    delete: { icon: 'delete', color: 'bg-red-200 text-red-800' },
+    Iniciado_sesión: { icon: 'Login', color: 'bg-gradient-to-r from-blue-200 to-blue-400 text-blue-900' },
+    Cerrado_sesión: { icon: 'Logout', color: 'bg-gradient-to-r from-orange-200 to-orange-400 text-orange-900 ' },
+    navegacion: { icon: 'visibility', color: 'bg-gray-200 text-gray-800' },
+    default: { icon: 'info', color: 'bg-slate-200 text-slate-800' }
 }
+
+
 
 
 const bgFocus = computed(() => bgColor[appName.value]);
@@ -189,31 +209,37 @@ const bg = computed(() => colores2[appName.value]);
                 </div>
 
                 <div class="cardInfo my-4 flex flex-col gap-2 h-[65vh] max-h-[80vh] overflow-y-auto scrollbar-custom">
+                    <transition-group name="fade" tag="div">
                     <div v-for="a in auditorias" :key="a.id"
-                        class="anuncio mr-2 flex justify-between gap-3 items-center border border-secundary-light rounded-lg p-3">
+                        class="anuncio mr-2 flex justify-between gap-3 items-center my-1 rounded-lg p-3">
                         <div class="iconoIfo flex items-center gap-3">
-                            <span class="material-symbols-rounded p-3 rounded-lg"
-                                :class="iconos[a.accion]?.color || iconos.default.color">
-                                {{ iconos[a.accion]?.icon || iconos.default.icon }}
+                            <span
+                                class="material-symbols-rounded p-3 rounded-lg shadow transition-transform duration-300 hover:scale-110"
+                                :class="iconos[a.accion_normalizada]?.color || iconos.default.color">
+                                {{ iconos[a.accion_normalizada]?.icon || iconos.default.icon }}
                             </span>
-                            <div class="info">
+
+                            <div class="info w-full">
                                 <p>
-                                    Se ha <strong>{{ a.accion }}</strong> el <strong>{{ a.modelo }}</strong>
-                                    <template v-if="a.modelo_id">con ID <strong>#{{ a.modelo_id }}</strong></template>
+                                    El <template v-if="a.modelo_id"> usuario: <strong>{{ a.modelo_id
+                                            }}</strong></template>
+                                    se ha <strong>{{ a.accion }}</strong>
+
                                 </p>
-                                <div class="creacion-id flex justify-between text-[12px]">
-                                    <p>Creado por: <span>{{ a.usuario }}</span>.</p>
+                                <div class="creacion-id gap-4 flex justify-between text-[12px]">
+                                    <p>Acción realizada por: <span>{{ a.usuario }}</span>.</p>
                                     <p>ID movimiento: <span>{{ a.id }}</span>.</p>
                                 </div>
                             </div>
                         </div>
                         <div class="fecha-categoria flex flex-col items-end gap-2 text-[12px]">
-                            <p>Fecha creación: <span>{{ a.fecha }}</span></p>
-                            <p class="p-2 rounded" :class="iconos[a.accion]?.color || iconos.default.color">
-                                {{ a.accion }}
+                            <p>{{ formatFecha(a.fecha) }}</p>
+                            <p class="p-2 rounded" :class="iconos[a.accion_normalizada]?.color || iconos.default.color">
+                                {{ a.comentario }}
                             </p>
                         </div>
                     </div>
+                </transition-group>
                 </div>
             </main>
 

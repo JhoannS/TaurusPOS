@@ -46,7 +46,7 @@ class HistorialController extends Controller
         if ($user->tienda && $user->tienda->aplicacion->nombre_app === $aplicacion) {
 
             $auditorias = Auditoria::with('user')
-                ->where('user_id', $user->id) // 👈 solo sus auditorías
+                ->where('user_id', $user->id)
                 ->latest()
                 ->take(30)
                 ->get()
@@ -55,6 +55,7 @@ class HistorialController extends Controller
                         'id' => $a->id,
                         'usuario' => $a->user->nombres_ct ?? 'Sistema',
                         'accion' => $a->accion,
+                        'accion_normalizada' => str_replace(' ', '_', $a->accion), // 👈 aquí
                         'modelo' => $a->modelo,
                         'modelo_id' => $a->modelo_id,
                         'comentario' => $a->comentario,

@@ -83,19 +83,19 @@ const initials = computed(() => {
 
 // ✅ Clases dinámicas según la aplicación
 const colores = {
-    'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
+    'TaurusCO': 'bg-universal-naranja shadow-universal-naranja rounded-full',
     'Essentials': 'bg-essentials-primary shadow-essentials rounded-full z-10 ',
-    'Machine': 'bg-machine-primary shadow-machine',
-    'Shopper': 'bg-shopper-primary shadow-shopper',
+    'Machine': 'bg-machine-primary shadow-machine rounded-full',
+    'Shopper': 'bg-shopper-primary shadow-shopper rounded-full',
     'Smart': 'bg-smart-primary shadow-smart rounded-full z-10 text-mono-negro',
     'default': 'bg-gray-300 shadow-gray-300'
 };
 const colores2 = {
-    'TaurusCO': 'bg-universal-naranja',
+    'TaurusCO': 'bg-universal-naranja rounded-full',
     'Essentials': 'bg-essentials-primary rounded-full z-10',
-    'Machine': 'bg-machine-primary',
-    'Shopper': 'bg-shopper-primary',
-    'Smart': 'bg-smart-primary',
+    'Machine': 'bg-machine-primary rounded-full',
+    'Shopper': 'bg-shopper-primary rounded-full',
+    'Smart': 'bg-smart-primary rounded-full',
     'default': 'bg-gray-300 shadow-gray-300'
 };
 

@@ -59,11 +59,11 @@ class LoginController extends Controller
 
         // ✅ Registrar el login
         $this->registrarAuditoria(
-            'Login',
+            'Iniciado sesión',
             'ClienteTaurus',
             $cliente->numero_documento_ct,
             'Ingreso al sistema',
-            ['evento' => 'inicio de sesión']
+            ['evento' => 'inicio de sesion']
         );
 
         if (
@@ -100,10 +100,11 @@ class LoginController extends Controller
         $clienteId = auth()->id(); // Guardamos el ID antes de cerrar sesión
     
         $this->registrarAuditoria(
-            'logout',
+            'Cerrado sesión',
             'ClienteTaurus',
             $clienteId,
-            'Cierre de sesión'
+            'Cierre de sesion',
+            ['evento' => 'cierre de sesion']
         );
     
         Auth::logout();

@@ -13,10 +13,14 @@ use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use App\Traits\RegistraAuditoria; // 👈 Importa el trait correctamente aquí
+
+
 
 
 class EditarClienteTaurusController extends Controller
 {
+    use RegistraAuditoria; // 👈 Usa el trait aquí a nivel de clase
     /**
      * Muestra el dashboard para la aplicación y rol especificados.
      *
@@ -145,6 +149,7 @@ class EditarClienteTaurusController extends Controller
     public function actualizar(Request $request, $aplicacion, $rol, $id)
 {
     $cliente = ClienteTaurus::with(['tienda.token', 'tienda.aplicacion.membresia', 'tienda.pagoMembresiaActual'])->findOrFail($id);
+    $original = $cliente->toArray(); // Estado antes del cambio
 
     $validated = $request->validate([
         'nombres_ct' => 'required|string|max:100',
@@ -201,6 +206,22 @@ class EditarClienteTaurusController extends Controller
 
     $nombreAplicacion = $user->tienda->aplicacion->nombre_app ?? null;
     $rol = $user->rol->tipo_rol ?? null;
+
+    $user = auth()->user();
+        $cambios = [
+            'antes' => collect($original)->only(array_keys($cliente->getChanges())),
+            'despues' => $cliente->getChanges(),
+            'editado_por' => $user->nombres_ct,
+            'usuario_id' => $user->id,
+        ];
+
+        $this->registrarAuditoria(
+            'Modificado',
+            'ClienteTaurus',
+            $cliente->id,
+            'El usuario ' . $user->nombres_ct . ' actualizó los datos del cliente.',
+            $cambios
+        );
 
     return redirect()->route('aplicacion.dashboard', [
         'aplicacion' => ucfirst($nombreAplicacion),
