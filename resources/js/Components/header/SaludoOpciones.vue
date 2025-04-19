@@ -18,6 +18,7 @@ const rol = props.auth.user.rol?.tipo_rol || 'Sin rol'; // Obtén el tipo de rol
 // Normaliza las rutas para que la comparación funcione
 const currentRoute = computed(() => new URL(page.url, window.location.origin).pathname);
 const configuracionesRoute = computed(() => new URL(route('aplicacion.configuraciones', { aplicacion, rol }), window.location.origin).pathname);
+const historialRoute = computed(() => new URL(route('aplicacion.historial', { aplicacion, rol }), window.location.origin).pathname);
 
 
 const dia = ref('');
@@ -132,11 +133,11 @@ const diasRestantes = computed(() => props.auth.user?.tienda?.pagos_membresia?.d
                     <div v-if="auth && auth.user">
                         <h3 class="font-semibold">{{ auth.user.tienda?.nombre_tienda || 'Sin tienda' }}</h3>
                         <p class="-mt-[5px] text-secundary-light text-[13px] font-medium">
-    {{ auth.user.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }} -
-    {{ diasRestantes === 999999 ? "Membresía Infinita" : diasRestantes + " días restantes." }}
-  </p>
+                            {{ auth.user.tienda?.aplicacion?.membresia?.nombre_membresia || 'Sin membresía' }} -
+                            {{ diasRestantes === 999999 ? "Membresía Infinita" : diasRestantes + " días restantes." }}
+                        </p>
                     </div>
-                  
+
                     <div v-else>
                         <p>Cargando información del usuario...</p>
                     </div>
@@ -160,6 +161,14 @@ const diasRestantes = computed(() => props.auth.user?.tienda?.pagos_membresia?.d
             </div>
 
             <div class="options-user flex gap-2 items-center justify-center">
+                <div
+                    :class="[currentRoute === historialRoute ? bgFocus : 'cursor-pointer rounded-full', hoverClass]">
+                    <a :href="route('aplicacion.historial', { aplicacion, rol })"
+                        class="flex items-center p-[6px] rounded-full justify-center">
+                        <span class="material-symbols-rounded"> history </span>
+                    </a>
+                </div>
+
                 <div :class="['cursor-pointer', 'rounded-full', hoverClass]"
                     class="flex items-center p-[6px] justify-center">
                     <span class="bg-transparent material-symbols-rounded">
@@ -168,7 +177,7 @@ const diasRestantes = computed(() => props.auth.user?.tienda?.pagos_membresia?.d
                 </div>
 
                 <div
-                    :class="[currentRoute === configuracionesRoute ? bgFocus : 'cursor-pointer rounded-full' , hoverClass]">
+                    :class="[currentRoute === configuracionesRoute ? bgFocus : 'cursor-pointer rounded-full', hoverClass]">
                     <a :href="route('aplicacion.configuraciones', { aplicacion, rol })"
                         class="flex items-center p-[6px] rounded-full justify-center">
                         <span class="material-symbols-rounded"> settings </span>

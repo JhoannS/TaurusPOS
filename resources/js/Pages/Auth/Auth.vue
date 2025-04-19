@@ -32,8 +32,6 @@ const tipoNotificacion = ref(null)
 const mostrarNotificacion = ref(false)
 
 onMounted(() => {
-  console.log("Flash messages:", usePage().props.flash); // Verificar si llega el mensaje
-
   if (usePage().props.flash && usePage().props.flash.success) {
     mostrarMensaje(usePage().props.flash.success, 'success');
   } else if (usePage().props.flash.error) {

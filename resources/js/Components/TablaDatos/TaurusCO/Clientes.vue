@@ -1,11 +1,18 @@
 <script setup>
 import ModalDetalles from '@/Components/Modales/ModalDetallesClientes.vue';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, onUnmounted } from 'vue';
 import { router,usePage } from '@inertiajs/vue3';
 import axios from 'axios';
 import dayjs from 'dayjs';
 import empty from '@images/empty.svg';
-import 'dayjs/locale/es';
+import 'dayjs/locale/es'
+import localizedFormat from 'dayjs/plugin/localizedFormat'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(localizedFormat)
+dayjs.extend(relativeTime)
+dayjs.locale('es')
+
 import { route } from 'ziggy-js';
 
 
@@ -42,7 +49,9 @@ const props = defineProps({
 
 const page = usePage()
 const aplicacion = page.props.aplicacion
-const rol = props.rol.tipo_rol  
+const rol = props.rol.tipo_rol
+
+
 
 const goToEditarCliente = (id) => {
   const nombreRol = props.rol.tipo_rol // 👈 Aquí obtienes el nombre del rol
@@ -91,11 +100,14 @@ const filteredClientes = computed(() => {
   });
 });
 
-dayjs.locale('es');
 const formatFecha = (fecha) => {
-  if (!fecha || !dayjs(fecha).isValid()) return 'Sin fecha';
-  return dayjs(fecha).format('dddd D [de] MMMM [de] YYYY [a las] h:mm a');
-};
+  if (!fecha) return 'Sin fecha'
+
+  const fechaStr = typeof fecha === 'string' ? fecha : new Date(fecha).toISOString()
+  const fechaObj = dayjs(fechaStr)
+
+  return `${fechaObj.format('dddd D [de] MMMM [de] YYYY [a las] h:mm a')} (${fechaObj.fromNow()})`
+}
 
 
 const detalleCliente = ref(null);
@@ -233,35 +245,67 @@ const formatCOP = (value) => {
   });
 };
 
+// const clientes = ref([])
+// const clientesPrevios = ref([])
+// const animarTabla = ref(false)
+
+// const cargarClientes = async () => {
+//   try {
+//     const { data } = await axios.get(route('clientes.lista', {
+//       aplicacion: props.aplicacion,
+//       rol: props.auth.user.rol
+//     }))
+
+//     const nuevoHash = JSON.stringify(data)
+//     const previoHash = JSON.stringify(clientesPrevios.value)
+
+//     if (nuevoHash !== previoHash) {
+//       clientes.value = data
+//       clientesPrevios.value = data
+
+//       animarTabla.value = true
+//       setTimeout(() => animarTabla.value = false, 1000)
+//     }
+//   } catch (error) {
+//     console.error('Error al cargar los clientes:', error)
+//   }
+// }
+
+// onMounted(() => {
+//   cargarClientes()
+//   // setInterval(cargarClientes, 5000)
+// })
+
 const clientes = ref([])
-const clientesPrevios = ref([])
-const animarTabla = ref(false)
+const error = ref(null)
+const cargando = ref(false)
+let intervalo = null
 
-const cargarClientes = async () => {
+const verificarCambios = async () => {
   try {
-    const { data } = await axios.get(route('clientes.lista', {
-      aplicacion: props.aplicacion,
-      rol: props.auth.user.rol
-    }))
-
-    const nuevoHash = JSON.stringify(data)
-    const previoHash = JSON.stringify(clientesPrevios.value)
-
-    if (nuevoHash !== previoHash) {
-      clientes.value = data
-      clientesPrevios.value = data
-
-      animarTabla.value = true
-      setTimeout(() => animarTabla.value = false, 1000)
-    }
-  } catch (error) {
-    console.error('Error al cargar los clientes:', error)
+    cargando.value = true
+    const response = await axios.get('/listar-clientes')
+    clientes.value = response.data
+    error.value = null
+  } catch (err) {
+    console.error('Error al verificar cambios:', err)
+    error.value = 'Error al obtener datos de clientes.'
+  } finally {
+    cargando.value = false
   }
 }
 
 onMounted(() => {
-  cargarClientes()
-  // setInterval(cargarClientes, 5000)
+  verificarCambios()
+  intervalo = setInterval(() => {
+    if (!cargando.value) {
+      verificarCambios()
+    }
+  }, 5000) // cada 5 segundos
+})
+
+onUnmounted(() => {
+  clearInterval(intervalo)
 })
 
 const coloresBg = {
@@ -292,7 +336,9 @@ const gotaClase = computed(() => coloresBg[appName.value]);
 </script>
 
 <template>
-  <div class="overflow-x-auto">
+  <div  class="overflow-x-auto">
+    <!-- <div v-if="error" class="text-red-600 mb-2">{{ error }}</div>
+    <div v-if="cargando" class="text-gray-500 mb-2">Cargando...</div> -->
     <table class="w-full border-collapse" id="tabla">
       <thead>
         <tr class="border border-secundary-light">

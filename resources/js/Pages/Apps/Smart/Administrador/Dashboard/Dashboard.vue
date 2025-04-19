@@ -5,11 +5,16 @@ import Sidebar from '@/Components/Sidebar/Sidebar.vue';
 import BarraCalendario from '@/Components/BarraCalendario/BarraCalendario.vue';
 import DetallesPlan from '@/Components/Dashboard/DetallesPlan.vue';
 import SaludoOpciones from '@/Components/header/SaludoOpciones.vue';
-import CardHistorial from '@/Components/Dashboard/CardHistorial.vue';
 
 const props = defineProps({
-    auth: { type: Object, required: true },
-    user: { type: Object, required: true },
+    auth: {
+        type: Object,
+        required: true
+    },
+    detalles: {
+        type: Object,
+        required: true
+    },
 });
 
 const saludo = ref('');
@@ -27,20 +32,20 @@ onMounted(() => {
 
 // Definir los colores
 const colores = {
-  'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
-  'Essentials': 'bg-essentials-primary shadow-essentials',
-  'Machine': 'bg-machine-primary shadow-machine',
-  'Shopper': 'bg-shopper-primary shadow-shopper',
-  'Smart': 'bg-smart-primary shadow-smart rounded-full z-10 text-mono-negro',
-  'default': 'bg-gray-300 shadow-gray-300'
+    'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
+    'Essentials': 'bg-essentials-primary shadow-essentials',
+    'Machine': 'bg-machine-primary shadow-machine',
+    'Shopper': 'bg-shopper-primary shadow-shopper',
+    'Smart': 'bg-smart-primary shadow-smart rounded-full z-10 text-mono-negro',
+    'default': 'bg-gray-300 shadow-gray-300'
 };
 const colores2 = {
-  'TaurusCO': 'bg-universal-naranja',
-  'Essentials': 'bg-essentials-primary rounded-full z-10',
-  'Machine': 'bg-machine-primary',
-  'Shopper': 'bg-shopper-primary',
-  'Smart': 'bg-smart-primary',
-  'default': 'bg-gray-300 shadow-gray-300'
+    'TaurusCO': 'bg-universal-naranja',
+    'Essentials': 'bg-essentials-primary rounded-full z-10',
+    'Machine': 'bg-machine-primary',
+    'Shopper': 'bg-shopper-primary',
+    'Smart': 'bg-smart-primary',
+    'default': 'bg-gray-300 shadow-gray-300'
 };
 
 // Primero definimos appName para obtener el nombre de la app
@@ -48,20 +53,20 @@ const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app 
 
 // Luego definimos hoverClass usando appName
 const hoverClass = computed(() => {
-  switch (appName.value) {
-    case 'TaurusCO':
-      return 'hover:bg-universal-naranja';
-    case 'Essentials':
-      return 'hover:bg-essentials-primary';
-    case 'Machine':
-      return 'hover:bg-machine-primary';
-    case 'Shopper':
-      return 'hover:bg-shopper-primary';
-    case 'Smart':
-      return 'hover:bg-smart-primary hover:text-mono-negro';
-    default:
-      return 'hover:bg-gray-300';
-  }
+    switch (appName.value) {
+        case 'TaurusCO':
+            return 'hover:bg-universal-naranja';
+        case 'Essentials':
+            return 'hover:bg-essentials-primary';
+        case 'Machine':
+            return 'hover:bg-machine-primary';
+        case 'Shopper':
+            return 'hover:bg-shopper-primary';
+        case 'Smart':
+            return 'hover:bg-smart-primary hover:text-mono-negro';
+        default:
+            return 'hover:bg-gray-300';
+    }
 });
 
 const bgFocus = computed(() => colores[appName.value]);
@@ -85,7 +90,8 @@ const bg = computed(() => colores2[appName.value]);
                             </h4>
                             <p>La aplicación más profesional del mercado.</p>
                             <button
-                                class="flex items-center cursor-pointer justify-center gap-3 py-[10px] px-[40px] rounded-xl hover:shadow-lg" :class="[bgFocus]">
+                                class="flex items-center cursor-pointer justify-center gap-3 py-[10px] px-[40px] rounded-xl hover:shadow-lg"
+                                :class="[bgFocus]">
                                 Vender con POS
                                 <span class="material-symbols-rounded"> outbound </span>
                             </button>
@@ -129,83 +135,10 @@ const bg = computed(() => colores2[appName.value]);
                     </div>
 
                     <div class="right w-[65%] px-3 flex flex-col ">
-                        <div class="encabezadoPanelDerecho">
-                            <div class="encabezado flex gap-2 items-center bg-transparent">
-                                <div
-                                    class=" h-[20px] w-[20px] rounded-full" :class="[bgFocus]">
-                                </div>
-                                <p class="bg-transparent">Historial de movimientos:</p>
-                            </div>
-                            <div class="flex items-center gap-[5px] my-[5px] bg-transparent">
-                                <div class="checkbox-wrapper-16">
-                                    <label class="checkbox-wrapper">
-                                        <input class="checkbox-input" type="checkbox" value="Todos"
-                                            name="CategoriasDash" />
-                                        <span class="checkbox-tile">
-                                            <span class="checkbox-label">Todos</span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="checkbox-wrapper-16">
-                                    <label class="radio-wrapper">
-                                        <input class="checkbox-input" type="checkbox" name="CategoriasDash"
-                                            value="Creaciones" />
-                                        <span class="checkbox-tile">
-                                            <span class="checkbox-label">Creaciones</span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="checkbox-wrapper-16">
-                                    <label class="checkbox-wrapper">
-                                        <input class="checkbox-input" type="checkbox" name="CategoriasDash"
-                                            value="Eliminaciones" />
-                                        <span class="checkbox-tile">
-                                            <span class="checkbox-label">Eliminaciones</span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="checkbox-wrapper-16">
-                                    <label class="checkbox-wrapper">
-                                        <input class="checkbox-input" type="checkbox" name="CategoriasDash"
-                                            value="Actualizaciones" />
-                                        <span class="checkbox-tile">
-                                            <span class="checkbox-label">Actualizaciones</span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="checkbox-wrapper-16">
-                                    <label class="checkbox-wrapper">
-                                        <input class="checkbox-input" type="checkbox" name="CategoriasDash"
-                                            value="Ventas" />
-                                        <span class="checkbox-tile">
-                                            <span class="checkbox-label">Ventas</span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="checkbox-wrapper-16">
-                                    <label class="checkbox-wrapper">
-                                        <input class="checkbox-input" type="checkbox" name="CategoriasDash"
-                                            value="Devoluciones" />
-                                        <span class="checkbox-tile">
-                                            <span class="checkbox-label">Devoluciones</span>
-                                        </span>
-                                    </label>
-                                </div>
-                                <div class="checkbox-wrapper-16">
-                                    <label class="checkbox-wrapper">
-                                        <input class="checkbox-input" type="checkbox" name="CategoriasDash"
-                                            value="Inicio Sesion" />
-                                        <span class="checkbox-tile">
-                                            <span class="checkbox-label">Inicio de sesion</span>
-                                        </span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+                        
+                       
+                        <DetallesPlan :auth="auth" :detalles="detalles" />
 
-                        <CardHistorial :auth="auth" />
-                        <DetallesPlan v-if="user?.tienda?.aplicacion?.plan?.detalles"
-                            :detalles="user.tienda.aplicacion.plan.detalles" />
                     </div>
                 </div>
             </main>

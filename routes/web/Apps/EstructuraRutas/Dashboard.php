@@ -5,6 +5,12 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Gate;
 
 Route::middleware('auth')->group(function () {
+
+    // Ruta para polling (sin parámetros)
+    Route::get('/listar-clientes', [DashboardController::class, 'listarClientesSinParametros']);
+
+    Route::post('/status', [DashboardController::class, 'status']);
+
     Route::prefix('{aplicacion}/{rol}')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])
             ->name('aplicacion.dashboard');
@@ -28,10 +34,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard/dinero-activo', [DashboardController::class, 'getDineroActivo'])
             ->name('dinero.activo');
 
-        Route::get('/clientes/lista', [DashboardController::class, 'listarClientes'])
-            ->name('clientes.lista');
-
-
+        // Route::get('/clientes/lista', [DashboardController::class, 'listarClientes'])
+        //     ->name('clientes.lista');
     });
 });
 

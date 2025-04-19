@@ -31,14 +31,30 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+
+
+import dayjs from 'dayjs'
+import 'dayjs/locale/es' // ✅ Importa el idioma español
+
+dayjs.locale('es')
+
+import { defineProps, computed } from 'vue';
 
 const props = defineProps({
+  auth: {
+    type: Object,
+    required: true
+  },
   detalles: {
     type: Object,
     required: true
   }
-});
+})
+
+const user = props.auth.user
+
+
+
 
 // Convertir los datos del plan a la estructura que usa `barsData`
 const barsData = computed(() => [
@@ -46,7 +62,7 @@ const barsData = computed(() => [
     id: 'bar1',
     title: 'Sucursales activas:',
     segments: [
-      { max: props.detalles?.cantidad_sucursales || 0, value: 10, color: 'bg-blue-500', tag: 'Sucursales' }
+      { value: 10, max: props.detalles?.cantidad_sucursales || 0, color: 'bg-blue-500', tag: 'Sucursales' }
     ]
   },
   {
@@ -61,7 +77,7 @@ const barsData = computed(() => [
     id: 'bar3',
     title: 'Facturación POS:',
     segments: [
-      { max: props.detalles?.cantidad_facturacion_electronica || 0, value: 1, color: 'bg-teal-500', tag: 'Electrónica' },
+      { max: props.detalles?.cantidad_facturacion_electronica || 0, value: 0, color: 'bg-teal-500', tag: 'Electrónica' },
       { max: props.detalles?.cantidad_facturacion_fisica || 0, value: 10, color: 'bg-pink-500', tag: 'Física' }
     ]
   },
@@ -98,5 +114,23 @@ const barTotalMax = (bar) => {
 const segmentPercentage = (segment, bar) => {
   const totalMax = barTotalMax(bar);
   return (segment.value / totalMax) * 100;
+};
+
+const formatCOP = (value) => {
+  if (value === null || value === undefined || isNaN(value)) {
+    return 'Sin precio';
+  }
+  return parseFloat(value).toLocaleString('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0, 
+    maximumFractionDigits: 0 
+  });
+};
+
+dayjs.locale('es');
+const formatFecha = (fecha) => {
+  if (!fecha || !dayjs(fecha).isValid()) return 'Sin fecha';
+  return dayjs(fecha).format('dddd D [de] MMMM [de] YYYY [a las] h:mm a');
 };
 </script>

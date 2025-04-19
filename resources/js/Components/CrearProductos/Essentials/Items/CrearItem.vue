@@ -371,7 +371,7 @@ watch(form, () => {
                     <div class=" mt-[5px] w-[50%]">
                         <p class="my-[5px] text-[16px]">Lote:</p>
                         <div class="input-insertar w-full">
-                            <input type="text" placeholder="Ingresa Lote" iv-model="form.loteProducto"
+                            <input type="text" placeholder="Ingresa Lote" v-model="form.loteProducto"
                                 name="loteProducto">
                             <span class="material-symbols-rounded text-essentials-primary">format_italic</span>
                         </div>
@@ -455,7 +455,7 @@ watch(form, () => {
                 <p class="flex items-center gap-2"><span
                         class="material-symbols-rounded text-[15px] text-essentials-primary">square_foot</span>
                     <span>{{ form.cantidadProducto || 'Unidad' }}</span><span>{{ form.unidadMedidaProducto || 'medida'
-                    }}</span>
+                        }}</span>
 
                 </p>
                 <p class="flex items-center gap-2"><span

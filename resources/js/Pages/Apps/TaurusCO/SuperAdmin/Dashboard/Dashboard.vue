@@ -46,8 +46,6 @@ const mostrarMensaje = (mensaje, tipo) => {
 };
 
 onMounted(() => {
-  console.log("Flash messages:", usePage().props.flash); // Verificar si llega el mensaje
-
   if (usePage().props.flash && usePage().props.flash.success) {
     mostrarMensaje(usePage().props.flash.success, 'success');
   } else if (usePage().props.flash.error) {
@@ -61,72 +59,77 @@ const user = props.auth.user
 const auth = usePage().props.auth;
 const clientes = ref(props.clientes);
 
-
-
-dayjs.locale('es')
-const formatFecha = (fecha) => {
-  if (!fecha) return 'Sin fecha'
-  return dayjs(fecha).format('dddd D [de] MMMM [de] YYYY [a las] h:mm a')
-}
-
-const clientesPorActivacion = ref([])
-const clientesPrevios = ref([])
-const animarClientes = ref(false)
-
-const cargarClientesPorActivacion = async () => {
-  try {
-    const { data } = await axios.get(route('clientes.activacion', {
-      aplicacion: props.aplicacion,
-      rol: props.auth.user.rol
-    }))
-
-    // Comparar si hay cambios
-    const nuevoHash = JSON.stringify(data)
-    const previoHash = JSON.stringify(clientesPrevios.value)
-
-    if (nuevoHash !== previoHash) {
-      clientesPrevios.value = data
-      clientesPorActivacion.value = data
-
-      animarClientes.value = true
-      setTimeout(() => (animarClientes.value = false), 1000)
-    }
-  } catch (error) {
-    console.error('Error al cargar clientes:', error)
+const formatCOP = (value) => {
+  if (value === null || value === undefined || isNaN(value)) {
+    return 'Sin precio';
   }
-}
+  return parseFloat(value).toLocaleString('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  });
+};
 
 
-const dineroActivo = ref(0)
-const dineroAnterior = ref(0)
-const animarCambio = ref(false)
+ const clientesPorActivacion = ref([])
+ const clientesPrevios = ref([])
+ const animarClientes = ref(false)
 
-const cargarDineroActivo = async () => {
-  try {
-    const { data } = await axios.get(route('dinero.activo', {
-      aplicacion: props.aplicacion,
-      rol: props.auth.user.rol
-    }))
+ const cargarClientesPorActivacion = async () => {
+   try {
+     const { data } = await axios.get(route('clientes.activacion', {
+       aplicacion: props.aplicacion,
+       rol: props.auth.user.rol
+     }))
 
-    if (data.total_activo !== dineroActivo.value) {
-      dineroAnterior.value = dineroActivo.value
-      dineroActivo.value = data.total_activo
+     // Comparar si hay cambios
+     const nuevoHash = JSON.stringify(data)
+     const previoHash = JSON.stringify(clientesPrevios.value)
 
-      animarCambio.value = true
-      setTimeout(() => animarCambio.value = false, 1000)
-    }
-  } catch (error) {
-    console.error('Error al cargar dinero activo:', error)
-  }
-}
+     if (nuevoHash !== previoHash) {
+       clientesPrevios.value = data
+       clientesPorActivacion.value = data
 
-onMounted(() => {
-  cargarDineroActivo()
-  cargarClientesPorActivacion()
+       animarClientes.value = true
+       setTimeout(() => (animarClientes.value = false), 1000)
+     }
+   } catch (error) {
+     console.error('Error al cargar clientes:', error)
+   }
+ }
 
-  //  setInterval(cargarDineroActivo, 5000)
-  //  setInterval(cargarClientesPorActivacion, 5000)
-})
+
+ const dineroActivo = ref(0)
+ const dineroAnterior = ref(0)
+ const animarCambio = ref(false)
+
+ const cargarDineroActivo = async () => {
+   try {
+     const { data } = await axios.get(route('dinero.activo', {
+       aplicacion: props.aplicacion,
+       rol: props.auth.user.rol
+     }))
+
+     if (data.total_activo !== dineroActivo.value) {
+       dineroAnterior.value = dineroActivo.value
+       dineroActivo.value = data.total_activo
+
+       animarCambio.value = true
+       setTimeout(() => animarCambio.value = false, 1000)
+     }
+   } catch (error) {
+     console.error('Error al cargar dinero activo:', error)
+   }
+ }
+
+ onMounted(() => {
+   cargarDineroActivo()
+   cargarClientesPorActivacion()
+
+    //  setInterval(cargarDineroActivo, 5000)
+    //  setInterval(cargarClientesPorActivacion, 5000)
+ })
 
 
 const coloresBg = {
@@ -178,8 +181,8 @@ const logout = () => {
             class="border bg-secundary-opacity border-secundary-light rounded-md w-[40%] p-2 flex justify-between items-center">
             <div class="metodoPago-monto">
               <p class="text-[14px]">Dinero activo:</p>
-              <p :class="['font-bold text-[18px]', { 'animate-ping-texto': animarCambio }]">
-                $ {{ dineroActivo.toLocaleString() }}
+              <p :class="['font-bold text-[18px]', ]">
+                {{ formatCOP(dineroActivo) }}
               </p>
             </div>
             <div class="contador p-2 rounded-md flex justify-center items-center w-10 h-10 font-bold"
@@ -198,10 +201,10 @@ const logout = () => {
                 Estás al día, muy bien 👌
               </div>
 
-              <div v-else :class="{ 'animate-ping-texto': animarClientes }" class="transition-all duration-500">
+              <div v-else :class="{ 'animate-ping-texto': animarClientes }" class="transition-all duration-500 flex items-center gap-2">
                 <div v-for="cliente in clientesPorActivacion" :key="cliente.id"
-                  class="clientesActivacion flex justify-between items-center gap-4 w-full">
-                  <div class="flex items-center gap-2">
+                  class="clientesActivacion">
+                  <div class="flex items-center gap-2 w-[150px]">
                     <div class="h-[12px] w-[20px] rounded-full" :class="[bgClase]"></div>
                     <div>
                       <h3 class="font-semibold">{{ cliente.nombres_ct }} {{ cliente.apellidos_ct }}</h3>
