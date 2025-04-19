@@ -97,7 +97,7 @@ const hoverClass = computed(() => {
 const iconos = {
     create: { icon: 'add_circle', color: 'bg-green-200 text-green-800' },
     Modificado: { icon: 'edit', color: 'bg-gradient-to-r from-green-200 to-green-400 text-green-900' },
-    delete: { icon: 'delete', color: 'bg-red-200 text-red-800' },
+    Eliminado: { icon: 'delete', color: 'bg-gradient-to-r from-red-200 to-red-400 text-red-900' },
     Iniciado_sesión: { icon: 'Login', color: 'bg-gradient-to-r from-blue-200 to-blue-400 text-blue-900' },
     Cerrado_sesión: { icon: 'Logout', color: 'bg-gradient-to-r from-orange-200 to-orange-400 text-orange-900 ' },
     navegacion: { icon: 'visibility', color: 'bg-gray-200 text-gray-800' },

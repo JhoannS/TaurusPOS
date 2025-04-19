@@ -8,11 +8,14 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\DB; // ✅ Importa la clase DB correctamente
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Events\ClienteEliminado; // Importamos el evento
+use App\Traits\RegistraAuditoria; // 👈 Importa el trait correctamente aquí
+
 
 
 class DashboardController extends Controller
 {
+    use RegistraAuditoria; // 👈 Usa el trait aquí a nivel de clase
+
     /**
      * Muestra el dashboard para la aplicación y rol especificados.
      *
@@ -323,8 +326,13 @@ public function getClientesPorActivacion($aplicacion, $rol)
         $clienteId = $cliente->id;
         $cliente->deleteOrFail();
 
-        // ✅ Emitir evento de WebSocket
-        broadcast(new ClienteEliminado($clienteId))->toOthers();
+        $this->registrarAuditoria(
+            'Eliminado',
+            'ClienteTaurus',
+            $cliente->numero_documento_ct,
+            'Eliminacion de cliente t',
+            ['evento' => 'Eliminacion de cliente taurus']
+        );
 
         // ✅ Redirigir con la notificación de éxito
         return redirect()->route('aplicacion.dashboard', [
