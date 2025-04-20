@@ -174,8 +174,8 @@ const searchQuery = ref('');
                         class="cardUsuario rounded-lg p-5 w-[35%] text-center flex flex-col justify-between items-center">
                         <img src="https://images.unsplash.com/photo-1744278955687-2a0216448268?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw5OHx8fGVufDB8fHx8fA%3D%3D"
                             alt="Img" width="130px" class="rounded-full my-2 h-[180px] shadowM">
-                        <h4 class="text-[20px] font-bold">Gestor de inventarios</h4>
-                        <p class="text-secundary-light text-[14px] -mt-[8px] bg-transparent">Gestiona a tus inventarios,
+                        <h4 class="text-[20px] font-bold">Gestor de categorias</h4>
+                        <p class="text-secundary-light text-[14px] -mt-[8px] bg-transparent">Gestiona a tus categorias,
                             crea, elimina, actualiza, etc.</p>
 
                         <div class="movimientos-total flex justify-between gap-2 my-2 w-full">
@@ -189,7 +189,7 @@ const searchQuery = ref('');
                             </div>
                         </div>
                         <button class="" :class="[buttonFocus]">
-                            <a :href="route('aplicacion.infoInventarios', { aplicacion, rol })"
+                            <a :href="route('aplicacion.infoCategorias', { aplicacion, rol })"
                                 class="">
                                 <p>Gestionar</p>
                             </a>
