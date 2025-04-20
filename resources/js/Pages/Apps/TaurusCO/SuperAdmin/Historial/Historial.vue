@@ -93,6 +93,15 @@ const hoverClass = computed(() => {
     }
 });
 
+
+
+
+
+const bgFocus = computed(() => bgColor[appName.value]);
+const textFocus = computed(() => bgText[appName.value]);
+const buttonFocus = computed(() => button[appName.value]);
+const bg = computed(() => colores2[appName.value]);
+
 // Mapeo de acciones a iconos y colores
 const iconos = {
     create: { icon: 'add_circle', color: 'bg-green-200 text-green-800' },
@@ -104,13 +113,6 @@ const iconos = {
     default: { icon: 'info', color: 'bg-slate-200 text-slate-800' }
 }
 
-
-
-
-const bgFocus = computed(() => bgColor[appName.value]);
-const textFocus = computed(() => bgText[appName.value]);
-const buttonFocus = computed(() => button[appName.value]);
-const bg = computed(() => colores2[appName.value]);
 </script>
 
 <template>
