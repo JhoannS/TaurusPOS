@@ -80,6 +80,12 @@ const initials = computed(() => {
     return firstNameInitial + lastNameInitial;
 });
 
+const inicialesNombreTienda = computed(() => {
+  const nombreTienda =  props.auth.user?.tienda?.nombre_tienda || '';
+
+  const inicialTienda = nombreTienda.split(' ')[0]?.charAt(0).toUpperCase() || '';
+  return inicialTienda;
+});
 
 // ✅ Clases dinámicas según la aplicación
 const colores = {
@@ -126,9 +132,14 @@ const diasRestantes = computed(() => props.auth.user?.tienda?.pagos_membresia?.d
 
 <template>
     <div class="header flex items-center gap-3 p-1">
-        <div class="left p-2  bg-secundary-opacity border border-secundary-light w-[20%] rounded-md">
+        <div class="left p-2  bg-secundary-opacity w-[20%] rounded-md">
             <div class="infoTienda flex gap-2">
-                <div class="gota h-10 w-10 rounded-full" :class="[bgFocus]"></div>
+                <div class="user h-[40px] w-[40px] rounded-full overflow-hidden flex items-center justify-center"
+                        :class="[bgFocus]">
+                        <span class="text-md font-bold">
+                            {{ inicialesNombreTienda }}
+                        </span>
+                    </div>
                 <div class="logo">
                     <div v-if="auth && auth.user">
                         <h3 class="font-semibold">{{ auth.user.tienda?.nombre_tienda || 'Sin tienda' }}</h3>
@@ -146,7 +157,7 @@ const diasRestantes = computed(() => props.auth.user?.tienda?.pagos_membresia?.d
             </div>
         </div>
         <header
-            class="p-2 bg-secundary-opacity border border-secundary-light rounded-md w-[80%] flex items-center justify-between">
+            class="p-2 bg-secundary-opacity rounded-md w-[80%] flex items-center justify-between">
             <div class="date flex gap-3 items-center">
                 <div class="dia flex items-center justify-center font-semibold h-10 w-7 rounded-full" :class="[bgFocus]"
                     id="dia">

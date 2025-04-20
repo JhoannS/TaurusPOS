@@ -137,7 +137,7 @@ const searchQuery = ref('');
 
                 <!-- header administrativo -->
                 <div class="titulp-input-btn flex justify-between items-center gap-5">
-                    <h4 class="font-semibold text-[25px]">Gestiona tus productos, inventarios y servicios</h4>
+                    <h4 class="font-semibold text-[25px]">Gestiona tus productos, categorias y servicios</h4>
 
                 </div>
 
@@ -161,11 +161,10 @@ const searchQuery = ref('');
                             </div>
                         </div>
                         <button class="" :class="[buttonFocus]">
-                            <a :href="route('aplicacion.infoProductos', { aplicacion, rol })"
-                                class="">
+                            <a :href="route('aplicacion.infoProductos', { aplicacion, rol })" class="flex gap-2">
                                 <p>Gestionar</p>
+                                <span class="material-symbols-rounded"> outbound </span>
                             </a>
-                            <span class="material-symbols-rounded"> outbound </span>
                         </button>
 
                     </div>
@@ -189,11 +188,10 @@ const searchQuery = ref('');
                             </div>
                         </div>
                         <button class="" :class="[buttonFocus]">
-                            <a :href="route('aplicacion.infoCategorias', { aplicacion, rol })"
-                                class="">
+                            <a :href="route('aplicacion.infoCategorias', { aplicacion, rol })" class="flex gap-2">
                                 <p>Gestionar</p>
+                                <span class="material-symbols-rounded"> outbound </span>
                             </a>
-                            <span class="material-symbols-rounded"> outbound </span>
                         </button>
 
                     </div>
@@ -217,11 +215,10 @@ const searchQuery = ref('');
                             </div>
                         </div>
                         <button class="" :class="[buttonFocus]">
-                            <a :href="route('aplicacion.infoServicios', { aplicacion, rol })"
-                                class="">
+                            <a :href="route('aplicacion.infoServicios', { aplicacion, rol })" class="flex gap-2">
                                 <p>Gestionar</p>
+                                <span class="material-symbols-rounded"> outbound </span>
                             </a>
-                            <span class="material-symbols-rounded"> outbound </span>
                         </button>
 
                     </div>
