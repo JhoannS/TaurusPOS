@@ -82,7 +82,7 @@ body {
 
 /* Barra deslizante */
 .scrollbar-custom::-webkit-scrollbar-thumb {
-  background: var(--primary_essentials);
+  background: #4B5563;
   border-radius: 8px;
   cursor: pointer;
 }

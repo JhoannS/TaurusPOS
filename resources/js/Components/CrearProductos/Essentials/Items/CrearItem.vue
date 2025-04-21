@@ -1,5 +1,112 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { usePage } from '@inertiajs/vue3';
+import { route } from 'ziggy-js';
+import { Head } from '@inertiajs/vue3';
+
+import dayjs from 'dayjs'
+import 'dayjs/locale/es'
+import localizedFormat from 'dayjs/plugin/localizedFormat'
+import relativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(localizedFormat)
+dayjs.extend(relativeTime)
+dayjs.locale('es')
+
+
+const props = defineProps({
+    auth: Object,
+    auditorias: Array
+
+});
+
+const page = usePage();
+
+const aplicacion = props.auth?.user?.tienda?.aplicacion?.nombre_app || 'Sin app';
+const rol = props.auth.user.rol?.tipo_rol || 'Sin rol'; // Obtén el tipo de rol
+
+const formatFecha = (fecha) => {
+  if (!fecha) return 'Sin fecha'
+
+  const fechaObj = dayjs(fecha)
+
+  if (!fechaObj.isValid()) return 'Fecha inválida'
+
+  return `${fechaObj.format('dddd D [de] MMMM [de] YYYY [a las] h:mm a')} (${fechaObj.fromNow()})`
+}
+
+// Definir los colores
+const bgColor = {
+    'TaurusCO': 'bg-universal-naranja shadow-universal-naranja',
+    'Essentials': 'bg-essentials-primary shadow-essentials',
+    'Machine': 'bg-machine-primary shadow-machine',
+    'Shopper': 'bg-shopper-primary shadow-shopper',
+    'Smart': 'bg-smart-primary shadow-smart text-mono-negro',
+    'default': 'bg-gray-300 shadow-gray-300'
+};
+
+const button = {
+    'TaurusCO': 'bg-universal-naranja shadow-universal-naranja rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+    'Essentials': 'bg-essentials-primary shadow-essentials rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+    'Machine': 'bg-machine-primary shadow-machine rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+    'Shopper': 'bg-shopper-primary shadow-shopper rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+    'Smart': 'bg-smart-primary shadow-smart text-mono-negro rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+    'default': 'bg-gray-300 shadow-gray-300'
+};
+
+const bgText = {
+    'TaurusCO': 'text-universal-naranja',
+    'Essentials': 'text-essentials-primary',
+    'Machine': 'text-machine-primary',
+    'Shopper': 'text-shopper-primary',
+    'Smart': 'text-smart-primary',
+    'default': 'text-gray-300'
+};
+const colores2 = {
+    'TaurusCO': 'bg-universal-naranja',
+    'Essentials': 'bg-essentials-primary',
+    'Machine': 'bg-machine-primary',
+    'Shopper': 'bg-shopper-primary',
+    'Smart': 'bg-smart-primary',
+    'default': 'bg-gray-300 shadow-gray-300'
+};
+
+
+
+// Primero definimos appName para obtener el nombre de la app
+const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app || 'default');
+
+// Luego definimos hoverClass usando appName
+const hoverClass = computed(() => {
+    switch (appName.value) {
+        case 'TaurusCO':
+            return 'hover:bg-universal-naranja';
+        case 'Essentials':
+            return 'hover:bg-essentials-primary';
+        case 'Machine':
+            return 'hover:bg-machine-primary';
+        case 'Shopper':
+            return 'hover:bg-shopper-primary';
+        case 'Smart':
+            return 'hover:bg-smart-primary hover:text-mono-negro';
+        default:
+            return 'hover:bg-gray-300';
+    }
+});
+
+
+
+
+
+const bgFocus = computed(() => bgColor[appName.value]);
+const textFocus = computed(() => bgText[appName.value]);
+const buttonFocus = computed(() => button[appName.value]);
+const bg = computed(() => colores2[appName.value]);
+
+
+const showModal = ref(false);
+
+const searchQuery = ref('');
 
 // Refs para los inputs y la imagen
 const file = ref(null)
@@ -197,7 +304,7 @@ watch(form, () => {
 
                 <!-- Botón de cancelar -->
                 <div id="cancel-btn" @click="resetImage">
-                    <i class="material-symbols-rounded hover:bg-essentials-primary rounded-md">
+                    <i class="material-symbols-rounded rounded-md":class="['cursor-pointer', 'rounded-full', hoverClass]">
                         close
                     </i>
                 </div>
@@ -215,7 +322,7 @@ watch(form, () => {
                         <div class="input-insertar w-full">
                             <input type="text" min="0" max="999999999999999" placeholder="Ponle identidad a tu item"
                                 v-model="form.pluProducto">
-                            <span class="material-symbols-rounded text-essentials-primary">pin</span>
+                            <span class="material-symbols-rounded" :class="[textFocus]">pin</span>
                         </div>
                     </div>
 
@@ -231,7 +338,7 @@ watch(form, () => {
                             <input type="text" placeholder="Escribe su nombre" v-model="form.nombreProducto"
                                 @input="handleInput($event, 'nombreProducto')" @blur="handleBlur('nombreProducto')"
                                 name="nombreProducto">
-                            <span class="material-symbols-rounded text-essentials-primary">format_italic</span>
+                            <span class="material-symbols-rounded" :class="[textFocus]">format_italic</span>
 
                         </div>
                     </div>
@@ -279,7 +386,7 @@ watch(form, () => {
                             <input type="text" placeholder="Describe tu producto" v-model="form.descripcionProducto"
                                 @input="handleInput($event, 'descripcionProducto')"
                                 @blur="handleBlur('descripcionProducto')" name="descripcionProducto">
-                            <span class="material-symbols-rounded text-essentials-primary">format_italic</span>
+                            <span class="material-symbols-rounded" :class="[textFocus]">format_italic</span>
                         </div>
                     </div>
 
@@ -289,7 +396,7 @@ watch(form, () => {
                             <input type="text" min="0" max="999999999999999" placeholder="¿Cuantos tienes disponibles?"
                                 :value="form.stockProducto" @input="validarNumero($event, 'stockProducto')"
                                 name="stockProducto">
-                            <span class="material-symbols-rounded text-essentials-primary">pin</span>
+                            <span class="material-symbols-rounded" :class="[textFocus]">pin</span>
                         </div>
                     </div>
                 </div>
@@ -301,7 +408,7 @@ watch(form, () => {
                             <input type="text" min="0" max="999999999999999" placeholder="Ejemplo: 400"
                                 :value="form.cantidadProducto" @input="validarNumero($event, 'cantidadProducto')"
                                 name="cantidadProducto">
-                            <span class="material-symbols-rounded text-essentials-primary">pin</span>
+                            <span class="material-symbols-rounded" :class="[textFocus]">pin</span>
                         </div>
                     </div>
 
@@ -329,7 +436,7 @@ watch(form, () => {
                         <div class="input-insertar w-full">
                             <input type="text" placeholder="Ejemplo: Coca cola" v-model="form.marcaProducto"
                                 name="marcaProducto">
-                            <span class="material-symbols-rounded text-essentials-primary">format_italic</span>
+                            <span class="material-symbols-rounded" :class="[textFocus]">format_italic</span>
                         </div>
                     </div>
 
@@ -339,7 +446,7 @@ watch(form, () => {
                             <input type="text" min="0" max="999999999999999" placeholder="Precio comprado" v
                                 :value="form.precioNetoProducto" @input="validarNumero($event, 'precioNetoProducto')"
                                 name="precioNetoProducto">
-                            <span class="material-symbols-rounded text-essentials-primary">format_italic</span>
+                            <span class="material-symbols-rounded" :class="[textFocus]">format_italic</span>
                         </div>
                     </div>
                 </div>
@@ -351,7 +458,7 @@ watch(form, () => {
                             <input type="text" min="0" max="999999999999999" placeholder="Escribe el monto"
                                 :value="form.descuentoProducto" @input="validarNumero($event, 'descuentoProducto')"
                                 name="descuentoProducto">
-                            <span class="material-symbols-rounded text-essentials-primary">pin</span>
+                            <span class="material-symbols-rounded" :class="[textFocus]">pin</span>
                         </div>
                     </div>
 
@@ -362,7 +469,7 @@ watch(form, () => {
                             <input type="text" min="0" max="999999999999999"
                                 placeholder="Si tiene ICUI E IVA ingresalo asi: (ICUI+IVA)" v-model="form.ivaProducto"
                                 @input="formatearNumeroInput($event, 'ivaProducto')" name="ivaProducto">
-                            <span class="material-symbols-rounded text-essentials-primary">pin</span>
+                            <span class="material-symbols-rounded" :class="[textFocus]">pin</span>
                         </div>
                     </div>
                 </div>
@@ -373,7 +480,7 @@ watch(form, () => {
                         <div class="input-insertar w-full">
                             <input type="text" placeholder="Ingresa Lote" v-model="form.loteProducto"
                                 name="loteProducto">
-                            <span class="material-symbols-rounded text-essentials-primary">format_italic</span>
+                            <span class="material-symbols-rounded" :class="[textFocus]">format_italic</span>
                         </div>
                     </div>
 
@@ -382,7 +489,7 @@ watch(form, () => {
                         <div class="input-insertar w-full">
                             <input type="text" placeholder="RSA de cada producto" v-model="form.rsaProducto"
                                 name="rsaProducto">
-                            <span class="material-symbols-rounded text-essentials-primary">format_italic</span>
+                            <span class="material-symbols-rounded" :class="[textFocus]">format_italic</span>
                         </div>
                     </div>
                 </div>
@@ -393,7 +500,7 @@ watch(form, () => {
                         <div class="input-insertar w-full">
                             <input type="date" placeholder="" v-model="form.vencimientoProducto"
                                 name="vencimientoProducto">
-                            <span class="material-symbols-rounded text-essentials-primary">event</span>
+                            <span class="material-symbols-rounded" :class="[textFocus]">event</span>
                         </div>
                     </div>
 
@@ -410,7 +517,7 @@ watch(form, () => {
                         </div>
                     </div>
                 </div>
-                <button class="btn-essentials mt-4 w-full" id="confirm-button">Confirmar creacion</button>
+                <button class=" mt-4 w-full" id="confirm-button" :class="[buttonFocus]">Confirmar creacion</button>
             </form>
         </div>
 
@@ -436,14 +543,14 @@ watch(form, () => {
 
             <div class="text-blanco flex items-center justify-between text-[15px] my-2">
                 <p class="flex items-center gap-2">
-                    <span class="material-symbols-rounded text-[15px] text-essentials-primary">
+                    <span class="material-symbols-rounded text-[15px]" :class="[textFocus]">
                         category
                     </span>
                     <span>{{ form.categoriaProducto || 'Categoría' }}</span>
 
                 </p>
                 <p class="flex items-center gap-2"><span
-                        class="material-symbols-rounded text-[15px] text-essentials-primary">view_object_track</span>
+                        class="material-symbols-rounded text-[15px]" :class="[textFocus]">view_object_track</span>
                     <span>{{ form.subcategoriaProducto || 'Subcategoría' }}</span>
 
                 </p>
@@ -453,51 +560,51 @@ watch(form, () => {
 
             <div class="text-blanco flex items-center justify-between text-[15px] my-2">
                 <p class="flex items-center gap-2"><span
-                        class="material-symbols-rounded text-[15px] text-essentials-primary">square_foot</span>
+                        class="material-symbols-rounded text-[15px]" :class="[textFocus]">square_foot</span>
                     <span>{{ form.cantidadProducto || 'Unidad' }}</span><span>{{ form.unidadMedidaProducto || 'medida'
                         }}</span>
 
                 </p>
                 <p class="flex items-center gap-2"><span
-                        class="material-symbols-rounded text-[15px] text-essentials-primary">person</span>
+                        class="material-symbols-rounded text-[15px]" :class="[textFocus]">person</span>
                     <span>{{ form.proveedorProducto || 'Proveedor' }}</span>
                 </p>
                 <p class="flex items-center gap-2"><span
-                        class="material-symbols-rounded text-[15px] text-essentials-primary">verified</span>
+                        class="material-symbols-rounded text-[15px]" :class="[textFocus]">verified</span>
                     <span>{{ form.marcaProducto || 'Marca' }}</span>
                 </p>
             </div>
 
             <div class="text-blanco flex items-center justify-between text-[15px] my-2">
                 <p class="flex items-center gap-2">
-                    <span class="material-symbols-rounded text-[15px] text-essentials-primary">
+                    <span class="material-symbols-rounded text-[15px]" :class="[textFocus]">
                         payments
                     </span>
                     <span>{{ form.precioNetoProducto || 'Precio neto' }}</span>
                 </p>
                 <p class="flex items-center gap-2"><span
-                        class="material-symbols-rounded text-[15px] text-essentials-primary">remove</span>
+                        class="material-symbols-rounded text-[15px]" :class="[textFocus]">remove</span>
                     <span>{{ form.descuentoProducto || 'Descuento' }}</span>
                 </p>
                 <p class="flex items-center gap-2"><span
-                        class="material-symbols-rounded text-[15px] text-essentials-primary">percent</span>
+                        class="material-symbols-rounded text-[15px]" :class="[textFocus]">percent</span>
                     <span>{{ form.ivaProducto || 'IVA + ICUI' }}</span>
                 </p>
             </div>
 
             <div class="text-blanco flex items-center justify-between text-[15px] my-2">
                 <p class="flex items-center gap-2">
-                    <span class="material-symbols-rounded text-[15px] text-essentials-primary">
+                    <span class="material-symbols-rounded text-[15px]" :class="[textFocus]">
                         table_convert
                     </span>
                     <span>{{ form.loteProducto || 'Lote' }}</span>
                 </p>
                 <p class="flex items-center gap-2"><span
-                        class="material-symbols-rounded text-[15px] text-essentials-primary">news</span>
+                        class="material-symbols-rounded text-[15px]" :class="[textFocus]">news</span>
                     <span>{{ form.rsaProducto || 'Registro Sanitario' }}</span>
                 </p>
                 <p class="flex items-center gap-2"><span
-                        class="material-symbols-rounded text-[15px] text-essentials-primary">event_busy</span>
+                        class="material-symbols-rounded text-[15px]" :class="[textFocus]">event_busy</span>
                     <span>{{ form.vencimientoProducto || 'Vencimiento' }}</span>
                 </p>
             </div>

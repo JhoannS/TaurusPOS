@@ -143,7 +143,7 @@ const searchQuery = ref('');
 
                 
 
-                <CrearItem />
+                <CrearItem :auth="auth"/>
                 
             </main>
 
