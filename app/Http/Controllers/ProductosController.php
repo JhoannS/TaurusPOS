@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB; // ✅ Importa la clase DB correctamente
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 
-class InfoProductosController extends Controller
+class ProductosController extends Controller
 {
     /**
      * Muestra el dashboard para la aplicación y rol especificados.
@@ -82,7 +82,7 @@ class InfoProductosController extends Controller
 
           
 
-            return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Inventarios/Productos', [
+            return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Inventarios/CrearProductos', [
                 'auth' => ['user' => $user],
                 'clientes' => $clientes,
                 'aplicacion' => $aplicacion,

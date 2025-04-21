@@ -120,7 +120,7 @@ const searchQuery = ref('');
 
         <div class="bg-mono flex scrollbar-custom">
             <Sidebar :auth="auth" />
-            <main class="w-full h-[100%] px-[40px] py-[20px] bg-transparent">
+            <main class="w-full h-[100%] px-[20px] py-[20px] bg-transparent">
 
                 <!-- navegable -->
                 <div class="options flex gap-1 items-center text-[14px] mt-4">
@@ -134,8 +134,9 @@ const searchQuery = ref('');
                 </div>
 
                 <!-- header administrativo -->
-                <div class="titulp-input-btn flex justify-between items-center gap-5">
+                <div class="titulp-input-btn">
                     <h4 class="font-semibold text-[25px]">Gestiona tus productos, categorias y servicios</h4>
+                    <p class="text-secundary-light text-[14px] -mt-[8px] bg-transparent">Gestiona a tus inventarios de diferentes stocks en el pordras crear, eliminar, actualizar, entre otras funciones.</p>
 
                 </div>
 
@@ -144,9 +145,8 @@ const searchQuery = ref('');
                         class="cardUsuario rounded-lg p-5 w-[35%] text-center flex flex-col justify-between items-center">
                         <img src="https://images.unsplash.com/photo-1744646377302-1feb4ab3e9b9?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwxMDZ8fHxlbnwwfHx8fHw%3D"
                             alt="Img" width="130px" height="130px" class="rounded-full my-2 h-[180px] shadowM">
-                        <h4 class="text-[20px] font-bold">Gestor de productos</h4>
-                        <p class="text-secundary-light text-[14px] -mt-[8px] bg-transparent">Gestiona a tus productos,
-                            crea, elimina, actualiza, etc.</p>
+                        <h4 class="text-[25px] font-bold">Gestor de productos</h4>
+                        
 
                         <div class="movimientos-total flex justify-between gap-2 my-2 w-full">
                             <div class="movimien p-2 text-[14px] rounded-lg w-[50%]">
@@ -171,9 +171,8 @@ const searchQuery = ref('');
                         class="cardUsuario rounded-lg p-5 w-[35%] text-center flex flex-col justify-between items-center">
                         <img src="https://images.unsplash.com/photo-1744278955687-2a0216448268?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw5OHx8fGVufDB8fHx8fA%3D%3D"
                             alt="Img" width="130px" class="rounded-full my-2 h-[180px] shadowM">
-                        <h4 class="text-[20px] font-bold">Gestor de categorias</h4>
-                        <p class="text-secundary-light text-[14px] -mt-[8px] bg-transparent">Gestiona a tus categorias,
-                            crea, elimina, actualiza, etc.</p>
+                        <h4 class="text-[25px] font-bold">Gestor de categorias</h4>
+                        
 
                         <div class="movimientos-total flex justify-between gap-2 my-2 w-full">
                             <div class="movimien p-2 text-[14px] rounded-lg w-[50%]">
@@ -198,9 +197,8 @@ const searchQuery = ref('');
                         class="cardUsuario rounded-lg p-5 w-[35%] text-center flex flex-col justify-between items-center">
                         <img src="https://plus.unsplash.com/premium_photo-1742945845688-7c11c2f6d33d?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw1fHx8ZW58MHx8fHx8"
                             alt="Img" width="130px" class="rounded-full my-2 h-[180px] shadowM">
-                        <h4 class="text-[20px] font-bold">Gestor de servicios</h4>
-                        <p class="text-secundary-light text-[14px] -mt-[8px] bg-transparent">Gestiona a tus servicios,
-                            crea, elimina, actualiza, etc.</p>
+                        <h4 class="text-[25px] font-bold">Gestor de servicios</h4>
+                        
 
                         <div class="movimientos-total flex justify-between gap-2 my-2 w-full">
                             <div class="movimien p-2 text-[14px] rounded-lg w-[50%]">

@@ -25,6 +25,8 @@ const gastosRoute = computed(() => new URL(route('aplicacion.gastos', { aplicaci
 const usuariosRoute = computed(() => new URL(route('aplicacion.usuarios', { aplicacion, rol }), window.location.origin).pathname);
 const reservasRoute = computed(() => new URL(route('aplicacion.reservas', { aplicacion, rol }), window.location.origin).pathname);
 const inventarioRoute = computed(() => new URL(route('aplicacion.inventarios', { aplicacion, rol }), window.location.origin).pathname);
+const infoProductosRoute = computed(() => new URL(route('aplicacion.infoProductos', { aplicacion, rol }), window.location.origin).pathname);
+const productosRoute = computed(() => new URL(route('aplicacion.crearProductos', { aplicacion, rol }), window.location.origin).pathname);
 const codigoBarrasRoute = computed(() => new URL(route('aplicacion.codigoBarras', { aplicacion, rol }), window.location.origin).pathname);
 const generadorQrsRoute = computed(() => new URL(route('aplicacion.generadorQrs', { aplicacion, rol }), window.location.origin).pathname);
 const ordenTrabajoRoute = computed(() => new URL(route('aplicacion.ordenTrabajos', { aplicacion, rol }), window.location.origin).pathname);
@@ -132,7 +134,7 @@ const bg = computed(() => colores2[appName.value]);
       </div>
 
       <!-- Botón para inventario -->
-      <div :class="[currentRoute === inventarioRoute ?  bgFocus : 'cursor-pointer rounded-full', hoverClass]">
+      <div :class="[currentRoute === inventarioRoute || currentRoute === infoProductosRoute || currentRoute === productosRoute ?  bgFocus : 'cursor-pointer rounded-full', hoverClass]">
         <a :href="route('aplicacion.inventarios', { aplicacion, rol })"
           class="bg-transparent flex items-center p-[6px] justify-center">
           <span class="material-symbols-rounded"> checklist </span>

@@ -118,23 +118,23 @@ const searchQuery = ref('');
         <Head title="Productos" />
 
 
+        <SaludoOpciones :auth="auth"/>
         <div class="bg-mono flex scrollbar-custom">
             <Sidebar :auth="auth"/>
 
-            <main class="w-full h-[100%] px-[40px] py-[20px] bg-transparent">
-                <SaludoOpciones :auth="auth"/>
+            <main class="w-full h-[100%] px-[20px] py-[20px] bg-transparent">
 
                 <!-- navegable -->
-                <div class="options flex gap-1 items-center text-[14px]">
+                <div class="options flex gap-1 items-center text-[14px] mt-4">
                     <a :href="route('aplicacion.dashboard', { aplicacion, rol })" class="hover:text-essentials-secundary">
                         <p>Dashboard</p>
                     </a>
                     <span class="material-symbols-rounded text-[18px]">chevron_right</span>
-                    <a :href="route('aplicacion.multisucursales', { aplicacion, rol })" class="hover:text-essentials-secundary">
-                        <p>Sucursales activas</p>
+                    <a :href="route('aplicacion.inventarios', { aplicacion, rol })" class="hover:text-essentials-secundary">
+                        <p>Inventarios</p>
                     </a>
                     <span class="material-symbols-rounded text-[18px]">chevron_right</span>
-                    <p class="font-bold">Informacion de mi sucursal</p>
+                    <p class="font-bold">Gestion de mis productos</p>
                 </div>
 
                 <!-- header administrativo -->
@@ -142,13 +142,13 @@ const searchQuery = ref('');
                     <h4 class="font-semibold text-[25px]">Gestion de sucursal</h4>
                     <div class="input-buscador">
                         <input v-model="searchQuery" type="search" placeholder="Buscar producto..." class="" />
-                        <span class="material-symbols-rounded text-essentials-primary">travel_explore</span>
+                        <span class="material-symbols-rounded" :class="[textFocus]">travel_explore</span>
                     </div>
 
 
 
-                    <a :href="route('essentials.admin.crearItem')">
-                        <button class="btn-essentials-secundary">Agregar items a esta bodega<span
+                    <a :href="route('aplicacion.crearProductos', { aplicacion, rol })">
+                        <button class="" :class="[buttonFocus]">Agregar items a esta bodega<span
                                 class="material-symbols-rounded"> outbound </span></button>
                     </a>
 
@@ -164,7 +164,7 @@ const searchQuery = ref('');
                             <p class="font-bold text-[18px]">Producto pronto a terminarse</p>
                         </div>
                         <div
-                            class="contador bg-essentials-primary p-2 rounded-md flex justify-center items-center shadow-essentials w-10 h-10 font-bold">
+                            class="contador p-2 rounded-md flex justify-center items-center  w-10 h-10 font-bold" :class="[bgFocus]">
                             <span class="material-symbols-rounded">
                                 category
                             </span>
@@ -177,7 +177,7 @@ const searchQuery = ref('');
                             <p class="font-bold text-[18px]">Fecha de ultimo movimiento</p>
                         </div>
                         <div
-                            class="contador bg-essentials-primary p-2 rounded-md flex justify-center items-center shadow-essentials w-10 h-10 font-bold">
+                        class="contador p-2 rounded-md flex justify-center items-center  w-10 h-10 font-bold" :class="[bgFocus]">
                             <span class="material-symbols-rounded">
                                 edit_calendar
                             </span>
@@ -190,7 +190,7 @@ const searchQuery = ref('');
                             <p class="font-bold text-[18px]">total de items</p>
                         </div>
                         <div
-                            class="contador bg-essentials-primary p-2 rounded-md flex justify-center items-center shadow-essentials w-10 h-10 font-bold">
+                        class="contador p-2 rounded-md flex justify-center items-center  w-10 h-10 font-bold" :class="[bgFocus]">
                             <span class="material-symbols-rounded">
                                 diversity_1
                             </span>
