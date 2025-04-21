@@ -77,10 +77,11 @@ const bg = computed(() => colores2[appName.value]);
     <div>
 
         <Head title="Dashboard Essentials" />
+        <SaludoOpciones :auth="auth" />
+        
         <div class="bg-mono flex scrollbar-custom">
             <Sidebar :auth="auth" />
             <main class="w-full h-[100%] px-[40px] bg-transparent">
-                <SaludoOpciones :auth="auth" />
                 <div class="flex gap-[10px] my-6">
                     <div class="left w-[35%] h-[85vh] flex flex-col gap-5 justify-between px-3">
                         <div class="saludo-btn flex flex-col justify-center items-center gap-3">

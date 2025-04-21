@@ -117,16 +117,16 @@ const bg = computed(() => colores2[appName.value]);
     <div>
 
         <Head title="Historial" />
+        <SaludoOpciones :auth="auth" />
 
 
         <div class="bg-mono flex scrollbar-custom">
             <Sidebar :auth="auth" />
 
             <main class="w-full h-[100%] px-[40px] bg-transparent">
-                <SaludoOpciones :auth="auth" />
 
                 <!-- navegable -->
-                <div class="options flex gap-1 items-center my-3 text-[14px]">
+                <div class="options flex gap-1 items-center text-[14px] mt-7">
                     <a :href="route('aplicacion.dashboard', { aplicacion, rol })"
                         class="hover:text-essentials-secundary">
                         <p>Dashboard</p>
@@ -136,7 +136,7 @@ const bg = computed(() => colores2[appName.value]);
                 </div>
 
 
-                <div class="my-7 flex justify-between items-center">
+                <div class=" flex justify-between items-center">
                     <div class="encabezado flex gap-2 items-center bg-transparent">
                         <div class=" h-[20px] w-[20px] rounded-full" :class="[bgFocus]">
                         </div>

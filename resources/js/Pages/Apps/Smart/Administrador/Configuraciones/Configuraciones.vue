@@ -113,14 +113,12 @@ const bg = computed(() => colores2[appName.value]);
 
         <Head title="Configuraciones" />
 
+        <SaludoOpciones :auth="auth" />
 
         <div class="bg-mono flex scrollbar-custom">
             <Sidebar :auth="auth" />
 
-
-
             <main class="w-full h-[100%] px-[40px] py-[20px] bg-transparent">
-                <SaludoOpciones :auth="auth" />
 
                 <!-- navegable -->
                 <div class="options flex gap-1 items-center text-[14px] mt-4">

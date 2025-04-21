@@ -74,7 +74,7 @@ const bg = computed(() => colores2[appName.value]);
 
 
 <template>
-  <div class="h-[100vh] w-[60px] flex items-center p-[20px]">
+  <div class="h-[85vh] w-[60px] flex justify-center mx-3 items-center p-[20px]">
     <aside class="w-[60px] flex justify-center flex-col gap-2 items-center bg-secundary-default p-2 rounded-full">
       <!-- Logo del Sidebar -->
       <div class="gota h-12 w-12 shadowM rounded-full z-10">

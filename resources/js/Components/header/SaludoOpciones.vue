@@ -131,7 +131,7 @@ const diasRestantes = computed(() => props.auth.user?.tienda?.pagos_membresia?.d
 </script>
 
 <template>
-    <div class="header flex items-center gap-3 p-1">
+    <div class="header flex items-center gap-3 p-1 m-3">
         <div class="left p-2  bg-secundary-opacity w-[20%] rounded-md">
             <div class="infoTienda flex gap-2">
                 <div class="user h-[40px] w-[40px] rounded-full overflow-hidden flex items-center justify-center"
