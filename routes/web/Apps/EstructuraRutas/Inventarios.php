@@ -4,6 +4,7 @@ use App\Http\Controllers\InventariosController;
 use App\Http\Controllers\InfoProductosController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\InfoCategoriasController;
+use App\Http\Controllers\CategoriasController;
 use App\Http\Controllers\InfoServiciosController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
@@ -21,6 +22,8 @@ Route::middleware('auth')->group(function () {
 
             Route::get('/inventarios/infoCategorias', [InfoCategoriasController::class, 'index'])
             ->name('aplicacion.infoCategorias');
+            Route::get('/inventarios/crearCategorias', [CategoriasController::class, 'index'])
+            ->name('aplicacion.crearCategorias');
 
             Route::get('/inventarios/infoServicios', [InfoServiciosController::class, 'index'])
             ->name('aplicacion.infoServicios');

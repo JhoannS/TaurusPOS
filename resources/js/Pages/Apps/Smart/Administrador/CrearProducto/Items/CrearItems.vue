@@ -6,7 +6,7 @@ import { usePage } from '@inertiajs/inertia-vue3';
 import { route } from 'ziggy-js'; // Importación nombrada
 import Sidebar from '@/Components/Sidebar/Sidebar.vue';
 import SaludoOpciones from '@/Components/header/SaludoOpciones.vue';
-import CrearItem from '@/Components/CrearProductos/Essentials/Items/CrearItem.vue';
+import CrearItem from '@/Components/CrearProductos/CrearItem.vue';
 
 
 const props = defineProps({

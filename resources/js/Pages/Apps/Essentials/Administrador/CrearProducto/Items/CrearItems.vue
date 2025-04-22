@@ -2,7 +2,7 @@
 import { Head } from '@inertiajs/vue3';
 import Sidebar from '@/Components/Sidebar/Sidebar.vue';
 import SaludoOpciones from '@/Components/header/SaludoOpciones.vue';
-import CrearItem from '@/Components/CrearProductos/Essentials/Items/CrearItem.vue';
+import CrearItem from '@/Components/CrearProductos/CrearItem.vue';
 
 
 

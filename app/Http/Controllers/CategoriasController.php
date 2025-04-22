@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB; // ✅ Importa la clase DB correctamente
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 
-class InfoCategoriasController extends Controller
+class CategoriasController extends Controller
 {
     /**
      * Muestra el dashboard para la aplicación y rol especificados.
@@ -82,7 +82,7 @@ class InfoCategoriasController extends Controller
 
           
 
-            return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Inventarios/Categorias', [
+            return Inertia::render('Apps/' . ucfirst($aplicacion) . '/' . ucfirst($rol) . '/Inventarios/CrearCategorias', [
                 'auth' => ['user' => $user],
                 'clientes' => $clientes,
                 'aplicacion' => $aplicacion,

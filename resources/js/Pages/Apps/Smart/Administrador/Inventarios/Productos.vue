@@ -139,7 +139,7 @@ const searchQuery = ref('');
 
                 <!-- header administrativo -->
                 <div class="titulo-input-btn mt-4 flex justify-between items-center gap-5">
-                    <h4 class="font-semibold text-[25px]">Gestion de sucursal</h4>
+                    <h4 class="font-semibold text-[25px]">Gestion de mis productos</h4>
                     <div class="input-buscador">
                         <input v-model="searchQuery" type="search" placeholder="Buscar producto..." class="" />
                         <span class="material-symbols-rounded" :class="[textFocus]">travel_explore</span>
@@ -148,7 +148,7 @@ const searchQuery = ref('');
 
 
                     <a :href="route('aplicacion.crearProductos', { aplicacion, rol })">
-                        <button class="" :class="[buttonFocus]">Agregar items a esta bodega<span
+                        <button class="" :class="[buttonFocus]">Agregar nuevo producto<span
                                 class="material-symbols-rounded"> outbound </span></button>
                     </a>
 
