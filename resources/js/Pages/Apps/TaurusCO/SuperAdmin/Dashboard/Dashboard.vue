@@ -72,64 +72,64 @@ const formatCOP = (value) => {
 };
 
 
- const clientesPorActivacion = ref([])
- const clientesPrevios = ref([])
- const animarClientes = ref(false)
+const clientesPorActivacion = ref([])
+const clientesPrevios = ref([])
+const animarClientes = ref(false)
 
- const cargarClientesPorActivacion = async () => {
-   try {
-     const { data } = await axios.get(route('clientes.activacion', {
-       aplicacion: props.aplicacion,
-       rol: props.auth.user.rol
-     }))
+const cargarClientesPorActivacion = async () => {
+  try {
+    const { data } = await axios.get(route('clientes.activacion', {
+      aplicacion: props.aplicacion,
+      rol: props.auth.user.rol
+    }))
 
-     // Comparar si hay cambios
-     const nuevoHash = JSON.stringify(data)
-     const previoHash = JSON.stringify(clientesPrevios.value)
+    // Comparar si hay cambios
+    const nuevoHash = JSON.stringify(data)
+    const previoHash = JSON.stringify(clientesPrevios.value)
 
-     if (nuevoHash !== previoHash) {
-       clientesPrevios.value = data
-       clientesPorActivacion.value = data
+    if (nuevoHash !== previoHash) {
+      clientesPrevios.value = data
+      clientesPorActivacion.value = data
 
-       animarClientes.value = true
-       setTimeout(() => (animarClientes.value = false), 1000)
-     }
-   } catch (error) {
-     console.error('Error al cargar clientes:', error)
-   }
- }
+      animarClientes.value = true
+      setTimeout(() => (animarClientes.value = false), 1000)
+    }
+  } catch (error) {
+    console.error('Error al cargar clientes:', error)
+  }
+}
 
 
- const dineroActivo = ref(0)
- const dineroAnterior = ref(0)
- const animarCambio = ref(false)
+const dineroActivo = ref(0)
+const dineroAnterior = ref(0)
+const animarCambio = ref(false)
 
- const cargarDineroActivo = async () => {
-   try {
-     const { data } = await axios.get(route('dinero.activo', {
-       aplicacion: props.aplicacion,
-       rol: props.auth.user.rol
-     }))
+const cargarDineroActivo = async () => {
+  try {
+    const { data } = await axios.get(route('dinero.activo', {
+      aplicacion: props.aplicacion,
+      rol: props.auth.user.rol
+    }))
 
-     if (data.total_activo !== dineroActivo.value) {
-       dineroAnterior.value = dineroActivo.value
-       dineroActivo.value = data.total_activo
+    if (data.total_activo !== dineroActivo.value) {
+      dineroAnterior.value = dineroActivo.value
+      dineroActivo.value = data.total_activo
 
-       animarCambio.value = true
-       setTimeout(() => animarCambio.value = false, 1000)
-     }
-   } catch (error) {
-     console.error('Error al cargar dinero activo:', error)
-   }
- }
+      animarCambio.value = true
+      setTimeout(() => animarCambio.value = false, 1000)
+    }
+  } catch (error) {
+    console.error('Error al cargar dinero activo:', error)
+  }
+}
 
- onMounted(() => {
-   cargarDineroActivo()
-   cargarClientesPorActivacion()
+onMounted(() => {
+  cargarDineroActivo()
+  cargarClientesPorActivacion()
 
-    //  setInterval(cargarDineroActivo, 5000)
-    //  setInterval(cargarClientesPorActivacion, 5000)
- })
+  //  setInterval(cargarDineroActivo, 5000)
+  //  setInterval(cargarClientesPorActivacion, 5000)
+})
 
 
 const coloresBg = {
@@ -147,8 +147,18 @@ const coloresTexto = {
   'default': 'text-gray-500'
 };
 
+const button = {
+  'TaurusCO': 'bg-universal-naranja shadow-universal-naranja rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+  'Essentials': 'bg-essentials-primary shadow-essentials rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+  'Machine': 'bg-machine-primary shadow-machine rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+  'Shopper': 'bg-shopper-primary shadow-shopper rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+  'Smart': 'bg-smart-primary shadow-smart text-mono-negro rounded-[8px] py-[5px] px-[15px] flex items-center justify-center gap-2',
+  'default': 'bg-gray-300 shadow-gray-300'
+};
+
 const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app || 'default');
 const bgClase = computed(() => coloresBg[appName.value]);
+const buttonFocus = computed(() => button[appName.value]);
 const textoClase = computed(() => coloresTexto[appName.value]);
 const searchQuery = ref('');
 
@@ -181,7 +191,7 @@ const logout = () => {
             class="border bg-secundary-opacity border-secundary-light rounded-md w-[40%] p-2 flex justify-between items-center">
             <div class="metodoPago-monto">
               <p class="text-[14px]">Dinero activo:</p>
-              <p :class="['font-bold text-[18px]', ]">
+              <p :class="['font-bold text-[18px]',]">
                 {{ formatCOP(dineroActivo) }}
               </p>
             </div>
@@ -201,9 +211,9 @@ const logout = () => {
                 Estás al día, muy bien 👌
               </div>
 
-              <div v-else :class="{ 'animate-ping-texto': animarClientes }" class="transition-all duration-500 flex items-center gap-2">
-                <div v-for="cliente in clientesPorActivacion" :key="cliente.id"
-                  class="clientesActivacion">
+              <div v-else :class="{ 'animate-ping-texto': animarClientes }"
+                class="transition-all duration-500 flex items-center gap-2">
+                <div v-for="cliente in clientesPorActivacion" :key="cliente.id" class="clientesActivacion">
                   <div class="flex items-center gap-2 w-[150px]">
                     <div class="h-[12px] w-[20px] rounded-full" :class="[bgClase]"></div>
                     <div>
@@ -226,8 +236,14 @@ const logout = () => {
             <input v-model="searchQuery" type="search" placeholder="Buscar clientes..." class="" />
             <span class="material-symbols-rounded" :class='[textoClase]'>travel_explore</span>
           </div>
+          <button class="" :class="[buttonFocus]">Agregar nuevo cliente<span class="material-symbols-rounded">
+            outbound </span></button>
+
         </div>
+
         <ExportarExcel idTabla="tabla" nombreArchivo="Movimientos_Almacenados" titulo="Movimientos almacenados" />
+
+       
         <!-- formulario -->
         <Clientes :auth="auth" :user-id="auth.user.id"
           :rol="typeof auth.user.rol === 'object' ? auth.user.rol : { id: auth.user.rol }" :aplicacion="aplicacion"

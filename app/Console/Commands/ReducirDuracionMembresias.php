@@ -13,18 +13,26 @@ class ReducirDuracionMembresias extends Command
 
     public function handle()
     {
-        $hoy = Carbon::now()->toDateString();
+
+        
 
         // 1. Reducir días restantes (solo si token activo, días > 0 y fecha activación <= hoy)
-        DB::table('pagos_membresia')
+        $hoy = Carbon::now()->toDateString();
+
+        $pagosValidos = DB::table('pagos_membresia')
             ->join('tiendas_sistematizadas', 'pagos_membresia.id_tienda', '=', 'tiendas_sistematizadas.id')
             ->join('token_accesos', 'tiendas_sistematizadas.id_token', '=', 'token_accesos.id')
             ->where('token_accesos.id_estado', 1) // Token activo
             ->where('pagos_membresia.dias_restantes', '>', 0)
             ->whereDate('pagos_membresia.fecha_activacion', '<=', $hoy)
+            ->pluck('pagos_membresia.id');
+
+        DB::table('pagos_membresia')
+            ->whereIn('id', $pagosValidos)
             ->update([
-                'pagos_membresia.dias_restantes' => DB::raw('dias_restantes - 1'),
+                'dias_restantes' => DB::raw('dias_restantes - 1'),
             ]);
+
 
         // 2. Cambiar estado de membresía a vencido (id_estado = 9)
         DB::table('pagos_membresia')
@@ -41,6 +49,8 @@ class ReducirDuracionMembresias extends Command
             ->update([
                 'token_accesos.id_estado' => 2, // Token inactivo
             ]);
+
+            $this->info('Días reducidos para ' . count($pagosValidos) . ' membresías activas.');
 
         $this->info('Membresías actualizadas: días reducidos, estados vencidos y tokens desactivados si correspondía.');
     }
