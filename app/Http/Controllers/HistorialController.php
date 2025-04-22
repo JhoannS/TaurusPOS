@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\ClienteTaurus;
 use Illuminate\Http\Request;
 use App\Models\Auditoria;
 use Inertia\Inertia;
@@ -45,8 +45,13 @@ class HistorialController extends Controller
         // Verificar que el usuario tenga tienda y la aplicación coincida
         if ($user->tienda && $user->tienda->aplicacion->nombre_app === $aplicacion) {
 
+            // Obtener la tienda del usuario logueado
+            $idTienda = $user->tienda->id;
+
+            // Obtener los IDs de los usuarios que pertenecen a esa tienda
+            $userIds = ClienteTaurus::where('id_tienda', $idTienda)->pluck('id');
             $auditorias = Auditoria::with('user')
-                ->where('user_id', $user->id)
+                ->whereIn('user_id', $userIds)
                 ->latest()
                 ->take(30)
                 ->get()
