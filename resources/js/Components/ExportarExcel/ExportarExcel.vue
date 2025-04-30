@@ -46,7 +46,7 @@
   
   <style scoped>
   span {
-    @apply text-2xl text-gray-400 hover:text-essentials-primary transition-all;
+    @apply text-2xl text-gray-400 hover:text-semaforo-verde transition-all;
   }
   </style>
   
