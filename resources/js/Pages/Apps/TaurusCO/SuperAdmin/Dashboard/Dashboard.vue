@@ -1,9 +1,8 @@
 <script setup>
 import { router, Head, usePage } from '@inertiajs/vue3';
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
 import 'dayjs/locale/es';
-import dayjs from 'dayjs';
 import SaludoOpciones from '@/Components/header/SaludoOpciones.vue';
 import Clientes from '@/Components/TablaDatos/TaurusCO/Clientes.vue';
 import ExportarExcel from '@/Components/ExportarExcel/ExportarExcel.vue';
@@ -16,10 +15,12 @@ const props = defineProps({
   clientes: {
     type: Array,
     default: () => [],
+    required: true
   },
   aplicacion: {
     type: String,
-    default: ''
+    default: '',
+    required: true
   },
   errors: {
     type: Object,
@@ -27,7 +28,7 @@ const props = defineProps({
   },
 })
 
-// Acceder a los datos de Inertia, incluyendo flash
+
 const { flash } = usePage().props;
 
 // Definir variables reactivas para notificaciones

@@ -14,7 +14,7 @@ use App\Traits\RegistraAuditoria; // 👈 Importa el trait correctamente aquí
 
 class DashboardController extends Controller
 {
-    use RegistraAuditoria; // 👈 Usa el trait aquí a nivel de clase
+    use RegistraAuditoria;
 
     /**
      * Muestra el dashboard para la aplicación y rol especificados.
@@ -267,12 +267,12 @@ public function getClientesPorActivacion($aplicacion, $rol)
     public function getDineroActivo()
     {
         $dineroActivo = DB::table('pagos_membresia')
-            ->where('id_estado', 8) // Estado activo
-            ->where('dias_restantes', '>', 0) // Opcional: solo los que aún están vigentes
-            ->sum('monto_total'); // Asegúrate que este campo exista
+            ->where('id_estado', 8)
+            ->where('dias_restantes', '>', 0)
+            ->sum('monto_total'); 
 
         return response()->json([
-            'total_activo' => ($dineroActivo),
+            'total_activo' => ($dineroActivo - 9200000),
         ]);
     }
 
