@@ -32,7 +32,7 @@ const form = useForm({
 
 // ✅ Estado para la notificación
 const mensajeNotificacion = ref('')
-const tipoNotificacion = ref(null) // 'success' o 'error'
+const tipoNotificacion = ref(null) 
 const mostrarNotificacion = ref(false)
 
 // ✅ Función para mostrar la notificación

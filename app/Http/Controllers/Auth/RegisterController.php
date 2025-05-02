@@ -41,7 +41,7 @@ class RegisterController extends Controller
             'id_tipo_documento' => 'required|integer|exists:tipo_documentos,id',
             'numero_documento_ct' => 'required|string|max:15|unique:clientes_taurus,numero_documento_ct',
             'email_ct' => 'required|string|email|max:60|unique:clientes_taurus,email_ct',
-            'telefono_ct' => 'required|string|max:10|min:10',
+            'telefono_ct' => 'required|string|max:10|min:10|unique:clientes_taurus,telefono_ct',
             'contrasenia_ct' => 'required|string|min:6|confirmed',
             'id_aplicacion' => 'required|nullable|integer|exists:aplicaciones_web,id',
 
@@ -56,6 +56,7 @@ class RegisterController extends Controller
             'telefono_ct.required' => 'El teléfono es requerido.',
             'telefono_ct.max' => 'El teléfono debe ser de maximo 10 digitos.',
             'telefono_ct.min' => 'El teléfono debe ser de minimo 10 digitos.',
+            'telefono_ct.unique' => 'Oh, oh, este telefono ya se encuentra vinculado.',
             'contrasenia_ct.required' => 'La contraseña es requerida.',
             'contrasenia_ct.min' => 'La contraseña debe ser minimo de 6 caracteres.',
             'contrasenia_ct.confirmed' => 'Las contraseñas no coinciden.',
@@ -72,8 +73,8 @@ class RegisterController extends Controller
             'email_ct' => $request->email_ct,
             'telefono_ct' => $request->telefono_ct,
             'contrasenia_ct' => Hash::make($request->contrasenia_ct),
-            'id_estado' => 1, // Estado inicial para cliente
-            'id_rol' => 1, // Rol inicial para cliente
+            'id_estado' => 1,
+            'id_rol' => 1,
         ]);
 
         // ✅ Crear tienda vinculada al cliente
@@ -90,10 +91,10 @@ class RegisterController extends Controller
         // ✅ Asignar la tienda creada al cliente
         $cliente->update(['id_tienda' => $tienda->id]);
 
-        // ✅ Crear token automáticamente y asignarle el estado 2
+        // ✅ Crear token automáticamente
         $token = TokenAcceso::create([
             'id_cliente_ct' => $cliente->id,
-            'id_estado' => 2, // Estado activo
+            'id_estado' => 2, 
             'token_activacion' => Str::uuid(),
             'id_tienda_sistematizada' => $tienda->id,
         ]);
@@ -101,7 +102,7 @@ class RegisterController extends Controller
         // ✅ Actualizar el id_token en la tienda para que quede vinculado
         $tienda->update(['id_token' => $token->id]);
         $montoTotal = AplicacionWeb::where('id', $request->id_aplicacion)
-            ->with('membresia') // ✅ Cargar la relación con la membresía
+            ->with('membresia')
             ->first()
             ->membresia
             ->precio;
@@ -111,9 +112,9 @@ class RegisterController extends Controller
         PagoMembresia::create([
             'id_cliente' => $cliente->id,
             'id_tienda' => $tienda->id,
-            'id_medio_pago' => 1, // ✅ Método de pago por defecto (puedes cambiarlo dinámicamente si es necesario)
-            'id_estado' => 8, // ✅ Estado por defecto
-            'monto_total' => $montoTotal, // ✅ Monto traído de la aplicación
+            'id_medio_pago' => 1, //
+            'id_estado' => 8, // 
+            'monto_total' => $montoTotal,
             'fecha_pago' => now(),
         ]);
 

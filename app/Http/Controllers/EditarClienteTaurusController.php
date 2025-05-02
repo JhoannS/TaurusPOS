@@ -90,7 +90,7 @@ class EditarClienteTaurusController extends Controller
             'pagos_membresia.id_estado as id_estado_pago',
             'pagos_membresia.monto_total as monto_pago',
             'pagos_membresia.fecha_pago as fecha_pago',
-            'estado_pago.tipo_estado as estado_pago'
+            'estado_pago.tipo_estado as estado_pago',
         )
             ->leftJoin('tiendas_sistematizadas', 'clientes_taurus.id_tienda', '=', 'tiendas_sistematizadas.id')
             ->leftJoin('token_accesos', 'tiendas_sistematizadas.id_token', '=', 'token_accesos.id')
@@ -106,6 +106,7 @@ class EditarClienteTaurusController extends Controller
         if (!$cliente) {
             abort(404);
         }
+
 
         // Catálogos
         $tiendas = TiendaSistematizada::all();

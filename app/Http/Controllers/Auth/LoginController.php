@@ -24,10 +24,11 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'numero_documento_ct' => 'required|string',
+            'numero_documento_ct' => 'required|integer',
             'contrasenia_ct' => 'required|string',
         ], [
             'numero_documento_ct.required' => 'El usuario es requerido.',
+            'numero_documento_ct.integer' => 'Verifica que tipo de usuario te asignaron',
             'contrasenia_ct.required' => 'La contraseña es requerida.',
         ]);
 

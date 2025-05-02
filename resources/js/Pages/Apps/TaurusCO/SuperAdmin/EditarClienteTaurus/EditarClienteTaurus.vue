@@ -297,8 +297,8 @@ const gotaClase = computed(() => coloresBg[appName.value]);
                       formatCOP(cliente.tienda.aplicacion.membresia.precio) || 'Sin precio' }} COP</p>
                 <div class="estadoCliente flex items-center gap-2 ">
                   <!-- <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
-                    :class="getEstadoClass(cliente.membresia.estado.tipo_estado)"></div> -->
-                  <!-- <p> {{ cliente.membresia.estado.tipo_estado || 'Sin estado' }} </p>  -->
+                    :class="getEstadoClass(cliente.detalleCliente.tienda.aplicacion.membresia.estado.tipo_estado)"></div>
+                  <p> {{ cliente.detalleCliente.tienda.aplicacion.membresia.estado.tipo_estado || 'Sin estado' }} </p> -->
                 </div>
               </div>
             </div>

@@ -1,7 +1,6 @@
 <script>
 import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue'
-
 import { route } from 'ziggy-js';
 
 export default {
@@ -139,6 +138,9 @@ const submit = () => {
                   class="w-full focus:outline-none focus:border-none font-normal bg-mono-negro text-blanco"
                   placeholder="Ingresa tu usuario establecido." />
               </div>
+              <span v-if="form.errors.contrasenia_ct" class="text-universal-naranja text-sm">
+                {{ form.errors.contrasenia_ct }}
+              </span>
               <span v-if="form.errors.numero_documento_ct" class="text-universal-naranja text-sm">
                 {{ form.errors.numero_documento_ct }}
               </span>
