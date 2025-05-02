@@ -140,7 +140,7 @@ body {
 }
 
 .shadow-rojo {
-  box-shadow: 0px 8px 20px var(-rojo);
+  box-shadow: 0px 8px 20px var(--rojo);
 }
 
 /* SHADOW UNIVERSAL */

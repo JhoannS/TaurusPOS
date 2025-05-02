@@ -223,8 +223,9 @@ class EditarClienteTaurusController extends Controller
             $cambios
         );
 
-    return redirect()->route('aplicacion.dashboard', [
+    return redirect()->route('aplicacion.editarClienteTaurus.id', [
         'aplicacion' => ucfirst($nombreAplicacion),
+        'id' => ucfirst($id),
         'rol' => ucfirst($rol),
     ])->with('success', 'Usuario módificado con éxito.');
 }

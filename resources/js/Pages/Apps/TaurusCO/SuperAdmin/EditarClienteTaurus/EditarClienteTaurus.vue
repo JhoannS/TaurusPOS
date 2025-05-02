@@ -134,6 +134,17 @@ const formatFecha = (fecha) => {
   return dayjs(fecha).format('dddd D [de] MMMM [de] YYYY [a las] h:mm a')
 }
 
+const formatCOP = (value) => {
+  if (value === null || value === undefined || isNaN(value)) {
+    return 'Sin precio';
+  }
+  return parseFloat(value).toLocaleString('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  });
+};
 
 
 const coloresBg = {
@@ -154,6 +165,7 @@ const coloresTexto = {
 
 const appName = computed(() => props.auth?.user?.tienda?.aplicacion?.nombre_app || 'default');
 const bgClase = computed(() => coloresBg[appName.value]);
+const textClase = computed(() => coloresTexto[appName.value]);
 
 // ✅ Límites de caracteres para cada campo
 const limitesCaracteres = {
@@ -186,6 +198,16 @@ const handleInput = (event, field) => {
   const maxCaracteres = limitesCaracteres[field] || 25
   form[field] = event.target.value.slice(0, maxCaracteres)
 }
+
+function getEstadoClass(estado) {
+  if (estado === 'Inactivo' || estado === 'Pendiente') return 'h-5 w-5 bg-semaforo-rojo shadow-rojo rounded-full';
+  if (estado === 'Suspendido') return 'bg-semaforo-amarillo';
+  if (estado === 'Activo' || estado === 'Pagada') return 'h-5 w-5 bg-semaforo-verde shadow-verde rounded-full';
+  return '';
+}
+
+const gotaClase = computed(() => coloresBg[appName.value]);
+
 </script>
 
 <template>
@@ -198,8 +220,7 @@ const handleInput = (event, field) => {
 
       <!-- navegable -->
       <div class="options flex gap-1 items-center text-[14px] mt-4 cursor-pointer">
-        <a :href="route('aplicacion.dashboard', { aplicacion, rol })"
-        class="hover:text-essentials-secundary">
+        <a :href="route('aplicacion.dashboard', { aplicacion, rol })" class="hover:text-essentials-secundary">
           <p>Dashboard</p>
         </a>
         <span class="material-symbols-rounded text-[18px]">chevron_right</span>
@@ -207,55 +228,90 @@ const handleInput = (event, field) => {
           <p>Clientes</p>
         </a>
         <span class="material-symbols-rounded text-[18px]">chevron_right</span>
+        <a class="hover:text-essentials-secundary">
+          <p>Editar clientes</p>
+        </a>
+        <span class="material-symbols-rounded text-[18px]">chevron_right</span>
         <p class="font-bold">{{ cliente.nombre_completo }}</p>
       </div>
     </div>
-    <div class="p-4">
-      <form  @submit.prevent="submitForm">
-        <!-- <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label>Nombres</label>
-            <input v-model="form.nombres_ct" type="text" class="input" />
-          </div>
+    <div class="editarClientes flex items-center gap-3 w-full min-h-[80vh]">
+      <div class="empleado w-[30%] h-full flex flex-col justify-center text-center">
+            <div class="contenido ">
 
-          <div>
-            <label>Apellidos</label>
-            <input v-model="form.apellidos_ct" type="text" class="input" />
-          </div>
+            <div class="imagen grid place-content-center my-3">
+              <img src="https://plus.unsplash.com/premium_photo-1666298862681-c993ceb7865e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGhvbWJyZXxlbnwwfHwwfHx8MA%3D%3D" class="rounded-full w-[150px] h-[150px] shadowM " alt="User">
+            </div>
+            <div class="nombre text-[25px]">
+              <h1>{{ cliente.nombre_completo }}</h1>
+            </div>
+            <div class="rol text-[20px] -mt-[10px]">
+              <p class="text-secundary-light">{{ cliente.rol.tipo_rol }}</p>
+            </div>
 
-          <div>
-            <label>Teléfono</label>
-            <input v-model="form.telefono" type="text" class="input" />
-          </div>
+            <div class="detallesCuenta my-2">
+              <p class="text-secundary-light font-semibold text-left">Datos personales:</p>
+              <div class="documento flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textClase]'>id_card</span> {{ cliente.tipo_documento.documento_legal || 'Sin tipo de documento' }}</p>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textClase]'>tag</span> {{ cliente.numero_documento_ct }}</p>
+              </div>
 
-          <div>
-            <label>Numero de documento</label>
-            <input v-model="form.numero_documento_ct" type="text" class="input" />
-          </div>
+              <div class="email-telefono flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textClase]'>email</span> {{ cliente.email_ct }}</p>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textClase]'>phone</span> {{ cliente.telefono_ct }}</p>
+              </div>
+            </div>
 
-          <div>
-            <label>Tienda</label>
-            <select v-model="form.id_tienda" class="input">
-              <option v-for="tienda in tiendas" :key="tienda.id" :value="tienda.id">{{ tienda.nombre_tienda }}</option>
-            </select>
-          </div>
+            <div class="detallesCuenta my-2">
+              <p class="text-secundary-light font-semibold text-left">Detalles membresía:</p>
+              <div class=" flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textClase]'>card_membership</span> {{
+                      cliente.tienda?.aplicacion.membresia.nombre_membresia || 'Sin membresía' }}</p>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textClase]'>timer</span>{{ cliente.tienda.aplicacion.membresia.duracion || 'Pago pendiente' }} días</p>
+              </div>
 
-          <div>
-            <label>Estado</label>
-            <select v-model="form.id_estado" class="input">
-              <option v-for="estado in estados" :key="estado.id" :value="estado.id">{{ estado.tipo_estado }}</option>
-            </select>
-          </div>
+              <div class=" flex justify-end items-center">
+               
+                <!-- <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]" :class="[textClase]">timer</span>{{ 
+                  cliente.tienda.pagos_membresia.dias_restantes || 'Sin duración' }} días restantes</p> -->
+              </div>
 
-          <div>
-            <label>Membresía</label>
-            <select v-model="form.id_membresia" class="input">
-              <option v-for="membresia in membresias" :key="membresia.id" :value="membresia.id">{{
-                membresia.nombre_membresia }}</option>
-            </select>
-          </div>
-        </div> -->
+              <div class=" flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textClase]'>format_italic</span> {{
+                      cliente.tienda.aplicacion.membresia.descripcion || 'Sin descripcion' }}</p>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textClase]'>history_toggle_off</span> {{
+                      cliente.tienda.aplicacion.membresia.periodo || 'Sin periodo' }} </p>
+              </div>
 
+              <div class=" flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textClase]'>attach_money</span>{{
+                      formatCOP(cliente.tienda.aplicacion.membresia.precio) || 'Sin precio' }} COP</p>
+                <div class="estadoCliente flex items-center gap-2 ">
+                  <!-- <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
+                    :class="getEstadoClass(cliente.membresia.estado.tipo_estado)"></div> -->
+                  <!-- <p> {{ cliente.membresia.estado.tipo_estado || 'Sin estado' }} </p>  -->
+                </div>
+              </div>
+            </div>
+           
+            <div class="estado text-[20px] flex justify-center items-center gap-2 my-2">
+              <div class="gota" :class="getEstadoClass(cliente.estado.tipo_estado)"></div>
+              <p>{{ cliente.estado.tipo_estado }}</p>
+          </div>
+        </div>
+          </div>
+    <div class="p-4 w-[70%]">
+      <form @submit.prevent="submitForm">
+       
         <div class="
             2xl:flex 2xl:flex-row 2xl:justify-between 2xl:items-center 2xl:gap-2
             xl:flex xl:flex-row xl:justify-between xl:items-center xl:gap-2
@@ -291,10 +347,12 @@ const handleInput = (event, field) => {
                   transition-all rounded-[5px] border-[1px] border-secundary-light">
               <span class="
                   text-[20px] pl-[5px]
-                  material-symbols-rounded text-universal-naranja 
-                  ">
+                  material-symbols-rounded
+                  " 
+                  :class="[textClase]" >
                 format_italic
               </span>
+              
 
               <input type="text" class="
                     w-full 
@@ -331,8 +389,8 @@ const handleInput = (event, field) => {
                   transition-all rounded-[5px] border-[1px] border-secundary-light ">
               <span class="
                   text-[20px] pl-[5px]
-                    material-symbols-rounded text-universal-naranja 
-                    ">format_italic</span>
+                    material-symbols-rounded
+                    "  :class="[textClase]">format_italic</span>
 
               <input type="text" class="
                     w-full 
@@ -377,8 +435,8 @@ const handleInput = (event, field) => {
                   transition-all rounded-[5px] border-[1px] border-secundary-light">
               <span class="
                   text-[20px] pl-[5px]
-                  material-symbols-rounded text-universal-naranja 
-                  ">
+                  material-symbols-rounded
+                  "  :class="[textClase]">
                 format_italic
               </span>
 
@@ -417,14 +475,14 @@ const handleInput = (event, field) => {
                   transition-all rounded-[5px] border-[1px] border-secundary-light ">
               <span class="
                   text-[20px] pl-[5px]
-                    material-symbols-rounded text-universal-naranja 
-                    ">format_italic</span>
+                    material-symbols-rounded
+                    " :class="[textClase]">format_italic</span>
 
               <input type="text" class="
                     w-full 
                     focus:outline-none focus:border-none font-normal bg-transparent
-                    " placeholder="Ingresa tu email" v-model="form.email_ct"
-                @input="handleInput($event, 'email_ct')" @blur="handleBlur('email_ct')" />
+                    " placeholder="Ingresa tu email" v-model="form.email_ct" @input="handleInput($event, 'email_ct')"
+                @blur="handleBlur('email_ct')" />
             </div>
           </div>
         </div>
@@ -487,8 +545,8 @@ const handleInput = (event, field) => {
                   transition-all rounded-[5px] border-[1px] border-secundary-light">
               <span class="
                   text-[20px] pl-[5px]
-                  material-symbols-rounded text-universal-naranja 
-                  ">pin</span>
+                  material-symbols-rounded
+                  " :class="[textClase]">pin</span>
 
               <input type="text" class="
                     w-full 
@@ -635,8 +693,7 @@ const handleInput = (event, field) => {
           </div>
         </div>
 
-        <button class="opcion my-4 flex items-center gap-1 cursor-pointer px-4 rounded-lg"
-          :class="[bgClase]">
+        <button class="opcion my-4 flex items-center gap-1 cursor-pointer px-4 rounded-lg" :class="[bgClase]">
           <p>Guardar cambios</p>
           <div class="icono flex justify-center items-center h-[40px] w-[40px]">
             <span class="material-symbols-rounded">save</span>
@@ -644,6 +701,8 @@ const handleInput = (event, field) => {
         </button>
       </form>
     </div>
+    </div>
+    
 
 
 
