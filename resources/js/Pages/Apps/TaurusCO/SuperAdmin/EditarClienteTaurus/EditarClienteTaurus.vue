@@ -5,6 +5,8 @@ import 'dayjs/locale/es';
 import { route } from 'ziggy-js';
 import dayjs from 'dayjs';
 import SaludoOpciones from '@/Components/header/SaludoOpciones.vue';
+import imgPredeterminada from '@images/img-fb.png';
+
 
 
 const props = defineProps({
@@ -240,7 +242,7 @@ const gotaClase = computed(() => coloresBg[appName.value]);
             <div class="contenido ">
 
             <div class="imagen grid place-content-center my-3">
-              <img src="https://plus.unsplash.com/premium_photo-1666298862681-c993ceb7865e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fGhvbWJyZXxlbnwwfHwwfHx8MA%3D%3D" class="rounded-full w-[150px] h-[150px] shadowM " alt="User">
+              <img :src="imgPredeterminada"  class="rounded-full w-[150px] h-[150px] shadowM " alt="User">
             </div>
             <div class="nombre text-[25px]">
               <h1>{{ cliente.nombre_completo }}</h1>
@@ -296,10 +298,30 @@ const gotaClase = computed(() => coloresBg[appName.value]);
                     :class='[textClase]'>attach_money</span>{{
                       formatCOP(cliente.tienda.aplicacion.membresia.precio) || 'Sin precio' }} COP</p>
                 <div class="estadoCliente flex items-center gap-2 ">
-                  <!-- <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
-                    :class="getEstadoClass(cliente.detalleCliente.tienda.aplicacion.membresia.estado.tipo_estado)"></div>
-                  <p> {{ cliente.detalleCliente.tienda.aplicacion.membresia.estado.tipo_estado || 'Sin estado' }} </p> -->
+                   <div class="p-1 h-3 w-2 rounded-[5px] font-bold"
+                    :class="getEstadoClass(cliente.estado_pago)"></div>
+                  <p> {{ cliente.estado_pago || 'Sin estado' }}</p>
                 </div>
+              </div>
+            </div>
+
+            <div class="detallesCuenta my-2">
+              <p class="text-secundary-light font-semibold text-left">Datos tienda vinculada:</p>
+              <div class="documento flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textClase]'>verified</span> {{ cliente.tienda.aplicacion.nombre_app || 'Sin tipo de documento' }}</p>
+                    <div class="estadoCliente flex items-center gap-2 ">
+                      <div class="p-1 h-3 w-3 rounded-[5px] font-bold"
+                      :class="getEstadoClass(detalleCliente.tienda?.estado?.tipo_estado)"></div>
+                    <p>{{ detalleCliente.tienda?.estado?.tipo_estado || 'Sin estado' }}</p>
+                </div>
+              </div>
+
+              <div class="email-telefono flex justify-between items-center">
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textClase]'>email</span> {{ cliente.tienda.email_tienda }}</p>
+                <p class="flex items-center gap-1"><span class="material-symbols-rounded text-[20px]"
+                    :class='[textClase]'>phone</span> {{ cliente.tienda.telefono_tienda }}</p>
               </div>
             </div>
            

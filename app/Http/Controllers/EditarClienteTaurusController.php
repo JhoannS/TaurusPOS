@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Models\ClienteTaurus;
 use App\Models\Rol;
 use App\Models\TiendaSistematizada;
@@ -30,6 +31,39 @@ class EditarClienteTaurusController extends Controller
      * @return \Inertia\Response
      */
 
+     public function detalleUser($aplicacion, $rol, $idCliente)
+    {
+        // Opcional: valida permisos (rol 4, etc.)
+        $user = auth()->user()->load([
+            'rol',
+            'tienda',
+            'tienda.aplicacion',
+        ]);
+        if (!Gate::allows('access-role', 4) || $user->rol->id != 4) {
+            abort(403, 'No tienes permisos para acceder a esta sección.');
+        }
+
+        // Cargar el cliente con todas las relaciones necesarias
+        $detalleCliente = ClienteTaurus::with([
+            'rol',
+            'tienda',
+            'tienda.token',
+            'tienda.token.estado',
+            'tienda.estado',
+            'tienda.aplicacion',
+            'tienda.aplicacion.plan',
+            'tienda.aplicacion.plan.detalles',
+            'tienda.aplicacion.membresia',
+            'tienda.aplicacion.membresia.estado',
+            'tienda.pagosMembresia',  // Nota que "pagosMembresia" está en singular
+            'estado',
+            'tipoDocumento',
+            'membresia'
+        ])->findOrFail($idCliente);
+
+        // Retornar en JSON (para usar en el modal)
+        return response()->json($detalleCliente);
+    }
 
     public function editar($aplicacion, $rol, $id)
     {
@@ -46,7 +80,7 @@ class EditarClienteTaurusController extends Controller
             'tienda.aplicacion.plan.detalles',
             'tienda.aplicacion.membresia',
             'tienda.aplicacion.membresia.estado',
-            'tienda.pagosMembresia',  // Nota que "pagosMembresia" está en singular
+            'tienda.pagosMembresia',
             'estado',
             'tipoDocumento'
         ]);
@@ -91,6 +125,7 @@ class EditarClienteTaurusController extends Controller
             'pagos_membresia.monto_total as monto_pago',
             'pagos_membresia.fecha_pago as fecha_pago',
             'estado_pago.tipo_estado as estado_pago',
+            
         )
             ->leftJoin('tiendas_sistematizadas', 'clientes_taurus.id_tienda', '=', 'tiendas_sistematizadas.id')
             ->leftJoin('token_accesos', 'tiendas_sistematizadas.id_token', '=', 'token_accesos.id')

@@ -13,6 +13,9 @@ Route::middleware('auth')->group(function () {
 
         Route::put('/editarClienteTaurus/{id}', [EditarClienteTaurusController::class, 'actualizar'])
             ->name('aplicacion.editarClienteTaurus.actualizar');
+
+            Route::get('/dashboard/detalle/{idCliente}', [EditarClienteTaurusController::class, 'detalleUser'])
+            ->name('aplicacion.editarClienteTaurus.detalle');
     });
 
 });
